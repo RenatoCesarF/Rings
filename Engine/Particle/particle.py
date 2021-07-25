@@ -1,12 +1,13 @@
-
 import pygame,random
 from Engine.Vector import Vector2D
 
 class Particle():
-    def __init__(self,position_x, position_y, size, velocity_x,velocity_y, lifeTime):
-        self.position = Vector2D(position_x,position_y)
-        self.velocity = Vector2D(velocity_x,velocity_y)
+    def __init__(self, x, y, velocity,size, lifeTime = 1, rotation = 0,friction = 0):
+        self.position = Vector2D(x,y)
+        self.velocity = velocity
+        self.friction = friction
         self.size = size
+        self.rotation = rotation
         self.lifeTime = lifeTime *60
         self.color = self.randomColor()
 
@@ -17,16 +18,9 @@ class Particle():
 
     def Draw(self,surface):
         pygame.draw.circle(surface,self.color,(self.position.x,self.position.y),self.size)
+        # pygame.draw.rect(surface,self.color,pygame.Rect((self.position.x,self.position.y), (self.size *2,self.size)),self.size)
 
-    def Update(self):
-        self.lifeTime -= 1
+    def setParticleImage(self,path):
+        pass
+  
 
-        self.position.x += self.velocity.x
-        self.position.y += self.velocity.y
-
-        self.velocity.y +=0.08
-
-
-      
-
- 
