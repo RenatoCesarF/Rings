@@ -1,6 +1,6 @@
 
 import os,pygame, sys,random
-from Engine.Particle.particle import Particle
+from Engine.Particle.particle import Particle,Shape
 from Engine.Particle.particle_emitter import ParticleEmitter 
 from Engine.Vector import Vector2D
 import utils
@@ -19,7 +19,7 @@ screen = pygame.display.set_mode((SCREEN_WITH, SCREEN_HEIGHT), pygame.RESIZABLE)
 pygame.display.set_caption("Rings")
 clock = pygame.time.Clock()
 
-particlePattern = Particle(0,0,Vector2D(0,0),1,10)
+particlePattern = Particle(x=0,y=0,velocity= Vector2D(0,0),width=11,height=11,lifeTime=100,shape= Shape.Rect)
 
 pe = ParticleEmitter(Vector2D(300,100), 1000, particlePattern, False, Vector2D(-2,-2))
 running = True
@@ -51,9 +51,7 @@ while running:
 
     screen.fill((0,0,40))
 
-    mouse_x, mouse_y = utils.getMousePosition()
     
-    pe.updateEmitterPosition(Vector2D(mouse_x,mouse_y))
     pe.update(screen)
 
     if len(pe.particles) >0:

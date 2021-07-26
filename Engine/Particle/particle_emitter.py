@@ -49,23 +49,27 @@ class ParticleEmitter():
             else:               
                 i += 1
 
+
+    def addParticle(self):
+        pp =  self.particlePattern
+        p = Particle(
+            x = self.position.x,
+            y = self.position.y,
+            velocity = Vector2D(randint(0,20)/10 - 1,randint(2,4)),
+            width = pp.width,# randint(11,10),
+            height = pp.height,#randint(11,10),
+            lifeTime = pp.lifeTime/60,
+            shape = pp.shape,
+            rotation = 90
+        )
+        p.friction = 0.06
+        self.particles.append(p)
+
     def stop(self):
         self.isEmitting = False
         
     def start(self):
         self.isEmitting = True
-
-    def addParticle(self):
-        pp =  self.particlePattern
-        p = Particle(
-            self.position.x, self.position.y,
-            Vector2D(randint(0,20)/10 - 1,randint(2,4)),
-            randint(2,10),
-            
-            pp.lifeTime/60,
-        )
-        p.friction = 0.06
-        self.particles.append(p)
 
     def updateEmitterPosition(self, newPosition):
         self.position = newPosition
