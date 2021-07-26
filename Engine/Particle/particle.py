@@ -1,3 +1,6 @@
+#TODO: implement image as particle
+
+from typing import Tuple
 import pygame,random
 from pygame import gfxdraw
 from Engine.Vector import Vector2D
@@ -12,25 +15,38 @@ class Shape(Enum):
 
 
 
-class Particle():
-    def __init__(self, x, y, velocity, width = 1, height = 1, lifeTime = 1, rotation = 0,friction = 0, opacity = 255,shape = Shape.Rect):
+class Particle:
+
+    def __init__(self, x, y, velocity, width = 1, height = 1, life_time = 1, rotation = 0, opacity = 100,shape = Shape.Rect):
+        """Each particle to be created by a particle emitter
+
+        Args:
+            `x` (int): The X position 
+            `y` (int): The Y position
+            `velocity` (Vector2D): (x,y) velocity of the particle
+            `width` (int, optional): The width of the particle's area. Defaults to 1.
+            `height` (int, optional): The height of the particle's area. Defaults to 1.
+            `life_time` (int, optional): Seconds of existence of this particle. Defaults to 1.
+            `rotation` (int, optional): rotation degrees of this particle. Defaults to 0.
+            `opacity` (int, optional): Opacity porcentage value  . Defaults to 100.
+            `shape` (Shape, optional): The shape of the particle. Defaults to Shape.Rect.
+        """
         self.position = Vector2D(x,y)
         self.velocity = velocity
-        self.friction = friction
         self.width = width
         self.height = height
         self.rotation = rotation % 360
-        self.lifeTime = lifeTime *60
+        self.life_time = life_time *60
 
-        self.opacity = opacity
+        self.opacity = opacity * 100 / 255
 
         self.shape = shape
 
         self.color = (255,255,255)
-        self.initialLifeTime = self.lifeTime
+        self.initial_life_time = self.life_time
 
 
-    def Draw(self,destinatonSurface):
+    def Draw(self,destinatonSurface) -> None:
         formSurface = pygame.Surface((self.width+10,self.height+10),pygame.SRCALPHA)
 
         #SET SHAPE
@@ -55,9 +71,9 @@ class Particle():
         #ADDING TO SCREEN
         destinatonSurface.blit(formSurface, rect)
 
-    def setParticleImage(self,path):
+    def set_particle_image(self,path) -> None:
         pass
 
     
-    def randomColor(self):
+    def random_color(self) -> Tuple:
         return (random.randint(20,255),random.randint(20,255),random.randint(20,255))

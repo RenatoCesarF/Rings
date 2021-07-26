@@ -1,10 +1,10 @@
 import pygame
 
-def getMousePosition():
+def get_mouse_position():
     pos = pygame.mouse.get_pos()
     return (pos)
 
-def drawText(font,text,surface, position):
+def draw_text(font,text,surface, position):
     interface_surface = font.render(text, False, "White")
     surface.blit(interface_surface,position)
 

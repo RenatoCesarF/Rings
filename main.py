@@ -6,7 +6,7 @@ from Engine.Vector import Vector2D
 import utils
 
 
-# os.environ['SDL_VIDEO_CENTERED'] = '1' # You have to call this before pygame.init()
+os.environ['SDL_VIDEO_CENTERED'] = '1' # You have to call this before pygame.init()
 
 pygame.init()
 
@@ -19,9 +19,10 @@ screen = pygame.display.set_mode((SCREEN_WITH, SCREEN_HEIGHT), pygame.RESIZABLE)
 pygame.display.set_caption("Rings")
 clock = pygame.time.Clock()
 
-particlePattern = Particle(x=0,y=0,velocity= Vector2D(0,0),width=11,height=11,lifeTime=100,shape= Shape.Rect)
+particle_pattern = Particle(x=0,y=0,velocity= Vector2D(0,0),width=11,height=11,life_time=1,shape= Shape.Rect)
 
-pe = ParticleEmitter(Vector2D(300,100), 1000, particlePattern, False, Vector2D(-2,-2))
+pe = ParticleEmitter(Vector2D(300,100), 100, particle_pattern, False, Vector2D(-2,-2))
+
 running = True
 while running:
     for event in pygame.event.get():
@@ -36,7 +37,7 @@ while running:
             if event.key == pygame.K_F1 :
                 debugging = not debugging
             if event.key == pygame.K_SPACE:
-                pe.addParticle()
+                pe.add_particle()
             if event.key == pygame.K_0:
                 pe.stop()
                 
@@ -51,12 +52,11 @@ while running:
 
     screen.fill((0,0,40))
 
-    
     pe.update(screen)
 
-    if len(pe.particles) >0:
-        utils.drawText(FONT,str(len(pe.particles)),screen,(10,50))
+    if len(pe.particles) > 0:
+        utils.draw_text(FONT,str(len(pe.particles)),screen,(10,50))
     if debugging:
-        utils.drawText(FONT,"FPS: "+str(int(clock.get_fps())),screen,(10,10))
+        utils.draw_text(FONT,"FPS: "+str(int(clock.get_fps())),screen,(10,10))
 
     clock.tick(60)
