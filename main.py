@@ -3,7 +3,6 @@ import os,pygame, sys,random
 from Engine.Particle.particle import Particle
 from Engine.Particle.particle_emitter import ParticleEmitter 
 from Engine.Vector import Vector2D
-import pygame.gfxdraw as gfxdraw
 import utils
 
 
@@ -14,46 +13,52 @@ pygame.init()
 SCREEN_WITH = 800
 SCREEN_HEIGHT = 400
 
-FONT = pygame.font.Font("res/Pixellari.ttf", 30)
+FONT = pygame.font.Font("res/Pixellari.ttf", 24)
 debugging = True
 screen = pygame.display.set_mode((SCREEN_WITH, SCREEN_HEIGHT), pygame.RESIZABLE)
 pygame.display.set_caption("Rings")
 clock = pygame.time.Clock()
 
-particlePattern = Particle(
-    0,0,
-    Vector2D(0,0),
-    6,
-    5,
-)
-pe = ParticleEmitter(Vector2D(300,100), 50,particlePattern,
-    False,
-    Vector2D(-2,-2))
+particlePattern = Particle(0,0,Vector2D(0,0),1,10)
 
-while True:
+pe = ParticleEmitter(Vector2D(300,100), 1000, particlePattern, False, Vector2D(-2,-2))
+running = True
+while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             pygame.quit()
             exit()
+        if event.type==pygame.VIDEORESIZE:
+            w = event.dict['size'][0]
+            h = event.dict['size'][1]
+            screen=pygame.display.set_mode(event.dict['size'],pygame.RESIZABLE)
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_F1 :
                 debugging = not debugging
-            if event.key == pygame.K_SPACE :
-                pe.fillParticleList()
+            if event.key == pygame.K_SPACE:
+                pe.addParticle()
+            if event.key == pygame.K_0:
+                pe.stop()
+                
+            if event.key == pygame.K_1:
+                pe.start()
+
         if event.type == pygame.KEYUP:
             pass
 
+    
     pygame.display.update()
 
     screen.fill((0,0,40))
+
     mouse_x, mouse_y = utils.getMousePosition()
+    
     pe.updateEmitterPosition(Vector2D(mouse_x,mouse_y))
     pe.update(screen)
 
-    # if len(pe.particles) >0:
-    #     print(int(pe.particles[0].velocity.y))
-    #     print(int(pe.particles[1].velocity.y)) 
+    if len(pe.particles) >0:
+        utils.drawText(FONT,str(len(pe.particles)),screen,(10,50))
     if debugging:
-        utils.drawText(FONT,str(int(clock.get_fps())),screen,(10,10))
-        
+        utils.drawText(FONT,"FPS: "+str(int(clock.get_fps())),screen,(10,10))
+
     clock.tick(60)

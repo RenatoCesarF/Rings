@@ -1,7 +1,9 @@
 from enum import Enum
+
+from pygame.display import update
 from Engine.Particle.particle import Particle
 from Engine.Vector import Vector2D
-from random import randint 
+from random import randint, uniform
 import utils
 
 class ParticleEmitter():
@@ -13,7 +15,11 @@ class ParticleEmitter():
         self.particlePattern = particlePattern
         self.velocity_RC = velocity_RC
         self.size_RC = size_RC
+        self.initialUpdateCicle = self.updateCicle = self.particlePattern.lifeTime/ self.amount
+
         self.particles = []
+
+            
 
     def fillParticleList(self):
         for i in range(0,self.amount):
@@ -21,22 +27,27 @@ class ParticleEmitter():
 
 
     def update(self,surface):
-     
+        if self.isEmitting:
+            self.updateCicle -=1
+            if  self.updateCicle <= 0:
+                self.addParticle()
+                self.updateCicle = self.initialUpdateCicle
+
         i=0
         while i < len(self.particles):
-            self.particles[i].lifeTime -= 1
-            self.particles[i].position.add(self.particles[i].velocity)
+            p = self.particles[i]
+            p.lifeTime -= 1
+            if not p.position.y >=399:
+                p.position.add(p.velocity)
+                p.rotation +=uniform(1,3)
 
-            self.particles[i].Draw(surface)
+            p.Draw(surface)
 
-            if self.particles[i].lifeTime <= 0:
+
+            if p.lifeTime <=0:
                 self.particles.pop(i)
             else:               
                 i += 1
-           
-
-            
-
 
     def stop(self):
         self.isEmitting = False
@@ -44,16 +55,13 @@ class ParticleEmitter():
     def start(self):
         self.isEmitting = True
 
-    def getVectorUsingRC(self,startVector,rcVector):
-        return Vector2D()
-        
-
     def addParticle(self):
         pp =  self.particlePattern
         p = Particle(
             self.position.x, self.position.y,
-            Vector2D(randint(0,10)/10 - 1,-randint(0,5)),
-            randint(6,20),
+            Vector2D(randint(0,20)/10 - 1,randint(2,4)),
+            randint(2,10),
+            
             pp.lifeTime/60,
         )
         p.friction = 0.06
