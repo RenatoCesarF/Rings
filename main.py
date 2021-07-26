@@ -1,10 +1,10 @@
+import os
+import pygame
 
-import os,pygame, sys,random
+from Engine.Vector import Vector2D
+from Engine import utils
 from Engine.Particle.particle import Particle,Shape
 from Engine.Particle.particle_emitter import ParticleEmitter 
-from Engine.Vector import Vector2D
-import utils
-
 
 os.environ['SDL_VIDEO_CENTERED'] = '1' # You have to call this before pygame.init()
 
@@ -19,9 +19,10 @@ screen = pygame.display.set_mode((SCREEN_WITH, SCREEN_HEIGHT), pygame.RESIZABLE)
 pygame.display.set_caption("Rings")
 clock = pygame.time.Clock()
 
-particle_pattern = Particle(x=0,y=0,velocity= Vector2D(0,0),width=11,height=11,life_time=1,shape= Shape.Rect)
+particle_pattern = Particle(x=0,y=0,velocity= Vector2D(0,0),width=11,height=11,
+                            life_time=2,shape= Shape.Rect)
 
-pe = ParticleEmitter(Vector2D(300,100), 100, particle_pattern, False, Vector2D(-2,-2))
+pe = ParticleEmitter(Vector2D(10,200), 10, particle_pattern, True, Vector2D(-2,-2))
 
 running = True
 while running:
@@ -39,7 +40,7 @@ while running:
             if event.key == pygame.K_SPACE:
                 pe.add_particle()
             if event.key == pygame.K_0:
-                pe.stop()
+                pe.amount +=10
                 
             if event.key == pygame.K_1:
                 pe.start()
@@ -47,7 +48,7 @@ while running:
         if event.type == pygame.KEYUP:
             pass
 
-    
+    #-----Update------
     pygame.display.update()
 
     screen.fill((0,0,40))

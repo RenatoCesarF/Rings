@@ -1,11 +1,13 @@
 #TODO: implement image as particle
 
 from typing import Tuple
-import pygame,random
-from pygame import gfxdraw
-from Engine.Vector import Vector2D
-import utils
 from enum import Enum
+import random
+
+import pygame
+
+from Engine import utils
+from Engine.Vector import Vector2D
 
 class Shape(Enum):
     Rect = 1
@@ -13,22 +15,20 @@ class Shape(Enum):
     Circle = 3
     Polygon = 4
 
-
-
 class Particle:
-
-    def __init__(self, x, y, velocity, width = 1, height = 1, life_time = 1, rotation = 0, opacity = 100,shape = Shape.Rect):
-        """Each particle to be created by a particle emitter
-
+    def __init__(self, x:float, y:float, velocity:Vector2D, width:float = 1, 
+                 height:float = 1, life_time:int = 1, rotation:float = 0, 
+                 opacity:int = 255,shape:Shape = Shape.Rect):
+        """Each particle to be created by a particle emitter\n
         Args:
-            `x` (int): The X position 
-            `y` (int): The Y position
+            `x` (float): The X position 
+            `y` (float): The Y position
             `velocity` (Vector2D): (x,y) velocity of the particle
-            `width` (int, optional): The width of the particle's area. Defaults to 1.
-            `height` (int, optional): The height of the particle's area. Defaults to 1.
+            `width` (float, optional): The width of the particle's area. Defaults to 1.
+            `height` (float, optional): The height of the particle's area. Defaults to 1.
             `life_time` (int, optional): Seconds of existence of this particle. Defaults to 1.
             `rotation` (int, optional): rotation degrees of this particle. Defaults to 0.
-            `opacity` (int, optional): Opacity porcentage value  . Defaults to 100.
+            `opacity` (int, optional): Opacity of the particle, it's from 0 to 255 value  . Defaults to 255.
             `shape` (Shape, optional): The shape of the particle. Defaults to Shape.Rect.
         """
         self.position = Vector2D(x,y)
@@ -37,14 +37,11 @@ class Particle:
         self.height = height
         self.rotation = rotation % 360
         self.life_time = life_time *60
-
-        self.opacity = opacity * 100 / 255
-
+        self.opacity = opacity
         self.shape = shape
 
         self.color = (255,255,255)
         self.initial_life_time = self.life_time
-
 
     def Draw(self,destinatonSurface) -> None:
         formSurface = pygame.Surface((self.width+10,self.height+10),pygame.SRCALPHA)
@@ -73,7 +70,6 @@ class Particle:
 
     def set_particle_image(self,path) -> None:
         pass
-
-    
+  
     def random_color(self) -> Tuple:
         return (random.randint(20,255),random.randint(20,255),random.randint(20,255))

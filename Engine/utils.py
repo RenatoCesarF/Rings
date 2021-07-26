@@ -1,3 +1,5 @@
+"""Functions that don't have a specific folder or class yet"""
+
 import pygame
 
 def get_mouse_position():

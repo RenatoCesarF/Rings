@@ -2,27 +2,28 @@
 #TODO: implement oneshot logic
 #TODO: improve emission logic
 
-from Engine.Particle.particle import Particle
-from Engine.Vector import Vector2D
 from random import randint, uniform
 
+from Engine.Particle.particle import Particle
+from Engine.Vector import Vector2D
+
 class ParticleEmitter:
-    def __init__(self,position, amount,particle_pattern, oneShot=False,velocity_RC = Vector2D(1,1),size_RC = Vector2D(1,1)):
-        
-        '''        
-        It Emmit particles based in a particle_pattern at a determinated position \n
-
-        :param `position`: The amount of distance traveled
-        :type position: Vector2D
-
-        :param `amount`: 
-        :type amount: int
-
-        :param `particle_pattern`: A particle sample of how the particles of this emitter gonna be
-        :raises: :class:`RuntimeError`: Out of fuel
-
-        '''
-
+    def __init__(self,position:Vector2D, amount:int, particle_pattern:Particle,
+                 oneShot:bool = False, velocity_RC:Vector2D = Vector2D(1,1),
+                 size_RC:Vector2D = Vector2D(1,1)):
+        """It Emmit particles based in a particle_pattern at a determinated position\n
+        Args:
+            `position` (Vector2D): Initial Position of emittion
+            `amount` (int): Amount of particles that gonna be generated
+            `particle_pattern` (Particle): A base particle used as pattern that 
+            gonna be emitted
+            `oneShot` (bool, optional): If it's one shot or not. If yes the 
+            emittion start and stop immediately. Defaults to False.
+            `velocity_RC` (Vector2D, optional): The Random Coeficient of velocity
+            applied to the particle each emmition. Defaults to Vector2D(1,1).
+            `size_RC` (Vector2D, optional): The Random Coeficient of sized applied 
+            to the particle each emmition. Defaults to Vector2D(1,1).
+        """
         self.oneShot = oneShot
         self.isEmitting = True
         self.position =position
@@ -30,60 +31,70 @@ class ParticleEmitter:
         self.particle_pattern = particle_pattern
         self.velocity_RC = velocity_RC
         self.size_RC = size_RC
-        self.initial_update_cicle = self.update_cicle = self.particle_pattern.life_time/ self.amount
+        self.initial_update_cicle = self.update_cicle = particle_pattern.life_time/amount
 
         self.particles = []
      
-    def update(self,surface):
+    def update(self,surface,timestep = 1):
         """Update every single particle of the list and draw each in the surface passed"""
         if self.isEmitting:
-            self.update_cicle -=1
+            self.update_cicle -= timestep
+            if self.oneShot:
+                self.isEmitting = False
+                self.fill_particle_list()
+        
             if  self.update_cicle <= 0:
-                self.add_particle()
                 self.update_cicle = self.initial_update_cicle
-
-        i=0
+                self.add_particle()
+                
+        i = 0
         while i < len(self.particles):
+
             p = self.particles[i]
-            p.life_time -= 1
-            if not p.position.y >=399:
-                p.position.add(p.velocity)
-                p.rotation +=uniform(1,3)
+            p.life_time -= timestep
+
+            p.position.add(p.velocity)
+            p.rotation += uniform(1,3)
 
             p.Draw(surface)
 
-
-            if p.life_time <=0:
+            if p.life_time <= 0:
                 self.particles.pop(i)
-            else:               
+            else:
                 i += 1
+     
+
+    def fill_particle_list(self): 
+        if self.is_emitter_full():
+            return
+        
+        for i in range(0,self.amount):
+            self.add_particle()
 
     def add_particle(self):
-        """
-            Add one particle to the list based in 
-            the particle_pattern passed in cosntructor"""
+        """ Add one particle to the list based in the particle_pattern passed in cosntructor"""
         pp =  self.particle_pattern
         p = Particle(
             x = self.position.x,
             y = self.position.y,
-            velocity = Vector2D(randint(0,20)/10 - 1,randint(2,4)),
-            width = pp.width,# randint(11,10),
-            height = pp.height,#randint(11,10),
+            velocity = Vector2D(randint(2,10),randint(3,10)/10 - 1),
+            width = randint(pp.width - 10, pp.width +10),# randint(11,10),
+            height = randint(pp.height-5, pp.height+5),
             life_time = pp.life_time/60,
             shape = pp.shape,
             rotation = 90
         )
         self.particles.append(p)
-
+    
     def update_emitter_position(self, newPosition):
         self.position = newPosition
-
-    def fill_particle_list(self):
-        for i in range(0,self.amount):
-            self.add_particle()
 
     def stop(self):
         self.isEmitting = False
         
     def start(self):
         self.isEmitting = True
+
+    def is_emitter_full(self) -> bool:
+        return len(self.particles) >= self.amount
+        
