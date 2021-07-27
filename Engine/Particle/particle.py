@@ -15,10 +15,10 @@ class Shape(Enum):
     Circle = 3
     Polygon = 4
 
-class Particle:
-    def __init__(self, x:float, y:float, velocity:Vector2D, width:float = 1, 
-                 height:float = 1, life_time:int = 1, rotation:float = 0, 
-                 opacity:int = 255,shape:Shape = Shape.Rect):
+class Particle(object):
+    def __init__(self, x: float, y: float, velocity: Vector2D, width: float = 1, 
+                 height: float = 1, life_time: int = 1, rotation: float = 0, 
+                 opacity: int = 255,shape: Shape = Shape.Rect):
         """Each particle to be created by a particle emitter\n
         Args:
             `x` (float): The X position 
@@ -43,24 +43,36 @@ class Particle:
         self.color = (255,255,255)
         self.initial_life_time = self.life_time
 
+    @classmethod
+    def fromImage(cls, path):
+        print("CRIOU PELA IMAGEM")
+        return cls()
+
     def Draw(self,destinatonSurface) -> None:
         formSurface = pygame.Surface((self.width+10,self.height+10),pygame.SRCALPHA)
 
         #SET SHAPE
         if self.shape == Shape.Rect:
-            pygame.draw.rect(formSurface, self.color, pygame.Rect(0, 0, self.width,self.height), width = 0,border_radius = 0)
+            pygame.draw.rect(formSurface, self.color, 
+                             pygame.Rect(0, 0, self.width,self.height), 
+                             width = 0,border_radius = 0)
         elif self.shape == Shape.Box:
-            pygame.gfxdraw.box(formSurface,pygame.Rect(0, 0,self.width,self.height),self.color)
+            pygame.gfxdraw.box(formSurface,pygame.Rect(0, 0,self.width,self.height),
+                                self.color)
         elif self.shape == Shape.Circle:
-            pygame.draw.circle(destinatonSurface,self.color,(self.position.x,self.position.y),self.width) #can go directaly to the surface
+            pygame.draw.circle(destinatonSurface,self.color,
+                               (self.position.x,self.position.y),self.width) #can go directaly to the surface
         elif self.shape == Shape.Polygon:
             #implement polygon
-            pygame.draw.circle(destinatonSurface,self.color,(self.position.x,self.position.y),self.width) #can go directaly to the surface
+            pygame.draw.circle(destinatonSurface,self.color,
+                                (self.position.x,self.position.y),self.width)
         else:
-            pygame.draw.rect(formSurface, self.color, pygame.Rect(0, 0, self.width,self.height), width = 0,border_radius = 2)
+            pygame.draw.rect(formSurface, self.color, 
+                             pygame.Rect(0, 0, self.width,self.height), width = 0,border_radius = 2)
 
         #SET ROTATION
-        formSurface, rect= utils.rotate(formSurface,self.rotation,self.position.x,self.position.y)
+        formSurface, rect= utils.rotate(formSurface,self.rotation,
+                                        self.position.x,self.position.y)
 
         #SET OPACITY
         formSurface.set_alpha(self.opacity)
@@ -68,8 +80,5 @@ class Particle:
         #ADDING TO SCREEN
         destinatonSurface.blit(formSurface, rect)
 
-    def set_particle_image(self,path) -> None:
-        pass
-  
     def random_color(self) -> Tuple:
         return (random.randint(20,255),random.randint(20,255),random.randint(20,255))

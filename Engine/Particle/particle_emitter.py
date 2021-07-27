@@ -7,10 +7,10 @@ from random import randint, uniform
 from Engine.Particle.particle import Particle
 from Engine.Vector import Vector2D
 
-class ParticleEmitter:
-    def __init__(self,position:Vector2D, amount:int, particle_pattern:Particle,
-                 oneShot:bool = False, velocity_RC:Vector2D = Vector2D(1,1),
-                 size_RC:Vector2D = Vector2D(1,1)):
+class ParticleEmitter(object):
+    def __init__(self,position: Vector2D, amount: int, particle_pattern: Particle,
+                 oneShot: bool = False, velocity_RC: Vector2D = Vector2D(1,1),
+                 size_RC: Vector2D = Vector2D(1,1)):
         """It Emmit particles based in a particle_pattern at a determinated position\n
         Args:
             `position` (Vector2D): Initial Position of emittion
@@ -63,7 +63,6 @@ class ParticleEmitter:
             else:
                 i += 1
      
-
     def fill_particle_list(self): 
         if self.is_emitter_full():
             return
@@ -72,7 +71,9 @@ class ParticleEmitter:
             self.add_particle()
 
     def add_particle(self):
-        """ Add one particle to the list based in the particle_pattern passed in cosntructor"""
+        """Add one particle to the list based in 
+           the particle_pattern passed in cosntructor
+        """
         pp =  self.particle_pattern
         p = Particle(
             x = self.position.x,

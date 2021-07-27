@@ -19,10 +19,12 @@ screen = pygame.display.set_mode((SCREEN_WITH, SCREEN_HEIGHT), pygame.RESIZABLE)
 pygame.display.set_caption("Rings")
 clock = pygame.time.Clock()
 
-particle_pattern = Particle(x=0,y=0,velocity= Vector2D(0,0),width=11,height=11,
-                            life_time=2,shape= Shape.Rect)
+# particle_pattern = Particle(x=0, y=0,velocity=Vector2D(0,0), width=11, height=11,
+#                             life_time=2, shape=Shape.Rect)
 
-pe = ParticleEmitter(Vector2D(10,200), 10, particle_pattern, True, Vector2D(-2,-2))
+particle_pattern = Particle.fromImage("S")
+pe = ParticleEmitter(Vector2D(10,200), 10, particle_pattern, True,
+                     Vector2D(-2,-2))
 
 running = True
 while running:
@@ -56,8 +58,8 @@ while running:
     pe.update(screen)
 
     if len(pe.particles) > 0:
-        utils.draw_text(FONT,str(len(pe.particles)),screen,(10,50))
+        utils.draw_text(FONT, str(len(pe.particles)), screen, (10,50))
     if debugging:
-        utils.draw_text(FONT,"FPS: "+str(int(clock.get_fps())),screen,(10,10))
+        utils.draw_text(FONT, "FPS: " + str(int(clock.get_fps())), screen, (10,10))
 
     clock.tick(60)

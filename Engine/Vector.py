@@ -8,6 +8,3 @@ class Vector2D():
         self.x += vector.x
         self.y += vector.y
         return self
-
-    def clone(self):
-        return self
