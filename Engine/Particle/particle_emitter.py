@@ -5,7 +5,8 @@
 from random import randint, uniform
 
 from Engine.Particle.shape_particle import ShapeParticle
-from Engine.Particle.shape_particle import AbcParticle
+from Engine.Particle.abc_particle import AbcParticle
+from Engine.Particle.image_particle import ImageParticle
 from Engine.Vector import Vector2D
 
 class ParticleEmitter(object):
@@ -69,30 +70,34 @@ class ParticleEmitter(object):
             self.add_particle()
 
     def add_particle(self):
-        """Add one particle to the list based in 
-           the particle_pattern passed in cosntructor
-        """
+        """Add one particle to the list based in the particle_pattern passed 
+           in cosntructor
         """
         pp = self.particle_pattern
-        pp.position = Vector2D(self.position.x,self.position.y)
-        pp.velocity = Vector2D(2,2) #Vector2D(randint(2,10),randint(3,10)/10 - 1),
-        pp.width =23# randint(pp.width - 10, pp.width +10),# randint(11,10),
-        pp.height = 23#randint(pp.height-5, pp.height+5),
-        pp.life_time = pp.life_time
-        """
-        pp =  self.particle_pattern
-        p = ShapeParticle(
+        
+        if type(self.particle_pattern) == ShapeParticle:
+            p = ShapeParticle(
+                position = self.position,
+                velocity = Vector2D(randint(2,10),randint(3,10)/10 - 1),
+                width = randint(pp.width - 10, pp.width +10),# randint(11,10),
+                height = randint(pp.height-5, pp.height+5),
+                life_time = pp.life_time/60,
+                rotation = 90,
+                shape = pp.shape,
+            )
+            self.particles.append(p)
+            return
+        
+        p = ImageParticle(
+            "",
             position = self.position,
             velocity = Vector2D(randint(2,10),randint(3,10)/10 - 1),
             width = randint(pp.width - 10, pp.width +10),# randint(11,10),
             height = randint(pp.height-5, pp.height+5),
             life_time = pp.life_time/60,
-            shape = pp.shape,
             rotation = 90
+            
         )
-        self.particles.append(p)
-
-        # self.particles.append(pp)
     
     def update_emitter_position(self, newPosition):
         self.position = newPosition

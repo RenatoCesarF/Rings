@@ -13,13 +13,12 @@ def main():
     
     clock = pygame.time.Clock()
 
-    particle_pattern = ShapeParticle(Vector2D(0,0),Vector2D(1,1), width=11, height=11,
+    particle_pattern = ShapeParticle(Vector2D(140,140),Vector2D(2,2), width=11, height=11,
                                 life_time = 2, shape = Shape.Rect)
 
     pe = ParticleEmitter(Vector2D(10,200), 120, particle_pattern, False,
                          Vector2D(-2,-2))
    
-    particle_pattern.describe()
     running = True
     while running:
         for event in pygame.event.get():
