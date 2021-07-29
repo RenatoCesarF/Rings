@@ -1,55 +1,43 @@
 #TODO: implement image as particle
 
 from typing import Tuple
-from enum import Enum
+from abc import ABC
+import abc
+
 import random
 
 import pygame
 
 from Engine import utils
 from Engine.Vector import Vector2D
+from Engine.shape import Shape
+from Engine.Particle.abc_particle import AbcParticle
 
-class Shape(Enum):
-    Rect = 1
-    Box = 2
-    Circle = 3
-    Polygon = 4
-
-class Particle(object):
-    def __init__(self, x: float, y: float, velocity: Vector2D, width: float = 1, 
-                 height: float = 1, life_time: int = 1, rotation: float = 0, 
+class ShapeParticle(AbcParticle):
+    def __init__(self,position: Vector2D, velocity: Vector2D, width: int = 1, 
+                 height: int = 1, life_time: int = 1, rotation: float = 0, 
                  opacity: int = 255,shape: Shape = Shape.Rect):
         """Each particle to be created by a particle emitter\n
         Args:
             `x` (float): The X position 
             `y` (float): The Y position
             `velocity` (Vector2D): (x,y) velocity of the particle
-            `width` (float, optional): The width of the particle's area. Defaults to 1.
-            `height` (float, optional): The height of the particle's area. Defaults to 1.
+            `width` (int, optional): The width of the particle's area. Defaults to 1.
+            `height` (int, optional): The height of the particle's area. Defaults to 1.
             `life_time` (int, optional): Seconds of existence of this particle. Defaults to 1.
             `rotation` (int, optional): rotation degrees of this particle. Defaults to 0.
             `opacity` (int, optional): Opacity of the particle, it's from 0 to 255 value  . Defaults to 255.
             `shape` (Shape, optional): The shape of the particle. Defaults to Shape.Rect.
         """
-        self.position = Vector2D(x,y)
-        self.velocity = velocity
-        self.width = width
-        self.height = height
-        self.rotation = rotation % 360
-        self.life_time = life_time *60
-        self.opacity = opacity
-        self.shape = shape
+        super().__init__(position,velocity,width,height,life_time,rotation,opacity)
 
         self.color = (255,255,255)
-        self.initial_life_time = self.life_time
+        self.shape = shape
 
-    @classmethod
-    def fromImage(cls, path):
-        print("CRIOU PELA IMAGEM")
-        return cls()
+
 
     def Draw(self,destinatonSurface) -> None:
-        formSurface = pygame.Surface((self.width+10,self.height+10),pygame.SRCALPHA)
+        formSurface = pygame.Surface((self.width,self.height),pygame.SRCALPHA)
 
         #SET SHAPE
         if self.shape == Shape.Rect:

@@ -4,11 +4,12 @@
 
 from random import randint, uniform
 
-from Engine.Particle.particle import Particle
+from Engine.Particle.shape_particle import ShapeParticle
+from Engine.Particle.shape_particle import AbcParticle
 from Engine.Vector import Vector2D
 
 class ParticleEmitter(object):
-    def __init__(self,position: Vector2D, amount: int, particle_pattern: Particle,
+    def __init__(self,position: Vector2D, amount: int, particle_pattern: AbcParticle,
                  oneShot: bool = False, velocity_RC: Vector2D = Vector2D(1,1),
                  size_RC: Vector2D = Vector2D(1,1)):
         """It Emmit particles based in a particle_pattern at a determinated position\n
@@ -32,7 +33,6 @@ class ParticleEmitter(object):
         self.velocity_RC = velocity_RC
         self.size_RC = size_RC
         self.initial_update_cicle = self.update_cicle = particle_pattern.life_time/amount
-
         self.particles = []
      
     def update(self,surface,timestep = 1):
@@ -49,13 +49,11 @@ class ParticleEmitter(object):
                 
         i = 0
         while i < len(self.particles):
-
             p = self.particles[i]
             p.life_time -= timestep
-
+         
             p.position.add(p.velocity)
             p.rotation += uniform(1,3)
-
             p.Draw(surface)
 
             if p.life_time <= 0:
@@ -74,10 +72,17 @@ class ParticleEmitter(object):
         """Add one particle to the list based in 
            the particle_pattern passed in cosntructor
         """
+        """
+        pp = self.particle_pattern
+        pp.position = Vector2D(self.position.x,self.position.y)
+        pp.velocity = Vector2D(2,2) #Vector2D(randint(2,10),randint(3,10)/10 - 1),
+        pp.width =23# randint(pp.width - 10, pp.width +10),# randint(11,10),
+        pp.height = 23#randint(pp.height-5, pp.height+5),
+        pp.life_time = pp.life_time
+        """
         pp =  self.particle_pattern
-        p = Particle(
-            x = self.position.x,
-            y = self.position.y,
+        p = ShapeParticle(
+            position = self.position,
             velocity = Vector2D(randint(2,10),randint(3,10)/10 - 1),
             width = randint(pp.width - 10, pp.width +10),# randint(11,10),
             height = randint(pp.height-5, pp.height+5),
@@ -86,6 +91,8 @@ class ParticleEmitter(object):
             rotation = 90
         )
         self.particles.append(p)
+
+        # self.particles.append(pp)
     
     def update_emitter_position(self, newPosition):
         self.position = newPosition
