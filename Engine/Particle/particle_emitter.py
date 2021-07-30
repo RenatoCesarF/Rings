@@ -53,7 +53,7 @@ class ParticleEmitter(object):
             p = self.particles[i]
             p.life_time -= timestep
          
-            p.position.add(p.velocity)
+            p.position.add(Vector2D(p.velocity.x,p.velocity.y))
             p.rotation += uniform(1,3)
             p.Draw(surface)
 
@@ -75,31 +75,32 @@ class ParticleEmitter(object):
         """
         pp = self.particle_pattern
         
-        if type(self.particle_pattern) == ShapeParticle:
-            p = ShapeParticle(
-                position = self.position,
-                velocity = Vector2D(randint(2,10),randint(3,10)/10 - 1),
-                width = randint(pp.width - 10, pp.width +10),# randint(11,10),
-                height = randint(pp.height-5, pp.height+5),
-                life_time = pp.life_time/60,
-                rotation = 90,
-                shape = pp.shape,
-            )
-            self.particles.append(p)
-            return
+        # if type(self.particle_pattern) == ShapeParticle:
+        #     p = ShapeParticle(
+        #         position = self.position,
+        #         velocity = Vector2D(randint(2,10),randint(3,10)/10 - 1),
+        #         width = randint(pp.width - 10, pp.width +10),# randint(11,10),
+        #         height = randint(pp.height-5, pp.height+5),
+        #         life_time = pp.life_time/60,
+        #         rotation = 90,
+        #         shape = pp.shape,
+        #     )
+        #     self.particles.append(p)
+        #     return
         
         p = ImageParticle(
-            "",
+            pp.image,
             position = self.position,
             velocity = Vector2D(randint(2,10),randint(3,10)/10 - 1),
             width = randint(pp.width - 10, pp.width +10),# randint(11,10),
             height = randint(pp.height-5, pp.height+5),
             life_time = pp.life_time/60,
             rotation = 90
-            
         )
+        self.particles.append(p)
+        
     
-    def update_emitter_position(self, newPosition):
+    def update_emitter_position(self, newPosition: Vector2D):
         self.position = newPosition
 
     def stop(self):

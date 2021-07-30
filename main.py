@@ -3,18 +3,31 @@ import pygame
 
 from Engine.Vector import Vector2D
 from Engine import utils
-from Engine.Particle.shape_particle import ShapeParticle
 from Engine.shape import Shape
+from Engine.Particle.shape_particle import ShapeParticle
+from Engine.Particle.image_particle import ImageParticle
 from Engine.Particle.particle_emitter import ParticleEmitter 
 
 def main():
     debugging = True
-    screen = pygame.display.set_mode((SCREEN_WITH, SCREEN_HEIGHT), pygame.RESIZABLE)
-    
-    clock = pygame.time.Clock()
+    mx, my = pygame.mouse.get_pos()
+    true_mx = mx
+    true_my = my
 
-    particle_pattern = ShapeParticle(Vector2D(140,140),Vector2D(2,2), width=11, height=11,
-                                life_time = 2, shape = Shape.Rect)
+
+
+    base_screen_size = [920, 680]
+    screen = pygame.display.set_mode((base_screen_size[0],base_screen_size[1]),0,32)
+    display = pygame.Surface((240, 160))
+    pygame.mouse.set_visible(False)
+
+    clock = pygame.time.Clock()
+    cursor_img = pygame.transform.scale(pygame.image.load('res/mouse.png'), (33, 33))
+    leaft = pygame.image.load('res/leaft.png').convert()
+    leaft.set_colorkey((0, 0, 0))
+
+    particle_pattern = ImageParticle(leaft,Vector2D(140,140),Vector2D(0.05,0.05), width=110, height=110,
+                                     life_time = 4)
 
     pe = ParticleEmitter(Vector2D(10,200), 120, particle_pattern, False,
                          Vector2D(-2,-2))
@@ -44,27 +57,41 @@ def main():
                 pass
 
         #-----Update------
-        pygame.display.update()
+       
+        display.fill((0,0,40))
+        mx, my = pygame.mouse.get_pos()
+        true_mx = mx
+        true_my = my
+        mx -= (screen.get_width() - base_screen_size[0]) // 2
+        my -= (screen.get_height() - base_screen_size[1]) // 2
+        mx /= base_screen_size[0] / display.get_width()
+        my /= base_screen_size[1] / display.get_height()
 
-        screen.fill((0,0,40))
 
-        pe.update(screen)
+        newP = Vector2D(mx, my )
+        pe.update(display)
+        pe.update_emitter_position(newP)
 
         if len(pe.particles) > 0:
-            utils.draw_text(FONT, str(len(pe.particles)), screen, (10,50))
+            utils.draw_text(FONT, str(len(pe.particles)), display, (10,50))
         if debugging:
-            utils.draw_text(FONT, "FPS: " + str(int(clock.get_fps())), screen, (10,10))
+            utils.draw_text(FONT, "FPS: " + str(int(clock.get_fps())), display, (10,10))
 
+        screen.blit(pygame.transform.scale(display, base_screen_size),
+         ((screen.get_width() - base_screen_size[0]) // 2, (screen.get_height() - base_screen_size[1]) // 2))
+
+        screen.blit(cursor_img, (true_mx // 3 * 3 + 1, true_my // 3 * 3 + 1))
+        pygame.display.update()
         clock.tick(60)
 
 
 if __name__ == '__main__':
-    os.environ['SDL_VIDEO_CENTERED'] = '1' # You have to call this before pygame.init()
+    pygame.mixer.pre_init(44100, -16, 2, 512)
+    
     pygame.init()
+    pygame.mixer.set_num_channels(32)
     pygame.display.set_caption("Rings")
 
-    FONT = pygame.font.Font("res/Pixellari.ttf", 24)
-    SCREEN_WITH = 800
-    SCREEN_HEIGHT = 400
+    FONT = pygame.font.Font("res/Pixellari.ttf", 12)
 
     main()

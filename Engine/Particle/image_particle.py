@@ -14,14 +14,13 @@ from Engine.shape import Shape
 from Engine.Particle.abc_particle import AbcParticle
 
 class ImageParticle(AbcParticle):
-    def __init__(self,path: str, position: Vector2D, velocity: Vector2D, width: int = 1, 
+    def __init__(self,image: pygame.image, position: Vector2D, velocity: Vector2D, width: int = 1, 
                  height: int = 1, life_time: int = 1, rotation: float = 0, 
                  opacity: int = 255):
         """Each particle to be created by a particle emitter\n
         Args:
-            `path` (str): The path to the image source
-            `x` (float): The X position 
-            `y` (float): The Y position
+            `image` (pygame.image): The image already loaded
+            `position` (Vector2D): The X and Y position 
             `velocity` (Vector2D): (x,y) velocity of the particle
             `width` (int, optional): The width of the particle's area. Defaults to 1.
             `height` (int, optional): The height of the particle's area. Defaults to 1.
@@ -30,13 +29,13 @@ class ImageParticle(AbcParticle):
             `opacity` (int, optional): Opacity of the particle, it's from 0 to 255 value  . Defaults to 255.
         """
         super().__init__(position,velocity,width,height,life_time,rotation,opacity)
-
-        self.path = path
-
+        scale = 2
+        self.image = image
 
     def Draw(self,destinatonSurface) -> None:
         formSurface = pygame.Surface((self.width,self.height),pygame.SRCALPHA)
 
+        formSurface.blit(self.image,(0,0))
         #SET ROTATION
         formSurface, rect= utils.rotate(formSurface,self.rotation,
                                         self.position.x,self.position.y)
