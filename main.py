@@ -10,10 +10,6 @@ from Engine.Particle.particle_emitter import ParticleEmitter
 
 def main():
     debugging = True
-    mx, my = pygame.mouse.get_pos()
-    true_mx = mx
-    true_my = my
-
 
 
     base_screen_size = [920, 680]
@@ -22,10 +18,12 @@ def main():
     pygame.mouse.set_visible(False)
 
     clock = pygame.time.Clock()
-    cursor_img = pygame.transform.scale(pygame.image.load('res/mouse.png'), (33, 33))
+    cursor_img = pygame.transform.scale(pygame.image.load('res/mouse.png').convert(), (33, 33))
+    cursor_img.set_colorkey((0, 0, 0))
     leaft = pygame.image.load('res/leaft.png').convert()
     leaft.set_colorkey((0, 0, 0))
 
+    #BUG: velocity is not beeing passed as float
     particle_pattern = ImageParticle(leaft,Vector2D(140,140),Vector2D(0.05,0.05), width=110, height=110,
                                      life_time = 4)
 
@@ -62,15 +60,15 @@ def main():
         mx, my = pygame.mouse.get_pos()
         true_mx = mx
         true_my = my
-        mx -= (screen.get_width() - base_screen_size[0]) // 2
-        my -= (screen.get_height() - base_screen_size[1]) // 2
-        mx /= base_screen_size[0] / display.get_width()
-        my /= base_screen_size[1] / display.get_height()
+        # mx -= (screen.get_width() - base_screen_size[0]) // 3
+        # my -= (screen.get_height() - base_screen_size[1]) // 3
+        # mx /= base_screen_size[0] / display.get_width()
+        # my /= base_screen_size[1] / display.get_height()
 
 
-        newP = Vector2D(mx, my )
         pe.update(display)
-        pe.update_emitter_position(newP)
+        print(str(mx)+" -- "+str(my))
+        pe.update_emitter_position(Vector2D(mx+50,  my-30))
 
         if len(pe.particles) > 0:
             utils.draw_text(FONT, str(len(pe.particles)), display, (10,50))
@@ -78,7 +76,8 @@ def main():
             utils.draw_text(FONT, "FPS: " + str(int(clock.get_fps())), display, (10,10))
 
         screen.blit(pygame.transform.scale(display, base_screen_size),
-         ((screen.get_width() - base_screen_size[0]) // 2, (screen.get_height() - base_screen_size[1]) // 2))
+                    ((screen.get_width() - base_screen_size[0]) // 2,
+                    (screen.get_height() - base_screen_size[1]) // 2))
 
         screen.blit(cursor_img, (true_mx // 3 * 3 + 1, true_my // 3 * 3 + 1))
         pygame.display.update()
