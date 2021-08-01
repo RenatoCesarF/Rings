@@ -89,11 +89,10 @@ class ParticleEmitter(object):
         p = ImageParticle(
             pp.image,
             position = self.position,
-            velocity = Vector2D(randint(2,10),randint(3,10)/10 - 1),
+            velocity = Vector2D(uniform(pp.velocity.x,pp.velocity.x+2),uniform(pp.velocity.y,pp.velocity.y+2)),
             width = randint(pp.width - 10, pp.width +10),# randint(11,10),
             height = randint(pp.height-5, pp.height+5),
             life_time = pp.life_time/60,
-            rotation = 90
         )
         self.particles.append(p)
         

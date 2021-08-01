@@ -11,7 +11,6 @@ from Engine.Particle.image_particle import ImageParticle
 from Engine.Particle.particle_emitter import ParticleEmitter 
 
 
-game_time = 0
 
 pygame.mixer.pre_init(44100, -16, 2, 512)
 particles = []
@@ -67,7 +66,7 @@ while running:
             pass
 
     #-----Update------
-    game_time +=1
+    
     display.fill((0,0,40))
     mx, my = pygame.mouse.get_pos()
     true_mx = mx
@@ -92,9 +91,4 @@ while running:
     screen.blit(cursor_img, (true_mx // 3 * 3 + 1, true_my // 3 * 3 + 1))
     pygame.display.update()
    
-    clock.tick(120)
-
-
-if __name__ == '__main__':
-
-    main()
+    clock.tick(60)
