@@ -38,29 +38,27 @@ class ParticleEmitter(object):
      
     def update(self,surface,timestep = 1):
         """Update every single particle of the list and draw each in the surface passed"""
-        if self.isEmitting:
+        if self.isEmitting and not self.is_emitter_full():
             self.update_cicle -= timestep
-            if self.oneShot:
-                self.isEmitting = False
-                self.fill_particle_list()
+            # if self.oneShot:
+            #     self.isEmitting = False
+            #     self.fill_particle_list()
         
             if  self.update_cicle <= 0:
                 self.update_cicle = self.initial_update_cicle
                 self.add_particle()
                 
-        i = 0
-        while i < len(self.particles):
-            p = self.particles[i]
-            p.life_time -= timestep
+       
+        for i, particle in  sorted(enumerate(self.particles), reverse=True):
+            particle.life_time -= timestep
          
-            p.position.add(Vector2D(p.velocity.x,p.velocity.y))
-            p.rotation += uniform(1,3)
-            p.Draw(surface)
+            particle.position.add(particle.velocity)
+            particle.rotation += uniform(1,10)
+            particle.Draw(surface)
 
-            if p.life_time <= 0:
+            if particle.life_time <= 0:
                 self.particles.pop(i)
-            else:
-                i += 1
+           
      
     def fill_particle_list(self): 
         if self.is_emitter_full():

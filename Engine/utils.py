@@ -2,10 +2,6 @@
 
 import pygame
 
-def get_mouse_position():
-    x,y = pygame.mouse.get_pos()
-    pos = (x // 3 * 3 + 1, y // 3 * 3 + 1)
-    return (pos)
 
 def draw_text(font,text,surface, position):
     interface_surface = font.render(text, False, "White")

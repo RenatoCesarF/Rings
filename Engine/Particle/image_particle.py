@@ -37,12 +37,12 @@ class ImageParticle(AbcParticle):
 
         formSurface.blit(self.image,(0,0))
         #SET ROTATION
-        formSurface, rect= utils.rotate(formSurface,self.rotation,
-                                        self.position.x,self.position.y)
+        # formSurface, rect= utils.rotate(formSurface,self.rotation,
+        #                                 self.position.x,self.position.y)
 
         #SET OPACITY
         formSurface.set_alpha(self.opacity)
 
         #ADDING TO SCREEN
-        destinatonSurface.blit(formSurface, rect)
+        destinatonSurface.blit(formSurface, (self.position.x,self.position.y))
 
