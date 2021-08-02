@@ -1,11 +1,6 @@
-#TODO: implement image as particle
-
 from typing import Tuple
 from abc import ABC
-import abc
-
 import random
-
 import pygame
 
 from Engine import utils

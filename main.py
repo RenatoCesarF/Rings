@@ -1,5 +1,6 @@
 import os
 import pygame
+import json
 import math
 import random
 
@@ -10,23 +11,25 @@ from Engine.Particle.shape_particle import ShapeParticle
 from Engine.Particle.image_particle import ImageParticle
 from Engine.Particle.particle_emitter import ParticleEmitter 
 
-
-
-pygame.mixer.pre_init(44100, -16, 2, 512)
+  
+configs = json.load(open('config.json'))
+  
 pygame.init()
+pygame.mixer.pre_init(44100, -16, 2, 512)
 pygame.mixer.set_num_channels(32)
 pygame.display.set_caption("Rings")
+pygame.mouse.set_visible(False)
 
 FONT = pygame.font.Font("res/Pixellari.ttf", 12)
 
+global debugging
 debugging = True
 game_time = 0
-base_screen_size = [920, 680]
+base_screen_size = configs['resolution']
 screen = pygame.display.set_mode((base_screen_size[0],base_screen_size[1]),0,32)
 display = pygame.Surface((300, 200))
-pygame.mouse.set_visible(False)
-
 clock = pygame.time.Clock()
+
 cursor_img = pygame.transform.scale(pygame.image.load('res/mouse.png').convert(), (33, 33))
 cursor_img.set_colorkey((0, 0, 0))
 
@@ -34,8 +37,7 @@ leaft = pygame.image.load('res/leaft.png').convert()
 leaft.set_colorkey((0, 0, 0))
 
 particle_pattern = ImageParticle(leaft,Vector2D(140,140),Vector2D(0.05,0.05), width=110, height=110, life_time = 10)
-
-pe = ParticleEmitter(Vector2D(10,200), 120, particle_pattern, oneShot = False)
+pe = ParticleEmitter(Vector2D(10,200), 12, particle_pattern)
 
 running = True
 while running:
@@ -79,6 +81,7 @@ while running:
         utils.draw_text(FONT, str(len(pe.particles)), display, (10,50))
     if debugging:
         utils.draw_text(FONT, "FPS: " + str(int(clock.get_fps())), display, (10,10))
+
 
     screen.blit(pygame.transform.scale(display, base_screen_size),
                 ((screen.get_width() - base_screen_size[0]) // 2,

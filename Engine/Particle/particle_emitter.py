@@ -1,7 +1,8 @@
-#TODO: implement shape emission
+
 #TODO: implement oneshot logic
 #TODO: improve random velocity with noise
 
+import pygame
 from random import randint, uniform
 from typing import Tuple
 
@@ -12,8 +13,8 @@ from Engine.Vector import Vector2D
 
 class ParticleEmitter(object):
     def __init__(self,position: Vector2D, amount: int, particle_pattern: AbcParticle,
-                 oneShot: bool = False, velocity_RC: Vector2D = Vector2D(1,1),
-                 size_RC: Vector2D = Vector2D(1,1)):
+                 oneShot: bool = False, emittion_height: float = 0, emittion_width: float = 0, 
+                 velocity_RC:Tuple = [], size_RC: Tuple = []):
         """It Emmit particles based in a particle_pattern at a determinated position\n
         Args:
             `position` (Vector2D): Initial Position of emittion
@@ -22,10 +23,16 @@ class ParticleEmitter(object):
             gonna be emitted
             `oneShot` (bool, optional): If it's one shot or not. If yes the 
             emittion start and stop immediately. Defaults to False.
+            `emittion_height` (float, optional): the height of the emittion,
+            `emittion_width` (float, optional): the width of the emittion,
             `velocity_RC` (Vector2D, optional): The Random Coeficient of velocity
             applied to the particle each emmition. Defaults to Vector2D(1,1).
             `size_RC` (Vector2D, optional): The Random Coeficient of sized applied 
             to the particle each emmition. Defaults to Vector2D(1,1).
+        
+        - The emittion_height and emittion_width change the size of the emittion shape.
+        the increasing of those values will add to the position, not from the middle but from 
+        the top-left corner
         """
         self.oneShot = oneShot
         self.isEmitting = True
@@ -36,6 +43,8 @@ class ParticleEmitter(object):
         self.size_RC = size_RC
         self.initial_update_cicle = self.update_cicle = particle_pattern.life_time/amount
         self.particles = []
+        self.emittion_height = emittion_height
+        self.emittion_width = emittion_width
      
     def update(self,surface,timestep = 1):
         """Update every single particle of the list and draw each in the surface passed"""
@@ -96,10 +105,13 @@ class ParticleEmitter(object):
         self.particles.append(p)
         
     def get_random_position_in_array(self) -> Vector2D:
-        if type(self.position) != Tuple:
+        if self.emittion_width == 0 and self.emittion_height ==0:
             return self.position
-        return self.position
-
+        
+        randomY = uniform(self.position.y, self.position.y + self.emittion_height)
+        randomX = uniform(self.position.x, self.position.x + self.emittion_width)
+        return Vector2D(randomX,randomY)
+        
     def update_emitter_position(self, newPosition: Vector2D):
         self.position = newPosition
 
