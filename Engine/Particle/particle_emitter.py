@@ -1,8 +1,9 @@
 #TODO: implement shape emission
 #TODO: implement oneshot logic
-#TODO: improve emission logic
+#TODO: improve random velocity with noise
 
 from random import randint, uniform
+from typing import Tuple
 
 from Engine.Particle.shape_particle import ShapeParticle
 from Engine.Particle.abc_particle import AbcParticle
@@ -42,14 +43,13 @@ class ParticleEmitter(object):
             self.update_cicle -= timestep
             # if self.oneShot:
             #     self.isEmitting = False
-            #     self.fill_particle_list()
+            # m    self.fill_particle_list()
         
             if  self.update_cicle <= 0:
                 self.update_cicle = self.initial_update_cicle
                 self.add_particle()
                 
-       
-        for i, particle in  sorted(enumerate(self.particles), reverse=True):
+        for i, particle in sorted(enumerate(self.particles), reverse=True):
             particle.life_time -= timestep
          
             particle.position.add(particle.velocity)
@@ -57,8 +57,7 @@ class ParticleEmitter(object):
             particle.Draw(surface)
 
             if particle.life_time <= 0:
-                self.particles.pop(i)
-           
+                self.particles.pop(i)        
      
     def fill_particle_list(self): 
         if self.is_emitter_full():
@@ -73,22 +72,22 @@ class ParticleEmitter(object):
         """
         pp = self.particle_pattern
         
-        # if type(self.particle_pattern) == ShapeParticle:
-        #     p = ShapeParticle(
-        #         position = self.position,
-        #         velocity = Vector2D(randint(2,10),randint(3,10)/10 - 1),
-        #         width = randint(pp.width - 10, pp.width +10),# randint(11,10),
-        #         height = randint(pp.height-5, pp.height+5),
-        #         life_time = pp.life_time/60,
-        #         rotation = 90,
-        #         shape = pp.shape,
-        #     )
-        #     self.particles.append(p)
-        #     return
+        if type(self.particle_pattern) == ShapeParticle:
+            p = ShapeParticle(
+                position = self.position,
+                velocity = Vector2D(randint(2,10),randint(3,10)/10 - 1),
+                width = randint(pp.width - 10, pp.width +10),# randint(11,10),
+                height = randint(pp.height-5, pp.height+5),
+                life_time = pp.life_time/60,
+                rotation = 90,
+                shape = pp.shape,
+            )
+            self.particles.append(p)
+            return
         
         p = ImageParticle(
             pp.image,
-            position = self.position,
+            position = self.get_random_position_in_array(),
             velocity = Vector2D(uniform(pp.velocity.x,pp.velocity.x+2),uniform(pp.velocity.y,pp.velocity.y+2)),
             width = randint(pp.width - 10, pp.width +10),# randint(11,10),
             height = randint(pp.height-5, pp.height+5),
@@ -96,7 +95,11 @@ class ParticleEmitter(object):
         )
         self.particles.append(p)
         
-    
+    def get_random_position_in_array(self) -> Vector2D:
+        if type(self.position) != Tuple:
+            return self.position
+        return self.position
+
     def update_emitter_position(self, newPosition: Vector2D):
         self.position = newPosition
 

@@ -13,7 +13,6 @@ from Engine.Particle.particle_emitter import ParticleEmitter
 
 
 pygame.mixer.pre_init(44100, -16, 2, 512)
-particles = []
 pygame.init()
 pygame.mixer.set_num_channels(32)
 pygame.display.set_caption("Rings")
@@ -34,12 +33,9 @@ cursor_img.set_colorkey((0, 0, 0))
 leaft = pygame.image.load('res/leaft.png').convert()
 leaft.set_colorkey((0, 0, 0))
 
-#BUG: velocity is not beeing passed as float
-particle_pattern = ImageParticle(leaft,Vector2D(140,140),Vector2D(0.05,0.05), width=110, height=110,
-                                    life_time = 4)
+particle_pattern = ImageParticle(leaft,Vector2D(140,140),Vector2D(0.05,0.05), width=110, height=110, life_time = 10)
 
-pe = ParticleEmitter(Vector2D(10,200), 120, particle_pattern, False,
-                        Vector2D(-2,-2))
+pe = ParticleEmitter(Vector2D(10,200), 120, particle_pattern, oneShot = False)
 
 running = True
 while running:
@@ -57,7 +53,7 @@ while running:
             if event.key == pygame.K_SPACE:
                 pe.add_particle()
             if event.key == pygame.K_0:
-                pe.amount +=10
+                pe.stop()
                 
             if event.key == pygame.K_1:
                 pe.start()

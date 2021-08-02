@@ -15,7 +15,7 @@ from Engine.Particle.abc_particle import AbcParticle
 
 class ShapeParticle(AbcParticle):
     def __init__(self,position: Vector2D, velocity: Vector2D, width: int = 1, 
-                 height: int = 1, life_time: int = 1,
+                 height: int = 1, life_time: float = 1,
                  opacity: int = 255, rotation: float = 0, shape: Shape = Shape.Rect):
         """Each particle to be created by a particle emitter\n
         Args:
@@ -24,7 +24,7 @@ class ShapeParticle(AbcParticle):
             `velocity` (Vector2D): (x,y) velocity of the particle
             `width` (int, optional): The width of the particle's area. Defaults to 1.
             `height` (int, optional): The height of the particle's area. Defaults to 1.
-            `life_time` (int, optional): Seconds of existence of this particle. Defaults to 1.
+            `life_time` (float, optional): Seconds of existence of this particle. Defaults to 1.
             `opacity` (int, optional): Opacity of the particle, it's from 0 to 255 value  . Defaults to 255.
             `rotation` (int, optional): rotation degrees of this particle. Defaults to 0.
             `shape` (Shape, optional): The shape of the particle. Defaults to Shape.Rect.

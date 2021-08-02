@@ -4,7 +4,7 @@ from Engine.Vector import Vector2D
 
 class AbcParticle(abc.ABC):
     def __init__(self,position: Vector2D, velocity: Vector2D, width: int = 1, 
-                 height: int = 1, life_time: int = 1, 
+                 height: int = 1, life_time: float = 1, 
                  opacity: int = 255, rotation: float = 0,):
         self.position = Vector2D(position.x,position.y)
         self.velocity = Vector2D(velocity.x,velocity.y)

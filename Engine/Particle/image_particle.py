@@ -14,7 +14,7 @@ from Engine.Particle.abc_particle import AbcParticle
 
 class ImageParticle(AbcParticle):
     def __init__(self,image: pygame.image, position: Vector2D, velocity: Vector2D, width: int = 1, 
-                 height: int = 1, life_time: int = 1, opacity: int = 255):
+                 height: int = 1, life_time: float = 1, opacity: int = 255):
         """Each particle to be created by a particle emitter\n
         Args:
             `image` (pygame.image): The image already loaded
@@ -22,7 +22,7 @@ class ImageParticle(AbcParticle):
             `velocity` (Vector2D): (x,y) velocity of the particle
             `width` (int, optional): The width of the particle's area. Defaults to 1.
             `height` (int, optional): The height of the particle's area. Defaults to 1.
-            `life_time` (int, optional): Seconds of existence of this particle. Defaults to 1.
+            `life_time` (float, optional): Seconds of existence of this particle. Defaults to 1.
             `opacity` (int, optional): Opacity of the particle, it's from 0 to 255 value  . Defaults to 255.
         """
         super().__init__(position,velocity,width,height,life_time,opacity)
