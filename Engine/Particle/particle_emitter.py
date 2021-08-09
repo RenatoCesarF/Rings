@@ -10,6 +10,7 @@ from Engine.Particle.shape_particle import ShapeParticle
 from Engine.Particle.abc_particle import AbcParticle
 from Engine.Particle.image_particle import ImageParticle
 from Engine.Vector import Vector2D
+from Engine.Glow import Glow
 
 class ParticleEmitter(object):
     def __init__(self,position: Vector2D, amount: int, particle_pattern: AbcParticle,
@@ -63,7 +64,7 @@ class ParticleEmitter(object):
          
             particle.position.add(particle.velocity)
             particle.rotation += uniform(1,10)
-            particle.Draw(surface)
+            particle.Draw(surface,Glow(width = 40, height = 40, radius = 100,color = (20,20,60,110)))
 
             if particle.life_time <= 0:
                 self.particles.pop(i)        
@@ -84,11 +85,10 @@ class ParticleEmitter(object):
         if type(self.particle_pattern) == ShapeParticle:
             p = ShapeParticle(
                 position = self.position,
-                velocity = Vector2D(randint(2,10),randint(3,10)/10 - 1),
-                width = randint(pp.width - 10, pp.width +10),# randint(11,10),
-                height = randint(pp.height-5, pp.height+5),
+                velocity = Vector2D(pp.velocity.x,pp.velocity.y),
+                width = randint(pp.width - 2, pp.width + 2),# randint(11,10),
+                height = randint(pp.height-2, pp.height+2),
                 life_time = pp.life_time/60,
-                rotation = 90,
                 shape = pp.shape,
             )
             self.particles.append(p)
@@ -97,8 +97,8 @@ class ParticleEmitter(object):
         p = ImageParticle(
             pp.image,
             position = self.get_random_position_in_array(),
-            velocity = Vector2D(uniform(pp.velocity.x,pp.velocity.x+2),uniform(pp.velocity.y,pp.velocity.y+2)),
-            width = randint(pp.width - 10, pp.width +10),# randint(11,10),
+            velocity = Vector2D(pp.velocity.x,pp.velocity.y),
+            width = randint(pp.width - 5, pp.width +5),# randint(11,10),
             height = randint(pp.height-5, pp.height+5),
             life_time = pp.life_time/60,
         )

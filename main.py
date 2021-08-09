@@ -36,8 +36,9 @@ cursor_img.set_colorkey((0, 0, 0))
 leaft = pygame.image.load('res/leaft.png').convert()
 leaft.set_colorkey((0, 0, 0))
 
-particle_pattern = ImageParticle(leaft,Vector2D(140,140),Vector2D(0.05,0.05), width=110, height=110, life_time = 10)
-pe = ParticleEmitter(Vector2D(10,200), 12, particle_pattern)
+particle_pattern = ShapeParticle(Vector2D(140,140),Vector2D(0.005,0.005), width=5,
+                                 height=15, life_time = 15,color = (255,255,255))
+pe = ParticleEmitter(Vector2D(10,200), 102, particle_pattern)
 
 running = True
 while running:
@@ -66,6 +67,16 @@ while running:
     #-----Update------
     
     display.fill((0,0,40))
+
+
+    pygame.draw.rect(display,(200,0,10), 
+                    pygame.Rect(100,0, 50,500),)
+    pygame.draw.rect(display,(0,200,10), 
+                    pygame.Rect(150,0, 50,500),)
+    pygame.draw.rect(display,(0,20,200), 
+                    pygame.Rect(200,0, 50,500),)
+
+
     mx, my = pygame.mouse.get_pos()
     true_mx = mx
     true_my = my
