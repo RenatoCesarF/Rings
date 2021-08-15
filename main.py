@@ -30,15 +30,12 @@ screen = pygame.display.set_mode((base_screen_size[0],base_screen_size[1]),0,32)
 display = pygame.Surface((300, 200))
 clock = pygame.time.Clock()
 
+
 cursor_img = pygame.transform.scale(pygame.image.load('res/mouse.png').convert(), (33, 33))
 cursor_img.set_colorkey((0, 0, 0))
 
-leaft = pygame.image.load('res/leaft.png').convert()
-leaft.set_colorkey((0, 0, 0))
+entities = []
 
-particle_pattern = ShapeParticle(Vector2D(140,140),Vector2D(0.005,0.005), width=5,
-                                 height=15, life_time = 15,color = (255,255,255))
-pe = ParticleEmitter(Vector2D(10,200), 102, particle_pattern)
 
 running = True
 while running:
@@ -54,28 +51,8 @@ while running:
             if event.key == pygame.K_F1 :
                 debugging = not debugging
             if event.key == pygame.K_SPACE:
-                pe.add_particle()
-            if event.key == pygame.K_0:
-                pe.stop()
-                
-            if event.key == pygame.K_1:
-                pe.start()
-
-        if event.type == pygame.KEYUP:
-            pass
-
-    #-----Update------
+                pass
     
-    display.fill((0,0,40))
-
-
-    pygame.draw.rect(display,(200,0,10), 
-                    pygame.Rect(100,0, 50,500),)
-    pygame.draw.rect(display,(0,200,10), 
-                    pygame.Rect(150,0, 50,500),)
-    pygame.draw.rect(display,(0,20,200), 
-                    pygame.Rect(200,0, 50,500),)
-
 
     mx, my = pygame.mouse.get_pos()
     true_mx = mx
@@ -85,14 +62,10 @@ while running:
     mx /= base_screen_size[0] / display.get_width()
     my /= base_screen_size[1] / display.get_height()
 
-    pe.update(display)
-    pe.update_emitter_position(Vector2D(mx,  my))
+    display.fill((0,0,40))
 
-    if len(pe.particles) > 0:
-        utils.draw_text(FONT, str(len(pe.particles)), display, (10,50))
     if debugging:
         utils.draw_text(FONT, "FPS: " + str(int(clock.get_fps())), display, (10,10))
-
 
     screen.blit(pygame.transform.scale(display, base_screen_size),
                 ((screen.get_width() - base_screen_size[0]) // 2,
