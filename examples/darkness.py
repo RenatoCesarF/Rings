@@ -1,16 +1,10 @@
+"""
+A way to mannage darkness and light inside pygame, probably one of the best ones
+"""
+
 import os
 import pygame
 import json
-import math
-import random
-
-from Engine.Vector import Vector2D
-from Engine import utils
-from Engine.shape import Shape
-from Engine.Particle.shape_particle import ShapeParticle
-from Engine.Particle.image_particle import ImageParticle
-from Engine.Particle.particle_emitter import ParticleEmitter 
-
   
 configs = json.load(open('config.json'))
   
@@ -32,11 +26,10 @@ clock = pygame.time.Clock()
 
 
 cursor_img = pygame.transform.scale(pygame.image.load('res/mouse.png').convert(), (33, 33))
-
+light = pygame.image.load('res/sprites/light.png')
 cursor_img.set_colorkey((0, 0, 0))
 
 entities = []
-
 
 running = True
 while running:
@@ -55,26 +48,22 @@ while running:
                 pass
     
 
-    mx, my = pygame.mouse.get_pos()
-    true_mx = mx
-    true_my = my
-    mx -= (screen.get_width() - base_screen_size[0]) // 3
-    my -= (screen.get_height() - base_screen_size[1]) // 3
-    mx /= base_screen_size[0] / display.get_width()
-    my /= base_screen_size[1] / display.get_height()
-
     display.fill((0,0,40))
 
-    if debugging:
-        utils.draw_text(FONT, "FPS: " + str(int(clock.get_fps())), display, (10,10))
-  
+
+    pygame.draw.rect(display, (255,10,10), 
+                     pygame.Rect(10, 10, 50,50),border_radius = 0)
+
+ 
+    darkness = pygame.surface.Surface((300,200))
+    darkness.fill(pygame.color.Color('Grey'))
+    darkness.blit(light,(0,0))
+    display.blit(darkness, (0, 0), special_flags=pygame.BLEND_RGBA_SUB)
+        
 
     screen.blit(pygame.transform.scale(display, base_screen_size),
                 ((screen.get_width() - base_screen_size[0]) // 2,
                 (screen.get_height() - base_screen_size[1]) // 2))
-
-    screen.blit(cursor_img, (true_mx // 3 * 3 + 1, true_my // 3 * 3 + 1))
-
 
     pygame.display.update()
    
