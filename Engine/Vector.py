@@ -2,7 +2,7 @@
 from typing import Tuple
 
 
-class Vector2D():
+class Vector():
     def __init__(self, x: float = 0, y: float = 0) -> None:
         self.x = x
         self.y = y
@@ -12,5 +12,5 @@ class Vector2D():
         self.y += vector.y
         return self
 
-    def to_tuple(self) -> Tuple:
-        return (self.position.x, self.position.y)
+    def get(self) -> Tuple:
+        return (self.x, self.y)

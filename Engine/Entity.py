@@ -1,8 +1,8 @@
 import pygame
-from Engine.Vector import Vector2D
+from Engine.Vector import Vector
 
 class Entity(object):
-    def __init__(self, image_path: str,position: pygame.Vector2D, height: float, width: float) -> None:
+    def __init__(self, image_path: str,position: pygame.Vector, height: float, width: float) -> None:
         super().__init__()
         self.image = pygame.image.load(image_path).convert()
         self.position = position

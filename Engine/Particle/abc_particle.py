@@ -1,13 +1,13 @@
 import abc
 
-from Engine.Vector import Vector2D
+from Engine.Vector import Vector
 
 class AbcParticle(abc.ABC):
-    def __init__(self,position: Vector2D, velocity: Vector2D, width: int = 1, 
+    def __init__(self,position: Vector, velocity: Vector, width: int = 1, 
                  height: int = 1, life_time: float = 1, 
                  opacity: int = 255, rotation: float = 0,):
-        self.position = Vector2D(position.x,position.y)
-        self.velocity = Vector2D(velocity.x,velocity.y)
+        self.position = Vector(position.x,position.y)
+        self.velocity = Vector(velocity.x,velocity.y)
         self.width = int(width)
         self.height = int(height)
         self.rotation = rotation % 360
@@ -15,17 +15,18 @@ class AbcParticle(abc.ABC):
         self.opacity = opacity
         self.initial_life_time = self.life_time
 
-    
     def describe(self):
-        print("""
-            position X: {}
-            position Y: {}
-            velocity X: {}
-            velocity Y: {}
-            width: {}
-            height: {}
-            rotation: {}
-            life_time: {}
-            opacity: {}
-        """.format(self.position.x, self.position.y, self.velocity.x, self.velocity.y, 
-                    self.width, self.height, self.rotation, self.life_time, self.opacity))
+        description = "A"
+
+    def __str__(self):
+        return f"""
+        position X: {self.position.x}
+        position Y: {self.position.y}
+        velocity X: {self.velocity.x}
+        velocity Y: {self.velocity.y}
+        width: {self.width}
+        height: {self.height}
+        rotation: {self.rotation}
+        life_time: {self.life_time}
+        opacity: {self.opacity}
+        """

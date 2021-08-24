@@ -5,7 +5,7 @@ import math
 from random import randint
 
 
-from Engine.Vector import Vector2D
+from Engine.Vector import Vector
 from Engine.Glow import Glow
 from Engine import utils
 from Engine.shape import Shape
@@ -66,7 +66,7 @@ while running:
     
     particleEmitionTime -=1
     if particleEmitionTime < 0:
-        particles.append(ShapeParticle(Vector2D(position,position), Vector2D(2,2), life_time = 100, color = (255,255,255),opacity = 215,width= 2, height = 2))
+        particles.append(ShapeParticle(Vector(position,position), Vector(2,2), life_time = 100, color = (255,255,255),opacity = 215,width= 2, height = 2))
         particleEmitionTime = 50
 
     

@@ -4,7 +4,7 @@ import json
 import math
 import random
 
-from Engine.Vector import Vector2D
+from Engine.Vector import Vector
 from Engine import utils
 from Engine.shape import Shape
 from Engine.Particle.shape_particle import ShapeParticle
@@ -21,7 +21,7 @@ pygame.mixer.set_num_channels(32)
 pygame.display.set_caption("Rings")
 pygame.mouse.set_visible(False)
 
-FONT = pygame.font.Font("res/Pixellari.ttf", 12)
+FONT = pygame.font.Font("res/Pixellari.ttf", 22)
 
 global debugging
 debugging = True
@@ -33,9 +33,7 @@ clock = pygame.time.Clock()
 
 
 cursor_img = pygame.transform.scale(pygame.image.load('res/mouse.png').convert(), (33, 33))
-
 cursor_img.set_colorkey((0, 0, 0))
-
 
 spritesheet = Spritesheet("res/sprites/base.png")
 animation = Animation(12,speed=0.5)
@@ -67,18 +65,19 @@ while running:
     my /= base_screen_size[1] / display.get_height()
 
     display.fill((0,20,80))
-        
-    if debugging:
-        utils.draw_text(FONT, "FPS: " + str(int(clock.get_fps())), display, (10,10))
+
   
+    display.blit(animation.get_next_frame(),(150,50))
+    
   
-    display.blit(animation.get_next_frame(),(50,80))
 
     screen.blit(pygame.transform.scale(display, base_screen_size),
                 ((screen.get_width() - base_screen_size[0]) // 2,
                 (screen.get_height() - base_screen_size[1]) // 2))
 
     screen.blit(cursor_img, (true_mx // 3 * 3 + 1, true_my // 3 * 3 + 1))
+    if debugging:
+        utils.draw_text(FONT, "FPS: " + str(int(clock.get_fps())), screen, (10,10))
 
 
     pygame.display.update()

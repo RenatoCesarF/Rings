@@ -4,19 +4,19 @@ import random
 import pygame
 
 from Engine import utils
-from Engine.Vector import Vector2D
+from Engine.Vector import Vector
 from Engine.shape import Shape
 from Engine.Particle.abc_particle import AbcParticle
 from Engine.Glow import Glow
 
 class ShapeParticle(AbcParticle):
-    def __init__(self,position: Vector2D, velocity: Vector2D, width: int = 1, 
+    def __init__(self,position: Vector, velocity: Vector, width: int = 1, 
                  height: int = 1, life_time: float = 1, color: Tuple = (255,255,255),
                  opacity: int = 255, rotation: float = 0, shape: Shape = Shape.Rect):
         """Each particle to be created by a particle emitter\n
         Args:
-            `position` (Vector2D): Position.
-            `velocity` (Vector2D): (x,y) velocity of the particle
+            `position` (Vector): Position.
+            `velocity` (Vector): (x,y) velocity of the particle
             `width` (int, optional): The width of the particle's area. Defaults to 1.
             `height` (int, optional): The height of the particle's area. Defaults to 1.
             `life_time` (float, optional): Seconds of existence of this particle. Defaults to 1.
@@ -70,3 +70,12 @@ class ShapeParticle(AbcParticle):
 
     def random_color(self) -> Tuple:
         return (random.randint(20,255),random.randint(20,255),random.randint(20,255))
+
+
+    def __str__(self):
+        desc = super().__str__()
+        desc += f"""
+            color: {self.color}
+            shape: {self.shape}
+        """
+        return desc

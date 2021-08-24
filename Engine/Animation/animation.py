@@ -11,7 +11,6 @@ class Animation:
 
     def load_from_spritesheet(self, sprite_sheet: Spritesheet, sprite_width: float,
                           sprite_height: float, line_height: float, debugging: bool = False) -> None:
-        # print(debugging)
         for i in range(self.frames_amount):
             self.frames.append(sprite_sheet.get_sprite(sprite_width*(i), line_height, 
                                sprite_width, sprite_height, debugging = debugging))
@@ -21,6 +20,7 @@ class Animation:
             self.current_frame = 0
         current = self.current_frame
         self.time -= self.speed
+
         if self.time <= 0:
             self.time = self.initial_animation_time
             

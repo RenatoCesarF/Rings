@@ -9,16 +9,16 @@ from typing import Tuple
 from Engine.Particle.shape_particle import ShapeParticle
 from Engine.Particle.abc_particle import AbcParticle
 from Engine.Particle.image_particle import ImageParticle
-from Engine.Vector import Vector2D
+from Engine.Vector import Vector
 from Engine.Glow import Glow
 
 class ParticleEmitter(object):
-    def __init__(self,position: Vector2D, amount: int, particle_pattern: AbcParticle,
+    def __init__(self,position: Vector, amount: int, particle_pattern: AbcParticle,
                  oneShot: bool = False, emittion_height: float = 0, emittion_width: float = 0, 
                  velocity_RC:Tuple = [], size_RC: Tuple = []):
         """It Emmit particles based in a particle_pattern at a determinated position\n
         Args:
-            `position` (Vector2D): Initial Position of emittion
+            `position` (Vector): Initial Position of emittion
             `amount` (int): Amount of particles that gonna be generated
             `particle_pattern` (Particle): A base particle used as pattern that 
             gonna be emitted
@@ -26,10 +26,10 @@ class ParticleEmitter(object):
             emittion start and stop immediately. Defaults to False.
             `emittion_height` (float, optional): the height of the emittion,
             `emittion_width` (float, optional): the width of the emittion,
-            `velocity_RC` (Vector2D, optional): The Random Coeficient of velocity
-            applied to the particle each emmition. Defaults to Vector2D(1,1).
-            `size_RC` (Vector2D, optional): The Random Coeficient of sized applied 
-            to the particle each emmition. Defaults to Vector2D(1,1).
+            `velocity_RC` (Vector, optional): The Random Coeficient of velocity
+            applied to the particle each emmition. Defaults to Vector(1,1).
+            `size_RC` (Vector, optional): The Random Coeficient of sized applied 
+            to the particle each emmition. Defaults to Vector(1,1).
         
         - The emittion_height and emittion_width change the size of the emittion shape.
         the increasing of those values will add to the position, not from the middle but from 
@@ -85,7 +85,7 @@ class ParticleEmitter(object):
         if type(self.particle_pattern) == ShapeParticle:
             p = ShapeParticle(
                 position = self.position,
-                velocity = Vector2D(pp.velocity.x,pp.velocity.y),
+                velocity = Vector(pp.velocity.x,pp.velocity.y),
                 width = randint(pp.width - 2, pp.width + 2),# randint(11,10),
                 height = randint(pp.height-2, pp.height+2),
                 life_time = pp.life_time/60,
@@ -97,22 +97,22 @@ class ParticleEmitter(object):
         p = ImageParticle(
             pp.image,
             position = self.get_random_position_in_array(),
-            velocity = Vector2D(pp.velocity.x,pp.velocity.y),
+            velocity = Vector(pp.velocity.x,pp.velocity.y),
             width = randint(pp.width - 5, pp.width +5),# randint(11,10),
             height = randint(pp.height-5, pp.height+5),
             life_time = pp.life_time/60,
         )
         self.particles.append(p)
         
-    def get_random_position_in_array(self) -> Vector2D:
+    def get_random_position_in_array(self) -> Vector:
         if self.emittion_width == 0 and self.emittion_height ==0:
             return self.position
         
         randomY = uniform(self.position.y, self.position.y + self.emittion_height)
         randomX = uniform(self.position.x, self.position.x + self.emittion_width)
-        return Vector2D(randomX,randomY)
+        return Vector(randomX,randomY)
         
-    def update_emitter_position(self, newPosition: Vector2D):
+    def update_emitter_position(self, newPosition: Vector):
         self.position = newPosition
 
     def stop(self):
