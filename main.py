@@ -11,7 +11,7 @@ from Engine.Particle.shape_particle import ShapeParticle
 from Engine.Particle.image_particle import ImageParticle
 from Engine.Particle.particle_emitter import ParticleEmitter 
 from Engine.Animation.SpriteSheet import Spritesheet
-from Engine.Animation.animation import Animation
+from Engine.Animation.Animation import Animation
   
 configs = json.load(open('config.json'))
   

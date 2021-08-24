@@ -19,3 +19,11 @@ class Glow():
         
         surf.set_colorkey((0,0,0))
         return surf
+    
+    def __str__(self):
+        return f"""
+            radius: {self.radius}
+            color: {self.color}
+            width: {self.width}
+            height: {self.height}
+        """

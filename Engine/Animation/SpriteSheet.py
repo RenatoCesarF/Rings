@@ -18,3 +18,11 @@ class Spritesheet:
             pygame.draw.rect(sprite, (200,0,0), pygame.Rect(0,0, width, height), width = 1)
 
         return sprite
+    
+    def __str__(self):
+        return f"""
+            directory: {self.file_directory}
+            height: {self.height}
+            width: {self.width}
+            scale: {self.scale}
+        """

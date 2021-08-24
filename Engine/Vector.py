@@ -14,3 +14,7 @@ class Vector():
 
     def get(self) -> Tuple:
         return (self.x, self.y)
+
+
+    def __str__(self):
+        return f"X: {self.x}\n Y: {self.y}"

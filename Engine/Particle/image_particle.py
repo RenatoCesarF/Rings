@@ -46,6 +46,6 @@ class ImageParticle(AbcParticle):
         desc = super().__str__()
         desc += f"""
             scale: {self.scale}
-            image_directory: {self.image_directory}
+            image: {self.image}
         """
         return desc

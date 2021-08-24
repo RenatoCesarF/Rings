@@ -18,6 +18,7 @@ class Animation:
     def get_next_frame(self) -> pygame.Surface:
         if self.current_frame >= self.frames_amount:
             self.current_frame = 0
+
         current = self.current_frame
         self.time -= self.speed
 
@@ -27,3 +28,13 @@ class Animation:
             self.current_frame +=1
 
         return self.frames[current]
+        
+    def __str__(self) -> str:
+        return f"""
+            frames lenght: {len(self.frames)}
+            frame amount: {self.frames_amount}
+            speed: {self.speed}
+            current frame: {self.current_frame}
+            time: {self.time}
+            initial animation time: {self.initial_animation_time}
+        """
