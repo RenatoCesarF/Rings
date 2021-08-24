@@ -10,9 +10,11 @@ class Animation:
         self.initial_animation_time = time
 
     def load_from_spritesheet(self, sprite_sheet: Spritesheet, sprite_width: float,
-                          sprite_height: float, line_height: float) -> None:
+                          sprite_height: float, line_height: float, debugging: bool = False) -> None:
+        # print(debugging)
         for i in range(self.frames_amount):
-            self.frames.append(sprite_sheet.get_sprite(sprite_width*(i), line_height, sprite_width, sprite_height))
+            self.frames.append(sprite_sheet.get_sprite(sprite_width*(i), line_height, 
+                               sprite_width, sprite_height, debugging = debugging))
 
     def get_next_frame(self) -> pygame.Surface:
         if self.current_frame >= self.frames_amount:

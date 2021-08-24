@@ -39,7 +39,7 @@ cursor_img.set_colorkey((0, 0, 0))
 
 spritesheet = Spritesheet("res/sprites/base.png")
 animation = Animation(12,speed=0.5)
-animation.load_from_spritesheet(spritesheet,24,27,38)
+animation.load_from_spritesheet(spritesheet, 24, 27, 38)
 
 running = True
 while running:
@@ -65,13 +65,9 @@ while running:
     my -= (screen.get_height() - base_screen_size[1]) // 3
     mx /= base_screen_size[0] / display.get_width()
     my /= base_screen_size[1] / display.get_height()
-    # print(len(sprites))z
 
-    display.fill((0,0,40))
-   
+    display.fill((0,20,80))
         
-
-
     if debugging:
         utils.draw_text(FONT, "FPS: " + str(int(clock.get_fps())), display, (10,10))
   
