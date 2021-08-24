@@ -19,15 +19,15 @@ clock = pygame.time.Clock()
 particleEmitionTime = 0
 
 class Orbit:
-    def __init__(self,position: Tuple,radius: int,speed: float,angle: int,) -> None:
+    def __init__(self,position: Tuple,size: int,speed: float,angle: int,) -> None:
         self.position = position
         self.center_position = position
-        self.radius = radius
+        self.size = size
         self.speed = speed
         self.angle = angle
-        self.gravitation_radius = 140
+        self.gravitation_size = 140
 
-planet = Orbit([450,276], radius = 20, speed = 0.5, angle = 180)
+planet = Orbit([450,276], size = 20, speed = 0.5, angle = 380)
 
 running = True
 while running:
@@ -40,11 +40,11 @@ while running:
 
     planet.position = [planet.center_position[0],planet.center_position[1]]
 
-    planet.position[0] += math.floor(math.sin(planet.angle * 0.017) * (planet.gravitation_radius + planet.radius))
-    planet.position[1] += math.floor(math.cos(planet.angle * 0.017) * (planet.gravitation_radius + planet.radius))
+    planet.position[0] += math.floor(math.sin(planet.angle * 0.0018) * (planet.gravitation_size + planet.size))
+    planet.position[1] += math.floor(math.cos(planet.angle * 0.0018) * (planet.gravitation_size + planet.size))
 
-    pygame.draw.circle(display, (255,5,0),planet.center_position,planet.gravitation_radius,0)
-    pygame.draw.circle(display, (2,255,5),planet.position,planet.radius,0)
+    pygame.draw.circle(display, (255,5,0),planet.center_position,planet.gravitation_size,0)
+    pygame.draw.circle(display, (2,255,5),planet.position,planet.size,0)
 
     planet.angle += planet.speed
 
