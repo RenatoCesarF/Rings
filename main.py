@@ -36,9 +36,37 @@ cursor_img = pygame.transform.scale(pygame.image.load('res/mouse.png').convert()
 cursor_img.set_colorkey((0, 0, 0))
 
 spritesheet = Spritesheet("res/sprites/base.png")
-animation = Animation(12,speed=0.5)
-animation.load_from_spritesheet(spritesheet, 24, 27, 38)
 
+a_stand = Animation(1);
+a_stand.load_from_spritesheet(spritesheet,24,27,70)
+current_animation = a_stand;
+
+running_right = Animation(12,speed=0.5)
+running_right.load_from_spritesheet(spritesheet, 24, 27, 38)
+
+running_left = Animation(12,speed=0.5)
+running_left.load_from_spritesheet(spritesheet, 24, 27, 101) 
+
+
+running_up = Animation(12,speed=1.5)
+running_up.load_from_spritesheet(spritesheet, 24, 27, 7, isReverse=True) 
+next_part = Animation(12,speed=1.5)
+next_part.load_from_spritesheet(spritesheet,24,27,134, isReverse=True)
+running_up.append_animation(next_part)
+
+running_down = Animation(12,speed=1.5)
+running_down.load_from_spritesheet(spritesheet, 24, 27, 70, isReverse=True) 
+next_part = Animation(12,speed=1.5)
+next_part.load_from_spritesheet(spritesheet,24,27,197, isReverse=True)
+running_down.append_animation(next_part)
+
+player_x = 50
+player_y = 50
+is_moving_left = False
+is_moving_right = False
+is_moving_down = False
+is_moving_up = False
+is_stand = False
 running = True
 while running:
     for event in pygame.event.get():
@@ -52,6 +80,31 @@ while running:
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_F1 :
                 debugging = not debugging
+
+            if event.key == pygame.K_d:
+                is_moving_right = True
+            if event.key == pygame.K_a:
+                is_moving_left = True
+            if event.key == pygame.K_w:
+                is_moving_up = True
+            if event.key == pygame.K_s:
+                is_moving_down = True
+
+        if event.type == pygame.KEYUP:
+            is_not_walking = not is_moving_right  and not is_moving_up  and not is_moving_down and not is_moving_left
+    
+            if is_not_walking:
+                is_stand = True
+            
+            if event.key == pygame.K_d:
+                is_moving_right = False
+            if event.key == pygame.K_w:
+                is_moving_up = False
+            if event.key == pygame.K_s:
+                is_moving_down = False
+            if event.key == pygame.K_a:
+                is_moving_left = False
+       
             if event.key == pygame.K_SPACE:
                 pass
     
@@ -65,9 +118,33 @@ while running:
     my /= base_screen_size[1] / display.get_height()
 
     display.fill((0,20,80))
+    #TODO: improve if state-mants
+    if is_moving_left:
+        player_x -=1
+        current_animation = running_left
+    if is_moving_up:
+        current_animation = running_up
+        player_y -=1
+    if is_moving_right:
+        current_animation = running_right
+        player_x +=1
+    if is_moving_down:
+        current_animation = running_down
+        player_y +=1
 
-  
-    display.blit(animation.get_next_frame(),(150,50))
+    if is_moving_right and is_moving_left:
+        current_animation = a_stand
+    if is_moving_down and is_moving_up:
+        current_animation = a_stand
+    if is_moving_down and is_moving_left and is_moving_right:
+        current_animation = running_down
+    if is_moving_up and is_moving_left and is_moving_right:
+        current_animation = running_up
+    
+    if not is_moving_right and not is_moving_up  and not is_moving_down and not is_moving_left:
+        current_animation = a_stand
+    
+    display.blit(current_animation.get_next_frame(),(player_x,player_y))
     
   
 
