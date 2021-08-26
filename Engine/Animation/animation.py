@@ -1,6 +1,8 @@
 import pygame
 from Engine.Animation.SpriteSheet import Spritesheet
-class Animation:
+
+
+class Animation():
     def __init__(self, frames_amount: int, speed: float = 1, time: float = 1) -> None:
         self.frames = []
         self.frames_amount = frames_amount
@@ -10,10 +12,17 @@ class Animation:
         self.initial_animation_time = time
 
     def load_from_spritesheet(self, sprite_sheet: Spritesheet, sprite_width: float,
-                          sprite_height: float, line_height: float, debugging: bool = False) -> None:
+                          sprite_height: float, line_height: float, debugging: bool = False, isReverse: bool = False) -> None:
         for i in range(self.frames_amount):
             self.frames.append(sprite_sheet.get_sprite(sprite_width*(i), line_height, 
                                sprite_width, sprite_height, debugging = debugging))
+        if not isReverse:
+            return
+
+        for i in range(self.frames_amount-1,1,-1):
+            self.frames.append(sprite_sheet.get_sprite(sprite_width*(i), line_height, 
+                               sprite_width, sprite_height, debugging = debugging))
+        self.frames_amount +=self.frames_amount - 3
 
     def get_next_frame(self) -> pygame.Surface:
         if self.current_frame >= self.frames_amount:
@@ -29,6 +38,11 @@ class Animation:
 
         return self.frames[current]
         
+    def append_animation(self, animation) -> None:
+        for frame in animation.frames:
+            self.frames.append(frame)
+        self.frames_amount += animation.frames_amount
+
     def __str__(self) -> str:
         return f"""
             frames lenght: {len(self.frames)}
