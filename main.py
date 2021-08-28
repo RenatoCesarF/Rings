@@ -1,11 +1,12 @@
 
 #If this file doenst work, copy it to main file and run from it
 import pygame
+from pygame import *
 import json
 
 from Engine import utils
-from Engine.Animation.SpriteSheet import Spritesheet
-from Engine.Animation.Animation import Animation
+from Engine.Animator.SpriteSheet import Spritesheet
+from Engine.Animator.Animation import Animation
   
 configs = json.load(open('config.json'))
   
@@ -30,11 +31,25 @@ cursor_img = pygame.transform.scale(pygame.image.load('res/mouse.png').convert()
 cursor_img.set_colorkey((0, 0, 0))
 
 
+robot_spritesheet = Spritesheet('res/sprites/robot.png', custom_colorkey = (127,146,255), space_between_sprites=1)
+
+current_animation = Animation(12)
+
+walking_right_animation = Animation(6,speed=0.2)
+walking_right_animation.load_from_spritesheet(robot_spritesheet, sprite_height= 15, sprite_width=15,spritesheet_line_height=95)
+
+walking_left_animation = Animation.createMirroredAnimation(walking_right_animation)
+
+idle_animation = Animation(24,speed=0.2)
+idle_animation.load_from_spritesheet(robot_spritesheet,sprite_height= 14,sprite_width=17, spritesheet_line_height= 49)
+idle_animation.append_animation_from_same_spritesheet(2, spritesheet_line_height=64,sprite_height = 14,sprite_width = 17)
+
+
 running = True
 while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
-            pygame.quit()
+            quit()
             exit()
         if event.type==pygame.VIDEORESIZE:
             w = event.dict['size'][0]
@@ -59,6 +74,7 @@ while running:
 
     display.fill((0,20,80))
 
+    display.blit(walking_right_animation.get_next_frame(),(150,50))
     screen.blit(pygame.transform.scale(display, base_screen_size),
                 ((screen.get_width() - base_screen_size[0]) // 2,
                 (screen.get_height() - base_screen_size[1]) // 2))
