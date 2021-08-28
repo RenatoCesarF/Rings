@@ -1,8 +1,8 @@
+from __future__ import annotations
 import pygame
-from Engine.Animation.SpriteSheet import Spritesheet
+from Engine.Animator.SpriteSheet import Spritesheet
 
-
-class Animation():
+class Animation:
     def __init__(self, frames_amount: int, speed: float = 1, time: float = 1) -> None:
         self.frames = []
         self.frames_amount = frames_amount
@@ -38,10 +38,19 @@ class Animation():
 
         return self.frames[current]
         
-    def append_animation(self, animation) -> None:
+    def append_animation(self, animation: Animation) -> None:
         for frame in animation.frames:
             self.frames.append(frame)
         self.frames_amount += animation.frames_amount
+
+    @classmethod
+    def createMirroredAnimation(cls, animation: Animation, horizontaly: bool = True, vertically: bool = False) -> Animation:
+        mirroredAnimation = Animation(animation.frames_amount,animation.speed,animation.initial_animation_time)
+        mirroredAnimation.frames = animation.frames.copy()
+        for index, frame in enumerate(mirroredAnimation.frames):
+            mirroredAnimation.frames[index] = pygame.transform.flip(frame,horizontaly,vertically)
+
+        return mirroredAnimation;
 
     def __str__(self) -> str:
         return f"""

@@ -18,3 +18,5 @@ class Vector():
 
     def __str__(self):
         return f"X: {self.x}\n Y: {self.y}"
+
+    #TODO: Create __add__ __eq__ and etc for this type

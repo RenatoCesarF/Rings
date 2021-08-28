@@ -1,10 +1,11 @@
+
 #If this file doenst work, copy it to main file and run from it
 import pygame
 import json
 
 from Engine import utils
-from Engine.Animation.SpriteSheet import Spritesheet
-from Engine.Animation.Animation import Animation
+from Engine.Animator.SpriteSheet import Spritesheet
+from Engine.Animator.Animation import Animation
   
 configs = json.load(open('config.json'))
   
@@ -34,17 +35,18 @@ a_stand = Animation(1);
 a_stand.load_from_spritesheet(spritesheet,24,27,70)
 current_animation = a_stand;
 
+
 running_right = Animation(12,speed=0.5)
 running_right.load_from_spritesheet(spritesheet, 24, 27, 38)
 
-running_left = Animation(12,speed=0.5)
-running_left.load_from_spritesheet(spritesheet, 24, 27, 101) 
+running_left = Animation.createMirroredAnimation(running_right);
+# running_left.load_from_spritesheet(spritesheet, 24, 27, 101) 
 
 
 running_up = Animation(12,speed=1.5)
-running_up.load_from_spritesheet(spritesheet, 24, 27, 7, isReverse=True) 
+running_up.load_from_spritesheet(spritesheet, 24, 27, 7, isReverse = True) 
 next_part = Animation(12,speed=1.5)
-next_part.load_from_spritesheet(spritesheet,24,27,134, isReverse=True)
+next_part.load_from_spritesheet(spritesheet,24,27,134, isReverse = True)
 running_up.append_animation(next_part)
 
 running_down = Animation(12,speed=1.5)
