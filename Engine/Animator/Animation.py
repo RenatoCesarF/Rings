@@ -52,14 +52,21 @@ class Animation:
             self.frames.append(frame)
         self.frames_amount += animation.frames_amount
 
-    def append_animation_from_same_spritesheet(self,frame_amount: int, spritesheet_line_height: float, sprite_width: float, sprite_height: int ) -> None:
-        space_between_sprites = self.spritesheet.space_between_sprites
-        sprite_width +=space_between_sprites
+    def append_animation_from_same_spritesheet(self,frame_amount: int, spritesheet_line_height: float,
+                                               custom_width: int = None, custom_height: int = None) -> None:
+                                               #TODO: make documentation about all functions
+        if custom_height is None and custom_width is None:
+            custom_height = self.sprite_height
+            custom_width = self.sprite_width
 
+        space_between_sprites = self.spritesheet.space_between_sprites
+        self.frames_amount += frame_amount
+
+        custom_width += space_between_sprites
         for i in range(frame_amount):
-            sprite_position = Vector((sprite_width*(i)+ space_between_sprites), spritesheet_line_height)
+            sprite_position = Vector((custom_width*(i)+ space_between_sprites), spritesheet_line_height)
             self.frames.append(self.spritesheet.get_sprite(sprite_position.x, sprite_position.y,
-                               sprite_width - space_between_sprites, sprite_height, debugging = self.is_debugging))
+                               custom_width - space_between_sprites, custom_height, debugging = self.is_debugging))
 
     @classmethod
     def createMirroredAnimation(cls, animation: Animation, horizontaly: bool = True, vertically: bool = False) -> Animation:
@@ -68,7 +75,7 @@ class Animation:
         for index, frame in enumerate(mirroredAnimation.frames):
             mirroredAnimation.frames[index] = pygame.transform.flip(frame,horizontaly,vertically)
 
-        return mirroredAnimation;
+        return mirroredAnimation
 
     def __str__(self) -> str:
         return f"""
