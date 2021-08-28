@@ -2,6 +2,7 @@ from __future__ import annotations
 import pygame
 from Engine.Animator.SpriteSheet import Spritesheet
 from Engine.Vector import Vector
+
 class Animation:
     def __init__(self, frames_amount: int, speed: float = 1, time: float = 1, is_debugging: bool = False) -> None:
         self.frames = []
@@ -30,10 +31,11 @@ class Animation:
 
         for i in range(self.frames_amount-1,1,-1):
             self.frames.append(sprite_sheet.get_sprite(sprite_width*(i), spritesheet_line_height, 
-                               sprite_width, sprite_height, debugging = debugging))
+                               sprite_width, sprite_height, debugging = self.is_debugging))
         self.frames_amount +=self.frames_amount - 3
 
     def get_next_frame(self) -> pygame.Surface:
+        #TODO a way to reset the animation when change from one to another
         if self.current_frame >= self.frames_amount:
             self.current_frame = 0
 
