@@ -19,6 +19,7 @@ pygame.display.set_caption("Rings")
 pygame.mouse.set_visible(False)
 
 FONT = pygame.font.Font("res/Pixellari.ttf", 22)
+
 class Player:
     def __init__(self, position: Vector):
         self.position = position 
@@ -45,7 +46,7 @@ class Player:
         self.idle_left_animation = Animation.createMirroredAnimation(self.idle_right_animation)
         self.current_animation = self.walking_left_animation
     
-    def update(self,mx,my):
+    def update(self,mx):
     
         if self.is_moving_left:
             self.position.x -=1
@@ -58,13 +59,21 @@ class Player:
 
         if not self.is_moving_right and not self.is_moving_up  and not self.is_moving_down and not self.is_moving_left:
             if mx > self.position.x:
-                self.current_animation = self.idle_right_animation
-            else: self.current_animation = self.idle_left_animation
+                self.change_animation(self.idle_right_animation)
+
+            else: self.change_animation(self.idle_left_animation)
         else:
             if mx > self.position.x:
-                self.current_animation = self.walking_right_animation
-            else: self.current_animation = self.walking_left_animation
+                self.change_animation(self.walking_right_animation)
+            else: self.change_animation(self.walking_left_animation)
+        
 
+    def change_animation(self,next_animation):
+        last_animation = self.current_animation
+        self.current_animation = next_animation
+
+        if last_animation != self.current_animation:
+            self.current_animation.reset_animation()
 
     def is_turned_left(self,mx,my):
         if mx > self.position.x:
@@ -141,7 +150,7 @@ while running:
     mx /= base_screen_size[0] / display.get_width()
     my /= base_screen_size[1] / display.get_height()
 
-    player.update(mx, my)
+    player.update(mx)
     display.fill((0,20,80))
 
     display.blit(player.current_animation.get_next_frame(),(player.position.x,player.position.y))

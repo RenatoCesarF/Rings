@@ -34,6 +34,9 @@ class Animation:
                                sprite_width, sprite_height, debugging = self.is_debugging))
         self.frames_amount +=self.frames_amount - 3
 
+    def reset_animation(self) -> None:
+        self.current_frame = 0
+
     def get_next_frame(self) -> pygame.Surface:
         #TODO a way to reset the animation when change from one to another
         if self.current_frame >= self.frames_amount:

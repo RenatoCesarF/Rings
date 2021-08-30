@@ -141,8 +141,6 @@ while running:
     
     display.blit(current_animation.get_next_frame(),(player_x,player_y))
     
-  
-
     screen.blit(pygame.transform.scale(display, base_screen_size),
                 ((screen.get_width() - base_screen_size[0]) // 2,
                 (screen.get_height() - base_screen_size[1]) // 2))
