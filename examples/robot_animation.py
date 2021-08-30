@@ -110,7 +110,38 @@ while running:
             w = event.dict['size'][0]
             h = event.dict['size'][1]
             screen=pygame.display.set_mode(event.dict['size'],pygame.RESIZABLE)
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_F1 :
+                debugging = not debugging
 
+            if event.key == pygame.K_d:
+                player.is_moving_right = True
+            if event.key == pygame.K_a:
+                player.is_moving_left = True
+            if event.key == pygame.K_w:
+                player.is_moving_up = True
+            if event.key == pygame.K_s:
+                player.is_moving_down = True
+
+        if event.type == pygame.KEYUP:
+            player.is_not_walking = not player.is_moving_right  and not player.is_moving_up  and not player.is_moving_down and not player.is_moving_left
+    
+            if player.is_not_walking:
+                player.is_stand = True
+                print("dflksjdlfk")
+            
+            if event.key == pygame.K_d:
+                player.is_moving_right = False
+            if event.key == pygame.K_w:
+                player.is_moving_up = False
+            if event.key == pygame.K_s:
+                player.is_moving_down = False
+            if event.key == pygame.K_a:
+                player.is_moving_left = False
+       
+            if event.key == pygame.K_SPACE:
+                pass
+    
     mx, my = pygame.mouse.get_pos()
     true_mx = mx
     true_my = my
@@ -122,6 +153,7 @@ while running:
     player.update(mx)
     display.fill((0,20,80))
 
+    display.blit(player.current_animation.get_next_frame(),(player.position.x,player.position.y))
     screen.blit(pygame.transform.scale(display, base_screen_size),
                 ((screen.get_width() - base_screen_size[0]) // 2,
                 (screen.get_height() - base_screen_size[1]) // 2))

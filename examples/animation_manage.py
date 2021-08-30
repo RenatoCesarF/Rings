@@ -39,7 +39,7 @@ current_animation = a_stand;
 running_right = Animation(12,speed=0.5)
 running_right.load_from_spritesheet(spritesheet, 24, 27, 38)
 
-running_left = Animation.createMirroredAnimation(running_right);
+running_left = Animation.create_mirrored_animation(running_right);
 # running_left.load_from_spritesheet(spritesheet, 24, 27, 101) 
 
 
