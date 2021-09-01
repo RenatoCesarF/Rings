@@ -78,7 +78,7 @@ while running:
             particle.position.y += math.cos(angle * 120)
 
             # particle.rotation += randint(1,10)
-            particle.Draw(display)
+            particle.draw(display)
 
             if particle.life_time <= 0:
                 particles.pop(i)   

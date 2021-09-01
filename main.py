@@ -1,13 +1,17 @@
 
 #If this file doenst work, copy it to main file and run from it
 import pygame
-from pygame import *
 import json
+import math
+import random
 
+from Engine.VFX.spark import Spark
 from Engine import utils
 from Engine.Vector import Vector
 from Engine.Animator.SpriteSheet import Spritesheet
 from Engine.Animator.Animation import Animation
+from Engine.Particle.shape_particle import ShapeParticle
+from Engine.shape import Shape
 
 
 configs = json.load(open('config.json'))
@@ -20,67 +24,7 @@ pygame.mouse.set_visible(False)
 
 FONT = pygame.font.Font("res/Pixellari.ttf", 22)
 
-class Player:
-    def __init__(self, position: Vector):
-        self.position = position 
-        self.is_moving_left = False
-        self.is_moving_right = False
-        self.is_moving_down = False
-        self.is_moving_up = False
-        self.is_stand = False
-  
 
-    def load_animations(self):
-        
-        robot_spritesheet = Spritesheet('res/sprites/robot.png', custom_colorkey = (127,146,255), space_between_sprites=1)
-
-        self.walking_right_animation = Animation(6,speed=0.3)
-        self.walking_right_animation.load_from_spritesheet(robot_spritesheet, sprite_height= 15, sprite_width=15,spritesheet_line_height=95)
-
-        self.walking_left_animation = Animation.create_mirrored_animation(self.walking_right_animation)
-
-        self.idle_right_animation = Animation(24,speed=0.3)
-        self.idle_right_animation.load_from_spritesheet(robot_spritesheet,sprite_height= 14,sprite_width=17, spritesheet_line_height= 49)
-        self.idle_right_animation.append_animation_from_same_spritesheet(2, spritesheet_line_height=64)
-
-        self.idle_left_animation = Animation.create_mirrored_animation(self.idle_right_animation)
-        self.current_animation = self.walking_left_animation
-    
-    def update(self,mx):
-    
-        if self.is_moving_left:
-            self.position.x -=1
-        if self.is_moving_up:
-            self.position.y -=1
-        if self.is_moving_right:
-            self.position.x +=1
-        if self.is_moving_down:
-            self.position.y +=1
-
-        if not self.is_moving_right and not self.is_moving_up  and not self.is_moving_down and not self.is_moving_left:
-            if mx > self.position.x:
-                self.change_animation(self.idle_right_animation)
-
-            else: self.change_animation(self.idle_left_animation)
-        else:
-            if mx > self.position.x:
-                self.change_animation(self.walking_right_animation)
-            else: self.change_animation(self.walking_left_animation)
-        
-
-    def change_animation(self,next_animation):
-        last_animation = self.current_animation
-        self.current_animation = next_animation
-
-        if last_animation != self.current_animation:
-            self.current_animation.reset_animation()
-
-    def is_turned_left(self,mx,my):
-        if mx > self.position.x:
-            print("a")
-            return True
-        print("b")
-        return False
 
 global debugging
 debugging = True
@@ -90,15 +34,11 @@ screen = pygame.display.set_mode((base_screen_size[0],base_screen_size[1]),0,32)
 display = pygame.Surface((300, 200))
 clock = pygame.time.Clock()
 
-player = Player(Vector(110,110))
-player.load_animations()
-
 cursor_img = pygame.transform.scale(pygame.image.load('res/mouse.png').convert(), (33, 33))
 cursor_img.set_colorkey((0, 0, 0))
 
 
-robot_spritesheet = Spritesheet('res/sprites/robot.png', custom_colorkey = (127,146,255), space_between_sprites=1)
-
+sparks = []
 
 running = True
 while running:
@@ -119,14 +59,25 @@ while running:
     mx /= base_screen_size[0] / display.get_width()
     my /= base_screen_size[1] / display.get_height()
 
-    player.update(mx)
     display.fill((0,20,80))
+
+
+    for i, spark in sorted(enumerate(sparks), reverse= True):
+        spark.move(1)
+        spark.draw(display)
+        if not spark.alive:
+            sparks.pop(i)
+    
+    s = Spark(Vector(mx,my), math.radians(random.randint(0,360)),speed= random.randint(1,3),color= (255,255,255))
+    sparks.append(s)
 
     screen.blit(pygame.transform.scale(display, base_screen_size),
                 ((screen.get_width() - base_screen_size[0]) // 2,
                 (screen.get_height() - base_screen_size[1]) // 2))
 
     screen.blit(cursor_img, (true_mx // 3 * 3 + 1, true_my // 3 * 3 + 1))
+
+
     if debugging:
         utils.draw_text(FONT, "FPS: " + str(int(clock.get_fps())), screen, (10,10))
 

@@ -64,7 +64,7 @@ class ParticleEmitter(object):
          
             particle.position.add(particle.velocity)
             particle.rotation += uniform(1,10)
-            particle.Draw(surface,Glow(width = 40, height = 40, radius = 100,color = (20,20,60,110)))
+            particle.draw(surface,Glow(width = 40, height = 40, radius = 100,color = (20,20,60,110)))
 
             if particle.life_time <= 0:
                 self.particles.pop(i)        

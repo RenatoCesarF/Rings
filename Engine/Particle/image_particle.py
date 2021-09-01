@@ -31,7 +31,7 @@ class ImageParticle(AbcParticle):
         super().__init__(position, velocity, self.width, self.height, life_time, opacity)
 
 
-    def Draw(self,destinatonSurface) -> None:
+    def draw(self,destinatonSurface) -> None:
         """Draws the particle into the destination surface after set it's opacity
 
         Args:

@@ -1,4 +1,4 @@
-from typing import Tuple
+from typing import List, Tuple
 from abc import ABC
 import random
 import pygame
@@ -30,9 +30,10 @@ class ShapeParticle(AbcParticle):
         self.color = color
         self.shape = shape
 
+    def set_polygon_points(self, points: List) -> None:
+        self.points = points
 
-
-    def Draw(self,destinatonSurface: pygame.Surface, glow: Glow = None) -> None:
+    def draw(self,destinatonSurface: pygame.Surface, glow: Glow = None) -> None:
         formSurface = pygame.Surface((self.width,self.height),pygame.SRCALPHA)
 
         #SET SHAPE
@@ -46,12 +47,10 @@ class ShapeParticle(AbcParticle):
         elif self.shape == Shape.Circle:
             pygame.draw.circle(destinatonSurface,self.color,
                                (self.position.x,self.position.y),self.width) #can go directaly to the surface
+        elif self.shape == Shape.Polygon:
+            pygame.draw.polygon(destinatonSurface,self.color,self.points,self.width)
         else:
-            pygame.draw.rect(formSurface, self.color, pygame.Rect(0, 0, self.width,self.height), width = 0,border_radius = 2)
-        # elif self.shape == Shape.Polygon:
-        #     #implement polygon
-        #     pygame.draw.circle(destinatonSurface,self.color,
-        #                         (self.position.x,self.position.y),self.width)
+            pygame.draw.rect(formSurface, self.color, pygame.Rect(0, 0, self.width,self.height), width = 0, border_radius = 2)
 
         #SET ROTATION
         formSurface, rect= utils.rotate(formSurface,self.rotation,
