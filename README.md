@@ -5,15 +5,19 @@
   </a>
 </p>
 
-<p>Pygame game developed in Twitch livestream
+<p>Pygame rogue-like game developed in Twitch livestream
 </p>
 
 
 ## 📝 To-Do:
 - [x] Particles
 - [x] Glow
-- [ ] Animations
-- [ ] Shadows
-- [ ] Sparks
-- [ ] Colidiond
-- [ ] ...
+- [x] Animations
+- [x] Sparks
+- [ ] Colisions
+- [ ] Camera
+- [ ] bouncing physics
+- [ ] Tile System
+- [ ] Ragdoll simulations
+- [ ] Noise
+- [ ] Shadows & Light

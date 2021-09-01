@@ -38,6 +38,8 @@ cursor_img = pygame.transform.scale(pygame.image.load('res/mouse.png').convert()
 cursor_img.set_colorkey((0, 0, 0))
 
 
+sparks = []
+
 running = True
 while running:
     for event in pygame.event.get():
@@ -58,6 +60,17 @@ while running:
     my /= base_screen_size[1] / display.get_height()
 
     display.fill((0,20,80))
+
+
+    for i, spark in sorted(enumerate(sparks), reverse= True):
+        spark.move(1)
+        spark.color = (random.randint(40,240),random.randint(40,240),random.randint(40,240))
+        spark.draw(display)
+        if not spark.alive:
+            sparks.pop(i)
+    
+    s = Spark(Vector(mx,my), math.radians(random.randint(0,360)),speed= random.randint(1,3),color= (255,255,255))
+    sparks.append(s)
 
     screen.blit(pygame.transform.scale(display, base_screen_size),
                 ((screen.get_width() - base_screen_size[0]) // 2,

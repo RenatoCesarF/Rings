@@ -44,7 +44,7 @@ class Spark:
         movement = self.calculate_movement(dt)
         self.position.x += movement[0]
         self.position.y += movement[1]
-
+        
         self.angle += angle_change
 
         # self.point_towards(math.pi/2, 0.02)
