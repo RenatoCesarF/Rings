@@ -15,9 +15,6 @@ class AbcParticle(abc.ABC):
         self.opacity = opacity
         self.initial_life_time = self.life_time
 
-    def describe(self):
-        description = "A"
-
     def __str__(self):
         return f"""
         position X: {self.position.x}
