@@ -19,7 +19,14 @@ class Vector():
     def __str__(self):
         return f"X: {self.x}\n Y: {self.y}"
 
-    def _eq__(self,vector: Vector):
+    def __eq__(self,vector: Vector):
         self.x = vector.x
         self.y = vector.y
-    #TODO: Create __add__ __eq__ and etc for this type
+    
+    def __add__(self,other: Vector) -> None:
+        self.x += other.x
+        self.y += other.y
+
+    def __sub__(self,other: Vector) -> None:
+        self.x -= other.x
+        self.y -= other.y
