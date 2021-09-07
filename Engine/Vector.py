@@ -7,10 +7,10 @@ class Vector():
         self.x = x
         self.y = y
     
-    def add(self, vector) -> None:
-        self.x += vector.x
-        self.y += vector.y
-        return self
+    # def add(self, vector) -> None:
+    #     self.x += vector.x
+    #     self.y += vector.y
+    #     return self
 
     def get(self) -> Tuple:
         return (self.x, self.y)

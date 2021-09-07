@@ -1,4 +1,3 @@
-
 #If this file doenst work, copy it to main file and run from it
 import pygame
 from pygame import *
@@ -110,7 +109,7 @@ while running:
     scroll.x = int(scroll.x)
     scroll.y = int(scroll.y)
     
-    display.fill((0,20,80))
+    display.fill((30,30,30))
 
     tile_rects =[] 
     utils.fill_game_map(game_map,display,TILE_SIZE,scroll);
