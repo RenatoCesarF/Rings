@@ -51,8 +51,11 @@ game_map = [
 [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
 ]
 
-cursor_img = pygame.transform.scale(pygame.image.load('res/mouse.png').convert(), (33, 33))
+cursor_img = pygame.transform.scale(pygame.image.load('res/mouse.png').convert(), (44, 44))
 cursor_img.set_colorkey((255, 0, 0))
+
+colide = Collider(Vector(40,40), 20,20)
+colide2 = Collider(Vector(60,40), 20,20)
 
 
 running = True
@@ -108,29 +111,36 @@ while running:
     scroll = camera
     scroll.x = int(scroll.x)
     scroll.y = int(scroll.y)
-    
+    s
     display.fill((30,30,30))
-    player.update(mx - 18)
-    display.blit(player.get_frame(),(player.position.x-camera.x,player.position.y-camera.y))
+        
+    collision_tiles = []
     tile_rects =[] 
-    y = 0
-    for row in game_map:
-        x= 0
-        for tile in row:
-            if tile == 1:
-                pygame.draw.rect(display, (244,24,24), pygame.Rect(x * TILE_SIZE - camera.x, y * TILE_SIZE - camera.y, TILE_SIZE,TILE_SIZE))
-                # display.blit(terrain, (x * TILE_SIZE, y * TILE_SIZE))
-            if tile == 2:
-                pygame.draw.rect(display, (244,24,24), pygame.Rect(x * TILE_SIZE- camera.x, y * TILE_SIZE - camera.y, TILE_SIZE,TILE_SIZE), width = 0, border_radius = 2)
-                # display.blit(ground, (x * TILE_SIZE, y * TILE_SIZE))
-            # if tile != 0:
-            #     tile_rects.append(pygame.Rect(x * TILE_SIZE, y * TILE_SIZE, TILE_SIZE,TILE_SIZE))
-            x += 1
-        y += 1
- 
+    collision_tiles.append(colide)
+    # collision_tiles.append(colide2)
+
+    # y = 0
+    # for row in game_map:
+    #     x= 0
+    #     for tile in row:
+    #         if tile == 1:
+    #             pygame.draw.rect(display, (244,24,24), pygame.Rect(x * TILE_SIZE - camera.x, y * TILE_SIZE - camera.y, TILE_SIZE,TILE_SIZE))
+    #         if tile == 2:
+    #             pygame.draw.rect(display, (244,24,24), pygame.Rect(x * TILE_SIZE- camera.x, y * TILE_SIZE - camera.y, TILE_SIZE,TILE_SIZE), width = 0, border_radius = 2)
+    #         if tile != 0:
+    #             collision_tiles.append(Collider(Vector(x * TILE_SIZE, y * TILE_SIZE), TILE_SIZE,TILE_SIZE))
+    #             tile_rects.append(pygame.Rect(x * TILE_SIZE, y * TILE_SIZE, TILE_SIZE,TILE_SIZE))
+    #         x += 1
+    #     y += 1
 
 
 
+    for tile in collision_tiles:
+        tile.draw_collision_rect(display,camera)
+        player.collision.check_colliding_with(tile)
+    
+    player.update(mx - 18, camera)
+    player.draw(display)
     
     screen.blit(pygame.transform.scale(display, base_screen_size),
                 ((screen.get_width() - base_screen_size[0]) // 2,

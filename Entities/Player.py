@@ -23,8 +23,9 @@ class Player:
     def load_animations(self):
         robot_spritesheet = Spritesheet('res/sprites/robot.png', custom_colorkey = (127,146,255), space_between_sprites=1)
 
+
         self.walking_right_animation = Animation(6,speed=self.speed/3)
-        self.walking_right_animation.load_from_spritesheet(robot_spritesheet, sprite_height= 15, sprite_width=15,spritesheet_line_height=95)
+        self.walking_right_animation.load_from_spritesheet(robot_spritesheet, sprite_height= 14, sprite_width=15,spritesheet_line_height=96)
 
         self.walking_left_animation = Animation.create_mirrored_animation(self.walking_right_animation)
 
@@ -35,32 +36,38 @@ class Player:
         self.idle_left_animation = Animation.create_mirrored_animation(self.idle_right_animation)
         self.current_animation = self.walking_left_animation
     
-    def update(self,mx):
-
+    def update(self,mx, offset: Vector = Vector()):
         self.movement_velocity = Vector()
-        if self.is_moving_left and not self.collision.is_colliding_left:
-            self.movement_velocity.x = -1*self.speed
-        if self.is_moving_right and not self.collision.is_colliding_right:
-            self.movement_velocity.x = 1*self.speed
-        if self.is_moving_up:
-            self.movement_velocity.y = -1*self.speed
-        if self.is_moving_down:
-            self.movement_velocity.y = 1*self.speed
-        self.position.x += self.movement_velocity.x
-        self.position.y += self.movement_velocity.y
-        # if self.is_moving_left:
-        #     self.position.x -= self.speed
-        # if self.is_moving_up:
-        #     self.position.y -= self.speed
-        # if self.is_moving_right:
-        #     self.position.x += self.speed
-        # if self.is_moving_down:
-        #     self.position.y += self.speed
+        self.offset = offset
 
-
-
+        self.move()
         self.update_animate(mx)
 
+    def move(self):
+        if self.is_moving_left and not self.collision.is_colliding_left:
+            self.movement_velocity.x = -1*self.speed        
+
+        if self.is_moving_right and not self.collision.is_colliding_right:
+            self.movement_velocity.x = 1*self.speed
+
+        if self.is_moving_up and not self.collision.is_colliding_top:
+            self.movement_velocity.y = -1*self.speed
+            
+        if self.is_moving_down and not self.collision.is_colliding_bottom:
+            self.movement_velocity.y = 1*self.speed
+        
+        self.position.x += self.movement_velocity.x
+        self.position.y += self.movement_velocity.y
+
+        self.collision.speed.x = self.movement_velocity.x
+        self.collision.speed.y = self.movement_velocity.y
+        self.collision.update_position_with_current_speed() 
+
+
+
+    def draw(self, surface: pygame.Surface)-> None:
+        surface.blit(self.get_frame(),(self.position.x - self.offset.x, self.position.y - self.offset.y))
+   
 
     def update_animate(self,mx):
         if not self.is_moving_right and not self.is_moving_up  and not self.is_moving_down and not self.is_moving_left:

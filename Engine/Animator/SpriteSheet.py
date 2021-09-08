@@ -13,10 +13,10 @@ class Spritesheet:
                                     you need to configure this, obs: this space will be applyed to the first sprite as well. Defaults to 0.
         """
         self.file_directory = file_directory
-        self.sprite_sheet = pygame.image.load(file_directory).convert()
-        self.height = self.sprite_sheet.get_height()
-        self.width = self.sprite_sheet.get_width()
-        self.sprite_sheet = pygame.transform.scale(self.sprite_sheet,(self.width * scale, self.height * scale))
+        self.image = pygame.image.load(file_directory).convert()
+        self.height = self.image.get_height()
+        self.width = self.image.get_width()
+        self.image = pygame.transform.scale(self.image,(self.width * scale, self.height * scale))
         self.color_key = custom_colorkey
         self.space_between_sprites = space_between_sprites
         self.scale = scale
@@ -37,7 +37,7 @@ class Spritesheet:
         """
         sprite = pygame.Surface((width*self.scale , height* self.scale)) 
         sprite.set_colorkey(self.color_key)
-        sprite.blit(self.sprite_sheet,(0,0),(x * self.scale, y * self.scale,
+        sprite.blit(self.image,(0,0),(x * self.scale, y * self.scale,
                                              width * self.scale, height * self.scale))
         if debugging:
             pygame.draw.rect(sprite, (200,0,0), pygame.Rect(0,0, width, height), width = 1)
