@@ -2,9 +2,13 @@ import pygame
 from Engine.Vector import Vector
 from Engine.Animator.Animation import Animation
 from Engine.Animator.SpriteSheet import Spritesheet
+from Engine.Collisions.Collider import Collider
+
 class Player:
     def __init__(self, position: Vector):
         self.position = position
+        self.movement_velocity = Vector()
+        self.collision = Collider(position,15,15)
         self.speed = 1
         self.life = 3
         self.is_moving_left = False
@@ -32,20 +36,33 @@ class Player:
         self.current_animation = self.walking_left_animation
     
     def update(self,mx):
-        if self.is_moving_left:
-            self.position.x -= self.speed
+
+        self.movement_velocity = Vector()
+        if self.is_moving_left and not self.collision.is_colliding_left:
+            self.movement_velocity.x = -1*self.speed
+        if self.is_moving_right and not self.collision.is_colliding_right:
+            self.movement_velocity.x = 1*self.speed
         if self.is_moving_up:
-            self.position.y -= self.speed
-        if self.is_moving_right:
-            self.position.x += self.speed
+            self.movement_velocity.y = -1*self.speed
         if self.is_moving_down:
-            self.position.y += self.speed
+            self.movement_velocity.y = 1*self.speed
+        self.position.x += self.movement_velocity.x
+        self.position.y += self.movement_velocity.y
+        # if self.is_moving_left:
+        #     self.position.x -= self.speed
+        # if self.is_moving_up:
+        #     self.position.y -= self.speed
+        # if self.is_moving_right:
+        #     self.position.x += self.speed
+        # if self.is_moving_down:
+        #     self.position.y += self.speed
 
-        self.animate(mx);
 
 
-    def animate(self,mx):
+        self.update_animate(mx)
 
+
+    def update_animate(self,mx):
         if not self.is_moving_right and not self.is_moving_up  and not self.is_moving_down and not self.is_moving_left:
             if mx > self.position.x:
                 self.change_animation(self.idle_right_animation)
@@ -65,7 +82,5 @@ class Player:
 
     def is_turned_left(self,mx):
         if mx > self.position.x:
-            print("a")
             return True
-        print("b")
         return False

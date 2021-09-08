@@ -5,6 +5,7 @@ import json
 
 from Engine import utils
 from Engine.Vector import Vector
+from Engine.Collisions.Collider import Collider
 from Engine.Animator.SpriteSheet import Spritesheet
 from Engine.Animator.Animation import Animation
 from Entities.Player import Player
@@ -34,15 +35,15 @@ camera = Vector(0,0)
 player = Player(Vector(110,110))
 player.load_animations()
 
-TILE_SIZE = 16
+TILE_SIZE = 20
 
 game_map = [
 [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
 [0,0,0,0,0,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,0],
-[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+[0,0,0,0,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+[0,0,0,2,0,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
 [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,1],
-[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1],
+[0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,1,1],
 [0,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2],
 [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
 [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
@@ -51,7 +52,7 @@ game_map = [
 ]
 
 cursor_img = pygame.transform.scale(pygame.image.load('res/mouse.png').convert(), (33, 33))
-cursor_img.set_colorkey((0, 0, 0))
+cursor_img.set_colorkey((255, 0, 0))
 
 
 running = True
@@ -94,7 +95,6 @@ while running:
                 pass
     
 
-    
     mx, my = pygame.mouse.get_pos()
     true_mx = mx
     true_my = my
@@ -110,15 +110,28 @@ while running:
     scroll.y = int(scroll.y)
     
     display.fill((30,30,30))
-
-    tile_rects =[] 
-    utils.fill_game_map(game_map,display,TILE_SIZE,scroll);
-
-    player.update(mx- 24)
-
-
-
+    player.update(mx - 18)
     display.blit(player.get_frame(),(player.position.x-camera.x,player.position.y-camera.y))
+    tile_rects =[] 
+    y = 0
+    for row in game_map:
+        x= 0
+        for tile in row:
+            if tile == 1:
+                pygame.draw.rect(display, (244,24,24), pygame.Rect(x * TILE_SIZE - camera.x, y * TILE_SIZE - camera.y, TILE_SIZE,TILE_SIZE))
+                # display.blit(terrain, (x * TILE_SIZE, y * TILE_SIZE))
+            if tile == 2:
+                pygame.draw.rect(display, (244,24,24), pygame.Rect(x * TILE_SIZE- camera.x, y * TILE_SIZE - camera.y, TILE_SIZE,TILE_SIZE), width = 0, border_radius = 2)
+                # display.blit(ground, (x * TILE_SIZE, y * TILE_SIZE))
+            # if tile != 0:
+            #     tile_rects.append(pygame.Rect(x * TILE_SIZE, y * TILE_SIZE, TILE_SIZE,TILE_SIZE))
+            x += 1
+        y += 1
+ 
+
+
+
+    
     screen.blit(pygame.transform.scale(display, base_screen_size),
                 ((screen.get_width() - base_screen_size[0]) // 2,
                 (screen.get_height() - base_screen_size[1]) // 2))
