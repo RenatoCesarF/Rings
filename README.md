@@ -5,7 +5,7 @@
   </a>
 </p>
 
-<p>Pygame rogue-like game developed in Twitch livestream
+<p>Pygame rogue-like topdown game developed in Twitch livestream
 </p>
 
 
@@ -14,10 +14,9 @@
 - [x] Glow
 - [x] Animations
 - [x] Sparks
-- [ ] Colisions
-- [ ] Camera
-- [ ] bouncing physics
+- [x] Colisions
+- [x] Camera
 - [ ] Tile System
 - [ ] Ragdoll simulations
 - [ ] Noise
-- [ ] Shadows & Light
+- [ ] Shadows & Light (maybe)
