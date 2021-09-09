@@ -23,7 +23,6 @@ FONT = pygame.font.Font("res/Pixellari.ttf", 22)
 
 global debugging
 
-debugging = True
 game_time = 0
 base_screen_size = configs['resolution']
 screen = pygame.display.set_mode((base_screen_size[0],base_screen_size[1]),0,32)
@@ -32,7 +31,7 @@ display = pygame.Surface((300, 200))
 clock = pygame.time.Clock()
 
 camera = Vector(0,0)
-player = Player(Vector(110,110))
+player = Player(Vector(10,10))
 player.load_animations()
 
 TILE_SIZE = 20
@@ -54,10 +53,8 @@ game_map = [
 cursor_img = pygame.transform.scale(pygame.image.load('res/mouse.png').convert(), (44, 44))
 cursor_img.set_colorkey((255, 0, 0))
 
-colide = Collider(Vector(40,40), 20,20)
-colide2 = Collider(Vector(60,40), 20,20)
 
-
+debugging = True
 running = True
 while running:
     for event in pygame.event.get():
@@ -71,6 +68,8 @@ while running:
             if event.key == pygame.K_F1 :
                 debugging = not debugging
 
+            if event.key == pygame.K_SPACE:
+                player.speed = 5
             if event.key == pygame.K_d:
                 player.is_moving_right = True
             if event.key == pygame.K_a:
@@ -82,7 +81,7 @@ while running:
 
         if event.type == pygame.KEYUP:
             player.is_not_walking = not player.is_moving_right  and not player.is_moving_up  and not player.is_moving_down and not player.is_moving_left
-    
+
             if player.is_not_walking:
                 player.is_stand = True
             if event.key == pygame.K_d:
@@ -93,6 +92,9 @@ while running:
                 player.is_moving_down = False
             if event.key == pygame.K_a:
                 player.is_moving_left = False
+
+            if event.key == pygame.K_SPACE:
+                player.speed = 1
        
             if event.key == pygame.K_SPACE:
                 pass
@@ -111,37 +113,29 @@ while running:
     scroll = camera
     scroll.x = int(scroll.x)
     scroll.y = int(scroll.y)
-    s
+
     display.fill((30,30,30))
         
     collision_tiles = []
     tile_rects =[] 
-    collision_tiles.append(colide)
-    # collision_tiles.append(colide2)
-
-    # y = 0
-    # for row in game_map:
-    #     x= 0
-    #     for tile in row:
-    #         if tile == 1:
-    #             pygame.draw.rect(display, (244,24,24), pygame.Rect(x * TILE_SIZE - camera.x, y * TILE_SIZE - camera.y, TILE_SIZE,TILE_SIZE))
-    #         if tile == 2:
-    #             pygame.draw.rect(display, (244,24,24), pygame.Rect(x * TILE_SIZE- camera.x, y * TILE_SIZE - camera.y, TILE_SIZE,TILE_SIZE), width = 0, border_radius = 2)
-    #         if tile != 0:
-    #             collision_tiles.append(Collider(Vector(x * TILE_SIZE, y * TILE_SIZE), TILE_SIZE,TILE_SIZE))
-    #             tile_rects.append(pygame.Rect(x * TILE_SIZE, y * TILE_SIZE, TILE_SIZE,TILE_SIZE))
-    #         x += 1
-    #     y += 1
 
 
+    y = 0
+    for row in game_map:
+        x= 0
+        for tile in row:
+            if tile == 1:
+                pygame.draw.rect(display, (204,24,24), pygame.Rect(x * TILE_SIZE - camera.x, y * TILE_SIZE - camera.y, TILE_SIZE,TILE_SIZE))
+            if tile == 2:
+                pygame.draw.rect(display, (204,24,24), pygame.Rect(x * TILE_SIZE- camera.x, y * TILE_SIZE - camera.y, TILE_SIZE,TILE_SIZE), width = 0, border_radius = 2)
+            if tile != 0:
+                collision_tiles.append(Collider(Vector(x * TILE_SIZE, y * TILE_SIZE), TILE_SIZE,TILE_SIZE))
+                tile_rects.append(pygame.Rect(x * TILE_SIZE, y * TILE_SIZE, TILE_SIZE,TILE_SIZE))
+            x += 1
+        y += 1
 
-    for tile in collision_tiles:
-        tile.draw_collision_rect(display,camera)
-        player.collision.check_colliding_with(tile)
-    
-    player.update(mx - 18, camera)
-    player.draw(display)
-    
+    player.update(mx - 18, collision_tiles)
+    player.draw(display,camera,debugging)
     screen.blit(pygame.transform.scale(display, base_screen_size),
                 ((screen.get_width() - base_screen_size[0]) // 2,
                 (screen.get_height() - base_screen_size[1]) // 2))
