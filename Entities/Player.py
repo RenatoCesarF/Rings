@@ -39,7 +39,7 @@ class Player:
         if self.is_moving_down:
             self.position.y += 1*self.speed
 
-        self.collision.update_position_after_collisions(self.position,tiles)
+        self.collision.update_position_after_check_collisions(self.position,tiles)
      
         self.position.x = self.collision.collision_rect.x
         self.position.y = self.collision.collision_rect.y

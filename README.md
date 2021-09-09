@@ -17,6 +17,14 @@
 - [x] Colisions
 - [x] Camera
 - [ ] Tile System
-- [ ] Ragdoll simulations
 - [ ] Noise
+- [ ] Ragdoll simulations (ropes, cloth, etc)
 - [ ] Shadows & Light (maybe)
+
+## Sub-tasks:
+- [ ] Camera shaking
+- [ ] Collision offset problem
+- [ ] Splite everything in a Game Class
+- [ ] Polygon particle
+- [ ] Rework Particles
+- [ ] Document everything in details

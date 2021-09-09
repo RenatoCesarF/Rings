@@ -34,9 +34,10 @@ camera = Vector(0,0)
 player = Player(Vector(10,10))
 player.load_animations()
 
+
 TILE_SIZE = 20
 
-game_map = [
+game_map = [ #TODO: Read it serperaly
 [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
 [0,0,0,0,0,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,0],
 [0,0,0,0,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
