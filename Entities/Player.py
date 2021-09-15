@@ -20,7 +20,8 @@ class Player:
         self.is_stand = False
     
  
-    def update(self,mx, tiles: tuple):
+    def update(self,mx, tiles: tuple, offset: Vector = Vector()):
+        self.offset = offset
         self.move(tiles)
         self.update_animate(mx)
 
@@ -40,26 +41,32 @@ class Player:
             self.position.y += 1*self.speed
 
         self.collision.update_position_after_check_collisions(self.position,tiles)
-     
         self.position.x = self.collision.collision_rect.x
         self.position.y = self.collision.collision_rect.y
 
-    def draw(self, surface: pygame.Surface,offset: Vector = Vector(), debugging: bool = False)-> None:
-        surface.blit(self.get_frame(),(self.position.x - offset.x, self.position.y - offset.y))
+    def draw(self, surface: pygame.Surface, debugging: bool = False)-> None:
+        surface.blit(self.get_frame(),(self.position.x - self.offset.x, self.position.y - self.offset.y))
         
         if debugging:
-            self.collision.draw_collision_rect(surface, offset, (0,100,0))
+            self.collision.draw_collision_rect(surface, self.offset, (0,100,0))
    
     def update_animate(self,mx):
+        # print("\nmx: " + str(mx))
+        # print("mouse: " + str(self.position.x))
+        is_turned_left = mx > self.position.x - self.offset.x
         if not self.is_moving_right and not self.is_moving_up  and not self.is_moving_down and not self.is_moving_left:
-            if mx > self.position.x:
+            if is_turned_left:
                 self.change_animation(self.idle_right_animation)
+                return
 
-            else: self.change_animation(self.idle_left_animation)
-        else:
-            if mx > self.position.x:
-                self.change_animation(self.walking_right_animation)
-            else: self.change_animation(self.walking_left_animation)
+            self.change_animation(self.idle_left_animation)
+            return
+
+        if is_turned_left:
+            self.change_animation(self.walking_right_animation)
+            return
+
+        self.change_animation(self.walking_left_animation)
         
     def change_animation(self,next_animation):
         last_animation = self.current_animation
@@ -68,10 +75,6 @@ class Player:
         if last_animation != self.current_animation:
             self.current_animation.reset_animation()
 
-    def is_turned_left(self,mx):
-        if mx > self.position.x:
-            return True
-        return False
 
     def get_frame(self) -> pygame.Surface:
         return self.current_animation.get_next_frame()
