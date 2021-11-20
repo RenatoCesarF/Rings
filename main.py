@@ -1,7 +1,7 @@
-#If this file doenst work, copy it to main file and run from it
 import pygame
 from pygame import *
 import json
+from math import sin, cos, floor
 
 from Engine import utils
 from Engine.Vector import Vector
@@ -9,6 +9,9 @@ from Engine.Collisions.Collider import Collider
 from Engine.Animator.SpriteSheet import Spritesheet
 from Engine.Animator.Animation import Animation
 from Entities.Player import Player
+
+
+
 
 def main():
     configs = json.load(open('config.json'))
@@ -28,17 +31,17 @@ def main():
     base_screen_size = configs['resolution']
     screen = pygame.display.set_mode((base_screen_size[0],base_screen_size[1]),0,32)
 
-    display = pygame.Surface((300, 200))
+    display = pygame.Surface((300,200))
     clock = pygame.time.Clock()
-
+    screen_real_size = display.get_size()
     camera = Vector(0,0)
     player = Player(Vector(10,10))
     player.load_animations()
 
-
     TILE_SIZE = 20
 
-    game_map = [ #TODO: Read it serperaly
+    #TODO: Read it serperaly
+    game_map = [
     [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
     [0,0,0,0,0,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,0],
     [0,0,0,0,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
@@ -55,11 +58,20 @@ def main():
     cursor_img = pygame.transform.scale(pygame.image.load('res/mouse.png').convert(), (44, 44))
     cursor_img.set_colorkey((255, 0, 0))
 
+    angle = 330
+    camera_speed = 20
 
     debugging = True
     running = True
     while running:
         for event in pygame.event.get():
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_LEFT:
+                    pass
+
+                if event.key == pygame.K_RIGHT:
+                    pass
+
             check_events(event,player)
 
         mx, my = pygame.mouse.get_pos()
@@ -70,11 +82,25 @@ def main():
         mx /= base_screen_size[0] / display.get_width()
         my /= base_screen_size[1] / display.get_height()
 
-        camera.x += (player.position.x - camera.x - 140) / 10
-        camera.y += (player.position.y - camera.y - 100) / 10
+       
+        camera.x = player.position.x + 7 - screen_real_size[0] /2 # the +7 is half of the size of the player, to certralyze
+        camera.y = player.position.y + 7 - screen_real_size[1] /2
+
+        player.is_not_walking = not player.is_moving_right  and not player.is_moving_up  and not player.is_moving_down and not player.is_moving_left
+        if not player.is_not_walking:
+            camera.x +=floor(sin(angle * 0.0017) * (0.02 * 3 ))
+            camera.y +=floor(cos(angle * 0.0017) * (0.02 * 5 )) 
+            angle += camera_speed *8
+        else:
+            camera.x +=floor(sin(angle * 0.0017) * (0.4 * 4))
+            camera.y +=floor(cos(angle * 0.0017) * (0.4* 4)) 
+            angle += camera_speed
+
+
         scroll = camera
         scroll.x = int(scroll.x)
         scroll.y = int(scroll.y)
+
 
         display.fill((30,30,30))
 
@@ -96,9 +122,10 @@ def main():
                 x += 1
             y += 1
 
-        # pygame.draw.rect(display, (0,0,200), pygame.Rect(mx, my, 5,5), width = 0, border_radius = 2)
         player.update(mx, collision_tiles,camera)
         player.draw(display,debugging)
+        
+        pygame.draw.circle(display, (0,225,0),[player.position.x + 7 - scroll.x ,player.position.y + 7- scroll.y], 2,0)
 
         screen.blit(pygame.transform.scale(display, base_screen_size),
                     ((screen.get_width() - base_screen_size[0]) // 2,
@@ -113,6 +140,7 @@ def main():
         pygame.display.update()
     
         clock.tick(60)
+
 def check_events(event, player: Player):
     if event.type == pygame.QUIT:
                 quit()
@@ -122,7 +150,8 @@ def check_events(event, player: Player):
         h = event.dict['size'][1]
     if event.type == pygame.KEYDOWN:
         if event.key == pygame.K_F1 :
-            debugging = not debugging
+            global debugging
+            debugging = not debugging #TODO: fix debuggin global
 
         if event.key == pygame.K_SPACE:
             player.speed = 5
@@ -151,6 +180,5 @@ def check_events(event, player: Player):
 
         if event.key == pygame.K_SPACE:
             player.speed = 1
-
 
 main()

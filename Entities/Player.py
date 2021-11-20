@@ -18,9 +18,8 @@ class Player:
         self.is_moving_down = False
         self.is_moving_up = False
         self.is_stand = False
-    
  
-    def update(self,mx, tiles: tuple, offset: Vector = Vector()):
+    def update(self, mx: int, tiles: tuple, offset: Vector = Vector()):
         self.offset = offset
         self.move(tiles)
         self.update_animate(mx)
@@ -51,8 +50,6 @@ class Player:
             self.collision.draw_collision_rect(surface, self.offset, (0,100,0))
    
     def update_animate(self,mx):
-        # print("\nmx: " + str(mx))
-        # print("mouse: " + str(self.position.x))
         is_turned_left = mx > self.position.x - self.offset.x
         if not self.is_moving_right and not self.is_moving_up  and not self.is_moving_down and not self.is_moving_left:
             if is_turned_left:

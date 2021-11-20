@@ -25,3 +25,4 @@ class Vector():
     def __sub__(self,other: Vector) -> None:
         self.x -= other.x
         self.y -= other.y
+    # Override de [] operator to return x and y 
