@@ -5,7 +5,7 @@
   </a>
 </p>
 
-<p>Pygame rogue-like topdown game developed in Twitch livestream
+<p>Pygame framework to 2D-Games and learn game-development
 </p>
 
 
