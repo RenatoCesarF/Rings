@@ -2,27 +2,30 @@ from __future__ import annotations
 from typing import Tuple
 
 
-class Vector():
-    def __init__(self, x: int = 0, y: int = 0) -> None:
+class Vector:
+    x: int
+    y: int
+
+    def __init__(self, x: int = 0, y: int = 0):
         self.x = x
         self.y = y
 
-    def get(self) -> Tuple:
-        return (self.x, self.y)
-
+    def get(self) -> Vector:
+        return Vector(self.x, self.y)
 
     def __str__(self):
-        return f"X: {self.x}\n Y: {self.y}"
+        return f"X: {self.x} Y: {self.y}"
 
-    def __eq__(self,vector: Vector):
+    def __eq__(self, vector: Vector):
         self.x = vector.x
         self.y = vector.y
-    
-    def __add__(self,other: Vector) -> None:
+
+    def __add__(self, other: Vector) -> None:
         self.x += other.x
         self.y += other.y
 
-    def __sub__(self,other: Vector) -> None:
+    def __sub__(self, other: Vector) -> None:
         self.x -= other.x
         self.y -= other.y
-    # Override de [] operator to return x and y 
+
+    # Override de [] operator to return x and y
