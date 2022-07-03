@@ -14,9 +14,9 @@ class Player:
     collision: Collider
     speed: int
 
-    def __init__(self, position: Vector, game):
+    def __init__(self, game):
         self.game = game
-        self.position = position
+        self.position = Vector()
         self.collision = Collider(Vector(0, 0), 14, 14, left_offset=Vector(1, 1))
         self.speed = 1
         # self.life = 3

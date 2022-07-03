@@ -7,8 +7,8 @@ class Mouse:
     position: Vector
     image: any
 
-    def __init__(self, game):
-        self.game = game
+    def __init__(self, window):
+        self.window = window
         self.true_position = Vector()
         self.position = Vector()
         self.image = pygame.transform.scale(
@@ -22,15 +22,15 @@ class Mouse:
         self.true_position.y = self.position.y
 
         self.position.x -= (
-            self.game.screen.get_width() - self.game.base_screen_size[0]
+            self.window.screen.get_width() - self.window.base_screen_size[0]
         ) // 3
         self.position.y -= (
-            self.game.screen.get_height() - self.game.base_screen_size[1]
+            self.window.screen.get_height() - self.window.base_screen_size[1]
         ) // 3
 
-        self.position.x /= self.game.base_screen_size[0] / self.game.display.get_width()
+        self.position.x /= self.window.base_screen_size[0] / self.window.display.get_width()
         self.position.y /= (
-            self.game.base_screen_size[1] / self.game.display.get_height()
+            self.window.base_screen_size[1] / self.window.display.get_height()
         )
 
     def draw(self, surface: pygame.Surface):
