@@ -8,7 +8,7 @@ TILE_SIZE = 20
 # TODO: put it in a file
 game_map = [
     [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 0],
+    [0, 0, 0, 0, 0, 1, 2, 3, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 0],
     [0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
     [0, 0, 0, 2, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
     [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 1],
@@ -36,17 +36,23 @@ class World:
         for row in game_map:
             x = 0
             for tile in row:
-                if tile != 0:           
-                    self.collision_tiles.append(
-                        Collider(Vector(x * TILE_SIZE, y * TILE_SIZE), TILE_SIZE, TILE_SIZE)
+                if tile == 0:
+                    x += 1
+                    continue    
+                
+                self.collision_tiles.append(
+                    Collider(Vector(x * TILE_SIZE, y * TILE_SIZE), TILE_SIZE, TILE_SIZE)
+                )
+                self.tiles.append(
+                    Tile(position=Vector(x * TILE_SIZE,y * TILE_SIZE), 
+                         size=TILE_SIZE,
+                         color_index=tile
                     )
-                    self.tiles.append(
-                        Tile(Vector(x * TILE_SIZE,y * TILE_SIZE), TILE_SIZE)
-                    )
+                )
             
                 x += 1
             y += 1
-
+        
     def draw(self, surface: pygame.Surface, offset: Vector = Vector()):
         for tile in self.tiles:
             tile.draw(surface, offset)

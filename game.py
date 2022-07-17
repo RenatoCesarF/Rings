@@ -7,10 +7,12 @@ from Engine.Vector import Vector
 from Engine.Collisions.Collider import Collider
 from Engine.Animator.SpriteSheet import Spritesheet
 from Engine.Animator.Animation import Animation
+from Engine.Camera import Camera
 from Engine.Window import Window
+from Engine.World.World import World
+
 from Entities.Player import Player
 from Entities.Mouse import Mouse
-from Engine.World.World import World
 
 
 class Globals:
@@ -23,16 +25,16 @@ class Game:
     window: Window
     world: World
     mouse: Mouse
-    camera: Vector()
+    camera: Camera
 
     def __init__(self):
         configs = json.load(open("config.json"))
         self.window = Window(configs)
         self.mouse = Mouse(self.window)
         self.world = World()
-        self.camera = Vector()
         self.player = Player(self)
         self.player.load_animations()
+        self.camera = Camera(self.player, self.window.screen_real_size)
 
         self.running = True
         self.clock = pygame.time.Clock()
@@ -44,9 +46,8 @@ class Game:
         self.world.update()
         self.mouse.update()
         self.player.update()
-        self.camera.x = self.player.position.x - self.window.screen_real_size[0] / 2
-        self.camera.y = self.player.position.y - self.window.screen_real_size[1] / 2
-
+        self.camera.update()
+        
         # scroll = self.camera
         # scroll.x = int(scroll.x)
         # scroll.y = int(scroll.y)
@@ -55,8 +56,8 @@ class Game:
 
     def draw(self):
         self.window.display.fill((30, 30, 30))
-        self.world.draw(self.window.display, self.camera)
-        self.player.draw(self.window.display, self.camera)
+        self.world.draw(self.window.display, self.camera.position)
+        self.player.draw(self.window.display, self.camera.position)
 
         self.window.blit_displays()
 
@@ -82,6 +83,7 @@ class Game:
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_TAB:
                     Globals.debugging = not Globals.debugging
+                    self.camera.set_target(self.mouse)
 
                 if event.key == pygame.K_SPACE:
                     self.player.speed = 5

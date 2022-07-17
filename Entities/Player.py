@@ -6,9 +6,9 @@ from Engine.Vector import Vector
 from Engine.Animator.Animation import Animation
 from Engine.Animator.SpriteSheet import Spritesheet
 from Engine.Collisions.Collider import Collider
+from Engine.Entity import Entity
 
-
-class Player:
+class Player(Entity):
     game: None
     position: Vector
     collision: Collider
@@ -60,7 +60,7 @@ class Player:
     def update_animate(self):
         is_turned_left = (
             self.game.mouse.position.get().x
-            > self.position.x - self.game.camera.get().x
+            > self.position.x - self.game.camera.position.get().x
         )
         if (
             not self.is_moving_right

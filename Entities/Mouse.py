@@ -1,8 +1,9 @@
 from Engine.Vector import Vector
+from Engine.Entity import Entity
 import pygame
 
 
-class Mouse:
+class Mouse(Entity):
     true_position: Vector
     position: Vector
     image: any
