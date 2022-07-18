@@ -34,9 +34,6 @@ screen = pygame.display.set_mode((base_screen_size[0],base_screen_size[1]),0,32)
 display = pygame.Surface((300, 200))
 clock = pygame.time.Clock()
 
-cursor_img = pygame.transform.scale(pygame.image.load('res/mouse.png').convert(), (33, 33))
-cursor_img.set_colorkey((0, 0, 0))
-
 
 sparks = []
 
@@ -46,21 +43,11 @@ while running:
         if event.type == pygame.QUIT:
             quit()
             exit()
-        if event.type==pygame.VIDEORESIZE:
-            w = event.dict['size'][0]
-            h = event.dict['size'][1]
-            screen=pygame.display.set_mode(event.dict['size'],pygame.RESIZABLE)
 
-    mx, my = pygame.mouse.get_pos()
-    true_mx = mx
-    true_my = my
-    mx -= (screen.get_width() - base_screen_size[0]) // 3
-    my -= (screen.get_height() - base_screen_size[1]) // 3
-    mx /= base_screen_size[0] / display.get_width()
-    my /= base_screen_size[1] / display.get_height()
-
-    display.fill((0,20,80))
-
+    display.fill((0,20,20))
+    
+    s = Spark(Vector(50,50), math.radians(random.randint(0,360)),speed= random.randint(1,3),color= (255,255,255))
+    sparks.append(s)
 
     for i, spark in sorted(enumerate(sparks), reverse= True):
         spark.move(1)
@@ -68,20 +55,10 @@ while running:
         spark.draw(display)
         if not spark.alive:
             sparks.pop(i)
-    
-    s = Spark(Vector(mx,my), math.radians(random.randint(0,360)),speed= random.randint(1,3),color= (255,255,255))
-    sparks.append(s)
 
     screen.blit(pygame.transform.scale(display, base_screen_size),
                 ((screen.get_width() - base_screen_size[0]) // 2,
                 (screen.get_height() - base_screen_size[1]) // 2))
-
-    screen.blit(cursor_img, (true_mx // 3 * 3 + 1, true_my // 3 * 3 + 1))
-
-
-    if debugging:
-        utils.draw_text(FONT, "FPS: " + str(int(clock.get_fps())), screen, (10,10))
-
 
     pygame.display.update()
    

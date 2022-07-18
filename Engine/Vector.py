@@ -20,12 +20,14 @@ class Vector:
         self.x = vector.x
         self.y = vector.y
 
-    def __add__(self, other: Vector) -> None:
+    def __add__(self, other: Vector):
         self.x += other.x
         self.y += other.y
+        return self
 
-    def __sub__(self, other: Vector) -> None:
-        self.x -= other.x
-        self.y -= other.y
+    def __sub__(self, other: Vector) :
+        self.x = self.x - other.x
+        self.y = self.y - other.y
+        return self
 
     # Override de [] operator to return x and y

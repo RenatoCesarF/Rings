@@ -20,7 +20,9 @@ class Tile:
     def get_tile_color_by_index(self, index: int):
         if index == 1:
             return (90,90,90)
-        if index == 2:
+        elif index == 2:
             return (190,90,90)
-        if index == 3:
+        elif index == 3:
+            return (90,190,90)
+        else:
             return (90,190,90)

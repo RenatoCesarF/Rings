@@ -1,6 +1,8 @@
 import pygame
 import json
-from math import sin, cos, floor
+import math
+import random
+
 
 from Engine import utils
 from Engine.Vector import Vector
@@ -10,6 +12,8 @@ from Engine.Animator.Animation import Animation
 from Engine.Camera import Camera
 from Engine.Window import Window
 from Engine.World.World import World
+from Engine.World.Tile import Tile
+from Engine.VFX.spark import Spark
 
 from Entities.Player import Player
 from Entities.Mouse import Mouse
@@ -19,7 +23,7 @@ class Globals:
     debugging = True
 
 class Game:
-    __entities: list
+    _entities: list
     game_time: int
     player: Player
     window: Window
@@ -36,31 +40,32 @@ class Game:
         self.player.load_animations()
         self.camera = Camera(self.player, self.window.screen_real_size)
 
+        self._entities = []
+        self._entities.append(self.player)
+        
         self.running = True
         self.clock = pygame.time.Clock()
         self.FONT = pygame.font.Font("res/Pixellari.ttf", 22)
 
     def update(self):
-        pygame.display.update()
-
         self.world.update()
         self.mouse.update()
-        self.player.update()
         self.camera.update()
         
-        # scroll = self.camera
-        # scroll.x = int(scroll.x)
-        # scroll.y = int(scroll.y)
+        for entitiy in self._entities:
+            entitiy.update()
 
+        pygame.display.update()
         self.clock.tick(60)
 
     def draw(self):
         self.window.display.fill((30, 30, 30))
         self.world.draw(self.window.display, self.camera.position)
-        self.player.draw(self.window.display, self.camera.position)
+
+        for entitiy in self._entities:
+            entitiy.draw(self.window.display, self.camera.position)
 
         self.window.blit_displays()
-
         self.draw_fps()
         self.mouse.draw(self.window.screen)
 

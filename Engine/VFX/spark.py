@@ -7,6 +7,14 @@ from pygame.transform import scale
 from Engine.Vector import Vector
 
 class Spark:
+    position: Vector
+    angle: float
+    speed: float
+    scale: float
+    color: tuple
+    thickness: float
+    alive: bool
+    points: list
     def __init__(self,position: Vector, angle: float, speed: float,
                     color: tuple = (255,255,255), scale:float = 1, thickness: float = 0.3) -> None:
         self.position = position
@@ -15,7 +23,8 @@ class Spark:
         self.scale = scale
         self.color = color
         self.thickness = thickness
-        self.alive = True
+        self.alive = True  
+        self.points = []
     
     def point_towards(self, angle: int, rate) -> None:
         rotate_direction = ((angle - self.angle + math.pi * 3) % (math.pi * 2)) - math.pi
@@ -56,22 +65,23 @@ class Spark:
             self.alive = False
     
     def draw(self, surface: pygame.Surface, offset: List = [0,0]) -> None:
-        if self.alive:
-            points = [
-                #Point 1
-                [self.position.x + math.cos(self.angle) * self.speed * self.scale, 
-                 self.position.y + math.sin(self.angle) * self.speed * self.scale],
+        if not self.alive:
+            return
+        self.points = [
+            #Point 1
+            [self.position.x + math.cos(self.angle) * self.speed * self.scale, 
+                self.position.y + math.sin(self.angle) * self.speed * self.scale],
 
-                #Point 2
-                [self.position.x + math.cos(self.angle + math.pi / 2) * self.speed * self.scale * self.thickness,
-                 self.position.y + math.sin(self.angle + math.pi/ 2) * self.speed * self.scale * self.thickness],
+            #Point 2
+            [self.position.x + math.cos(self.angle + math.pi / 2) * self.speed * self.scale * self.thickness,
+                self.position.y + math.sin(self.angle + math.pi/ 2) * self.speed * self.scale * self.thickness],
 
-                #Point 3
-                [self.position.x - math.cos(self.angle) * self.speed * self.scale * 3.5,
-                 self.position.y - math.sin(self.angle) * self.speed * self.scale * 3.5 ],
+            #Point 3
+            [self.position.x - math.cos(self.angle) * self.speed * self.scale * 3.5,
+                self.position.y - math.sin(self.angle) * self.speed * self.scale * 3.5 ],
 
-                #Point 4
-                [self.position.x + math.cos(self.angle - math.pi / 2) * self.speed * self.scale * self.thickness, 
-                 self.position.y - math.sin(self.angle + math.pi / 2) * self.speed * self.scale * self.thickness]
-            ]
-            pygame.draw.polygon(surface, self.color, points)
+            #Point 4
+            [self.position.x + math.cos(self.angle - math.pi / 2) * self.speed * self.scale * self.thickness, 
+                self.position.y - math.sin(self.angle + math.pi / 2) * self.speed * self.scale * self.thickness]
+        ]
+        pygame.draw.polygon(surface, self.color, self.points)
