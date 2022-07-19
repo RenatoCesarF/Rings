@@ -7,6 +7,7 @@ class Mouse(Entity):
     true_position: Vector
     position: Vector
     image: any
+    colision_rect: pygame.Rect
 
     def __init__(self, window):
         self.window = window
@@ -29,7 +30,9 @@ class Mouse(Entity):
             self.window.screen.get_height() - self.window.base_screen_size[1]
         ) // 3
 
-        self.position.x /= self.window.base_screen_size[0] / self.window.display.get_width()
+        self.position.x /= (
+            self.window.base_screen_size[0] / self.window.display.get_width()
+        )
         self.position.y /= (
             self.window.base_screen_size[1] / self.window.display.get_height()
         )

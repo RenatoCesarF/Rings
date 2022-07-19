@@ -22,6 +22,7 @@ from Entities.Mouse import Mouse
 class Globals:
     debugging = True
 
+
 class Game:
     _entities: list
     game_time: int
@@ -42,7 +43,7 @@ class Game:
 
         self._entities = []
         self._entities.append(self.player)
-        
+
         self.running = True
         self.clock = pygame.time.Clock()
         self.FONT = pygame.font.Font("res/Pixellari.ttf", 22)
@@ -51,7 +52,7 @@ class Game:
         self.world.update()
         self.mouse.update()
         self.camera.update()
-        
+
         for entitiy in self._entities:
             entitiy.update()
 

@@ -1,5 +1,6 @@
 from enum import Enum
 
+
 class Shape(Enum):
     Rect = 1
     Box = 2

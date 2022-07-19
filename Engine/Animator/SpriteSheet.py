@@ -1,7 +1,14 @@
 import pygame
 
+
 class Spritesheet:
-    def __init__(self,file_directory: str, scale: int = 1, custom_colorkey = (0,0,0), space_between_sprites: float = 0) -> None:
+    def __init__(
+        self,
+        file_directory: str,
+        scale: int = 1,
+        custom_colorkey=(0, 0, 0),
+        space_between_sprites: float = 0,
+    ) -> None:
         """Load a spritesheet image by the file_directory and apply the custom_colorkey to it.
            if your animation has a space between the sprites, you can configure it as well.
 
@@ -16,12 +23,16 @@ class Spritesheet:
         self.image = pygame.image.load(file_directory).convert()
         self.height = self.image.get_height()
         self.width = self.image.get_width()
-        self.image = pygame.transform.scale(self.image,(self.width * scale, self.height * scale))
+        self.image = pygame.transform.scale(
+            self.image, (self.width * scale, self.height * scale)
+        )
         self.color_key = custom_colorkey
         self.space_between_sprites = space_between_sprites
         self.scale = scale
 
-    def get_sprite(self,x: float,y: float,width: int,height: int, debugging: bool = False) -> pygame.Surface:
+    def get_sprite(
+        self, x: float, y: float, width: int, height: int, debugging: bool = False
+    ) -> pygame.Surface:
         """Return a pygame Surface with the sprite in the x,y position and with this width and height.
 
         Args:
@@ -35,15 +46,20 @@ class Spritesheet:
         Returns:
             pygame.Surface: You can use it to blit into some pygame.surface
         """
-        sprite = pygame.Surface((width*self.scale , height* self.scale)) 
+        sprite = pygame.Surface((width * self.scale, height * self.scale))
         sprite.set_colorkey(self.color_key)
-        sprite.blit(self.image,(0,0),(x * self.scale, y * self.scale,
-                                             width * self.scale, height * self.scale))
+        sprite.blit(
+            self.image,
+            (0, 0),
+            (x * self.scale, y * self.scale, width * self.scale, height * self.scale),
+        )
         if debugging:
-            pygame.draw.rect(sprite, (200,0,0), pygame.Rect(0,0, width, height), width = 1)
+            pygame.draw.rect(
+                sprite, (200, 0, 0), pygame.Rect(0, 0, width, height), width=1
+            )
 
         return sprite
-    
+
     def __str__(self):
         return f"""
             directory: {self.file_directory}

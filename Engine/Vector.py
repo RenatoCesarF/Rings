@@ -25,7 +25,7 @@ class Vector:
         self.y += other.y
         return self
 
-    def __sub__(self, other: Vector) :
+    def __sub__(self, other: Vector):
         self.x = self.x - other.x
         self.y = self.y - other.y
         return self

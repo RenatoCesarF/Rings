@@ -8,6 +8,7 @@ from Engine.Animator.SpriteSheet import Spritesheet
 from Engine.Collisions.Collider import Collider
 from Engine.Entity import Entity
 
+
 class Player(Entity):
     game: None
     position: Vector

@@ -4,11 +4,22 @@ from pygame.math import Vector2
 
 from Engine.Vector import Vector
 
-class  Collider:
-    def __init__(self, initial_position: Vector, width: int, height: int, 
-                 collision_tolerance: int = 3, left_offset: Vector = Vector()) -> None:
-        self.collision_rect = pygame.Rect(initial_position.x,initial_position.y,width, height)
-        self.left_offset = left_offset #TODO: implement a way to add offset to collision
+
+class Collider:
+    def __init__(
+        self,
+        initial_position: Vector,
+        width: int,
+        height: int,
+        collision_tolerance: int = 3,
+        left_offset: Vector = Vector(),
+    ) -> None:
+        self.collision_rect = pygame.Rect(
+            initial_position.x, initial_position.y, width, height
+        )
+        self.left_offset = (
+            left_offset  # TODO: implement a way to add offset to collision
+        )
         self.collision_tolerance = collision_tolerance
         self.speed = Vector()
         self.width = width
@@ -23,15 +34,15 @@ class  Collider:
 
     def check_multiple_tiles_collision(self, tile_list: tuple) -> tuple:
         colide_list = []
-        
 
         for tile in tile_list:
             if self.collision_rect.colliderect(tile.collision_rect):
                 colide_list.append(tile)
         return colide_list
-    
 
-    def update_position_after_check_collisions(self,next_position: Vector, tiles: tuple) -> None:
+    def update_position_after_check_collisions(
+        self, next_position: Vector, tiles: tuple
+    ) -> None:
         self.reset_all_collisions()
         self.collision_rect.x += next_position.x
         hit_list = self.check_multiple_tiles_collision(tiles)
@@ -43,11 +54,10 @@ class  Collider:
             elif next_position.x < 0:
                 self.collision_rect.left = tile.collision_rect.right
                 self.is_colliding_left = True
-            
 
         self.collision_rect.y += next_position.y
         hit_list = self.check_multiple_tiles_collision(tiles)
-        
+
         for tile in hit_list:
             if next_position.y > 0:
                 self.collision_rect.bottom = tile.collision_rect.top
@@ -56,12 +66,24 @@ class  Collider:
                 self.collision_rect.top = tile.collision_rect.bottom
                 self.is_colliding_top = True
 
-    def draw_collision_rect(self, destination_surface: pygame.Surface, offset: Vector = Vector(), 
-                            color: tuple = (250,0,0), width: int = 1) -> None:
-        pygame.draw.rect(destination_surface, color, 
-                         pygame.Rect(self.collision_rect.x - offset.x,# + self.left_offset.x,
-                                     self.collision_rect.y - offset.y,# + self.left_offset.y,
-                                     self.width,self.height), width=width)
+    def draw_collision_rect(
+        self,
+        destination_surface: pygame.Surface,
+        offset: Vector = Vector(),
+        color: tuple = (250, 0, 0),
+        width: int = 1,
+    ) -> None:
+        pygame.draw.rect(
+            destination_surface,
+            color,
+            pygame.Rect(
+                self.collision_rect.x - offset.x,  # + self.left_offset.x,
+                self.collision_rect.y - offset.y,  # + self.left_offset.y,
+                self.width,
+                self.height,
+            ),
+            width=width,
+        )
 
     def reset_all_collisions(self) -> None:
         self.is_colliding = False
@@ -69,9 +91,7 @@ class  Collider:
         self.is_colliding_bottom = False
         self.is_colliding_left = False
         self.is_colliding_right = False
-        
-        
-    
+
     # def check_single_collising_with(self, other_collider: Collider) -> None:
     #     if not self.is_active:
     #         self.reset_all_collisions()

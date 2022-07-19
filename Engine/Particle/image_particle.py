@@ -1,4 +1,4 @@
-#TODO: add animation to the image using list of images or an animation Object
+# TODO: add animation to the image using list of images or an animation Object
 from typing import Tuple
 from abc import ABC
 import abc
@@ -12,12 +12,21 @@ from Engine.Vector import Vector
 from Engine.shape import Shape
 from Engine.Particle.abc_particle import AbcParticle
 
+
 class ImageParticle(AbcParticle):
-    def __init__(self,image: pygame.image, position: Vector, velocity: Vector,  life_time: float = 1, opacity: int = 255, scale: float = 1):
+    def __init__(
+        self,
+        image: pygame.image,
+        position: Vector,
+        velocity: Vector,
+        life_time: float = 1,
+        opacity: int = 255,
+        scale: float = 1,
+    ):
         """Each particle to be created by a particle emitter\n
         Args:
             `image` (pygame.image): The image already loaded
-            `position` (Vector): The X and Y position 
+            `position` (Vector): The X and Y position
             `velocity` (Vector): (x,y) velocity of the particle
             `life_time` (float, optional): Seconds of existence of this particle. Defaults to 1.
             `opacity` (int, optional): Opacity of the particle, it's from 0 to 255 value  . Defaults to 255.
@@ -27,21 +36,24 @@ class ImageParticle(AbcParticle):
         self.image = image
         self.width = self.image.get_width()
         self.height = self.image.get_height()
-        self.image = pygame.transform.scale(self.image,(self.width * scale, self.height * scale))
-        super().__init__(position, velocity, self.width, self.height, life_time, opacity)
+        self.image = pygame.transform.scale(
+            self.image, (self.width * scale, self.height * scale)
+        )
+        super().__init__(
+            position, velocity, self.width, self.height, life_time, opacity
+        )
 
-
-    def draw(self,destinatonSurface) -> None:
+    def draw(self, destinatonSurface) -> None:
         """Draws the particle into the destination surface after set it's opacity
 
         Args:
             destinatonSurface (pygame.Surface): The surface where ther particle will be blited at
-        """ 
+        """
         self.image.set_alpha(self.opacity)
         destinatonSurface.blit(self.image, self.position.get())
-        
-        #TODO: make rotations 
-    
+
+        # TODO: make rotations
+
     def __str__(self):
         desc = super().__str__()
         desc += f"""
