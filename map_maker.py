@@ -38,20 +38,31 @@ class MapMaker:
         )
         self.camera = Camera(Entity(self.center_point), self.window.screen_real_size)
         self.mouse = Mouse(self.window)
-        self.tile_test = Tile(Vector(50, 50), TILE_SIZE, 1)
         self.clock = pygame.time.Clock()
         self.running = True
 
     def draw(self):
-        self.window.display.fill((30, 30, 30))
-
+        self.window.display.fill((20, 20, 20))
+        
         for tile in self.tiles:
             tile.draw(self.window.display, self.camera.position)
 
-
+        self.draw_grid()
         self.window.blit_displays()
         self.mouse.draw(self.window.screen)
     def update(self):
+        self.generate_tiles_with_game_map()
+        self.mouse.update()
+        self.camera.update()
+        
+        x_index = int((self.mouse.position.x + self.camera.position.x) / TILE_SIZE)
+        y_index = int((self.mouse.position.y + self.camera.position.y) / TILE_SIZE)
+
+        game_map[y_index][x_index] = 6
+    
+        pygame.display.update()
+        self.clock.tick(60)
+    def generate_tiles_with_game_map(self):
         self.tiles: Dict[Tile] = []
         y = 0
         for row in game_map:
@@ -70,11 +81,8 @@ class MapMaker:
 
                 x += 1
             y += 1
-        self.mouse.update()
-        self.camera.update()
-        pygame.display.update()
-        self.clock.tick(60)
-
+        
+        
     def check_events(self):
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -100,6 +108,14 @@ class MapMaker:
             #         self.center_point.y -=1
             #     if event.key == pygame.K_s:
             #         self.center_point.y -=1
+
+    def draw_grid(self):
+        for i in range (-30,30):
+            for j in range(-30,30):
+                t = Tile(Vector(i* TILE_SIZE, j * TILE_SIZE),
+                        TILE_SIZE,
+                        color_index=4, thikness=1)
+                t.draw(self.window.display, self.camera.position)
 
     def run(self):
         while self.running:

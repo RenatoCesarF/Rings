@@ -29,5 +29,9 @@ class Vector:
         self.x = self.x - other.x
         self.y = self.y - other.y
         return self
+    
+    def __truediv__(self,other: Vector):
+        self.x = self.x / other.x
+        self.y = self.y / other.y
+        return self
 
-    # Override de [] operator to return x and y
