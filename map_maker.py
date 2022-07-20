@@ -54,8 +54,10 @@ class MapMaker:
         y_index = int((self.mouse.position.y + self.camera.position.y) / TILE_SIZE)
         self.tile_hover_index = [x_index, y_index]
         
-        if self.mouse.is_pressed:
+        if self.mouse.left_is_pressed:
             self.change_tile_info(x_index, y_index, self.selected_tile)
+        if self.mouse.right_is_pressed:
+            self.change_tile_info(x_index, y_index, 0)
 
         pygame.display.update()
         self.clock.tick(60)

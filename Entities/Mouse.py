@@ -7,7 +7,8 @@ class Mouse(Entity):
     true_position: Vector
     position: Vector
     image: any
-    is_pressed: bool 
+    left_is_pressed: bool 
+    right_is_pressed: bool 
     colision_rect: pygame.Rect
 
     def __init__(self, window):
@@ -17,7 +18,8 @@ class Mouse(Entity):
         self.image = pygame.transform.scale(
             pygame.image.load("res/mouse.png").convert(), (44, 44)
         )
-        self.is_pressed = False
+        self.left_is_pressed = False
+        self.right_is_pressed = False
         self.image.set_colorkey((255, 0, 0))
 
     def update(self, tick=30):
@@ -25,10 +27,7 @@ class Mouse(Entity):
         self.true_position.x = self.position.x
         self.true_position.y = self.position.y
         self.handle_click()
-        if pygame.mouse.get_pressed()[0]:
-            self.is_pressed = True
-        else:
-            self.is_pressed = False
+
             
         self.position.x -= (
             self.window.screen.get_width() - self.window.base_screen_size[0]
@@ -45,9 +44,16 @@ class Mouse(Entity):
         )
     def handle_click(self):
         if pygame.mouse.get_pressed()[0]:
-            self.is_pressed = True
+            self.left_is_pressed = True
         else:
-            self.is_pressed = False
+            self.left_is_pressed = False
+            
+        if pygame.mouse.get_pressed()[2]:
+            print("pressed")
+            self.right_is_pressed = True
+        else:
+            self.right_is_pressed = False
+            
             
     def draw(self, surface: pygame.Surface):
         surface.blit(

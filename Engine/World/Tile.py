@@ -35,7 +35,7 @@ class Tile:
         elif index == 3:
             return (90, 190, 90)
         elif index == 4:
-            return (40,40, 40)
+            return (30,30,30)
         elif index == 6:
             return (0,200,0)
         else:
