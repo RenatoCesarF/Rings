@@ -13,8 +13,10 @@ class Vector:
     def get(self) -> Vector:
         return Vector(self.x, self.y)
 
+    def to_tuple(self):
+        return (self.x, self.y)
     def __str__(self):
-        return f"X: {self.x} Y: {self.y}"
+        return f"X: {int(self.x)} Y: {int(self.y)}"
 
     def __eq__(self, vector: Vector):
         self.x = vector.x

@@ -3,7 +3,6 @@ import json
 import math
 import random
 
-
 from Engine import utils
 from Engine.Vector import Vector
 from Engine.Collisions.Collider import Collider

@@ -7,7 +7,7 @@ from Engine.World.Tile import Tile
 TILE_SIZE = 20
 
 
-game_map = json.load(open("res/map.json"))
+game_map = json.load(open("test.json"))
 
 
 class World:
@@ -42,7 +42,6 @@ class World:
                         color_index=tile,
                     )
                 )
-
                 x += 1
             y += 1
 
