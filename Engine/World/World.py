@@ -39,7 +39,7 @@ class World:
                     Tile(
                         position=Vector(x * TILE_SIZE, y * TILE_SIZE),
                         size=TILE_SIZE,
-                        color_index=tile,
+                        content=tile,
                     )
                 )
                 x += 1

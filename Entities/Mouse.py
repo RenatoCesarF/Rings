@@ -49,7 +49,6 @@ class Mouse(Entity):
             self.left_is_pressed = False
             
         if pygame.mouse.get_pressed()[2]:
-            print("pressed")
             self.right_is_pressed = True
         else:
             self.right_is_pressed = False

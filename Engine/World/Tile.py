@@ -7,11 +7,13 @@ class Tile:
     size: int
     color: tuple
     thikness: int
+    content: int 
 
-    def __init__(self, position: Vector, size: int, color_index: int = 0, thikness: int = 0):
+    def __init__(self, position: Vector, size: int, content: int = 0, thikness: int = 0):
+        self.content = content or 0
         self.position = position
         self.size = size
-        self.color = self.get_tile_color_by_index(color_index)
+        self.color = self.get_tile_color_by_index(self.content)
         self.thikness = thikness
 
     def draw(self, surface: pygame.Surface, offset: Vector):

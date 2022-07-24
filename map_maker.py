@@ -18,23 +18,25 @@ from Engine.Entity import Entity
 from Entities.Player import Player
 from Entities.Mouse import Mouse
 
-game_map = json.load(open("test.json"))
+WORLD_FILE = 'test.json'
+game_map = json.load(open(WORLD_FILE))
 
 TILE_SIZE = 20
-MAP_SIZE = 30
+VERTICAL_MAP_SIZE = len(game_map[0])
+HORIZONTAL_MAP_SIZE = len(game_map)
 
 class MapMaker:
-    running: bool = True
+    running: bool
     camera: Camera
     center_point: Vector
     window: Window
     tiles: list
     mouse: Mouse
-    selected_tile: int
+    selected_tile: Tile
 
     def __init__(self):
         configs = json.load(open("config.json"))
-        self.selected_tile = 0
+        self.selected_tile = Tile(Vector(), TILE_SIZE)
         self.window = Window(configs)
         self.center_point = Vector(
             self.window.screen_real_size[0] / 2, self.window.screen_real_size[1] / 2
@@ -55,7 +57,7 @@ class MapMaker:
         self.tile_hover_index = [x_index, y_index]
         
         if self.mouse.left_is_pressed:
-            self.change_tile_info(x_index, y_index, self.selected_tile)
+            self.change_tile_info(x_index, y_index, self.selected_tile.content)
         if self.mouse.right_is_pressed:
             self.change_tile_info(x_index, y_index, 0)
 
@@ -71,7 +73,6 @@ class MapMaker:
         self.draw_grid()
 
         self.window.blit_displays()
-    
         self.mouse.draw(self.window.screen)
     
     def change_tile_info(self, x_position, y_position, new_data):
@@ -114,7 +115,7 @@ class MapMaker:
                     Tile(
                         position=Vector(x * TILE_SIZE, y * TILE_SIZE),
                         size=TILE_SIZE,
-                        color_index=tile,
+                        content=tile,
                     )
                 )
 
@@ -122,18 +123,18 @@ class MapMaker:
             y += 1
 
     def draw_grid(self):
-        for i in range (-1 * MAP_SIZE,MAP_SIZE):
-            for j in range(-1 * MAP_SIZE,MAP_SIZE):
+        for i in range (0, VERTICAL_MAP_SIZE):
+            for j in range(0 , HORIZONTAL_MAP_SIZE):
                 t = Tile(Vector(i* TILE_SIZE, j * TILE_SIZE),
                         TILE_SIZE,
-                        color_index=4, thikness=1)
+                        content=4, thikness=1)
                 t.draw(self.window.display, self.camera.position)
         
     def check_events(self):
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 self.running = False
-                self.save_world("test.json")
+                self.save_world(WORLD_FILE)
                 quit()
                 exit()
             if event.type == pygame.KEYDOWN:
@@ -145,29 +146,21 @@ class MapMaker:
                     self.center_point.y -= 10
                 if event.key == pygame.K_s:
                     self.center_point.y += 10
-                
-                
-                
-                if event.key == pygame.K_1:
-                    self.selected_tile = 1
-                elif event.key == pygame.K_2:
-                    self.selected_tile = 2
-                elif event.key == pygame.K_3:
-                    self.selected_tile = 3
-                elif event.key == pygame.K_4:
-                    self.selected_tile = 4
-                elif event.key == pygame.K_0:
-                    self.selected_tile = 0
-            # if event.type == pygame.KEYUP:
-            #     if event.key == pygame.K_d:
-            #         self.center_point.x += 10
-            #     if event.key == pygame.K_a:
-            #         self.center_point.x -= 1
-            #     if event.key == pygame.K_w:
-            #         self.center_point.y -=1
-            #     if event.key == pygame.K_s:
-            #         self.center_point.y -=1
+                          
+                self.check_number_keys_input(event.key)
 
+    def check_number_keys_input(self, key):
+        if key == pygame.K_1:
+            self.selected_tile.content = 1
+        elif key == pygame.K_2:
+            self.selected_tile.content = 2
+        elif key == pygame.K_3:
+            self.selected_tile.content = 3
+        elif key == pygame.K_4:
+            self.selected_tile.content = 4
+        elif key == pygame.K_0:
+            self.selected_tile.content = 0
+    
     def run(self):
         while self.running:
             self.check_events()
