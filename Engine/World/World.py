@@ -18,11 +18,12 @@ class World:
     tiles: List[Tile]
     vertical_map_size: int
     horizontal_map_size: int
-
+    map_matrix: List[List[int]]
     def __init__(self):
         self.collision_tiles = []
         self.tile_rects = []
         self.tiles = []
+        self.map_matrix = game_map
         self.vertical_map_size = len(game_map[0])
         self.horinzontal_map_size = len(game_map)
         self.testImage: Image = Image('./res/sprites/ground6.png', (215, 123, 186))
@@ -70,7 +71,9 @@ class World:
         offset.x += camera_position.x % TILE_SIZE.x  # Add camera_position scroll to offset
         offset.y += camera_position.y % TILE_SIZE.y
 
-        cell_position = World.get_uppon_tile_number(position, camera_position)
+        cell_position = Vector((position.x // TILE_SIZE.x), (position.y // TILE_SIZE.y))
+        cell_position.x += int((camera_position.x // TILE_SIZE.x))  # Add camera_position scroll to cell
+        cell_position.y += int((camera_position.y // TILE_SIZE.y))
         # get the selected cell in iso grid
         selected_pos = Vector(
             (cell_position.y - MAP_OFFSET.y) + (cell_position.x - MAP_OFFSET.x),
@@ -90,10 +93,3 @@ class World:
 
         # translate the selected cell to world coordinate
         return Vector(selected_pos.x, selected_pos.y)
-
-    def get_uppon_tile_number(position: Vector, offset: Vector):
-        # get the cell number
-        cell_position = Vector((position.x // TILE_SIZE.x), (position.y // TILE_SIZE.y))
-        cell_position.x += int((offset.x // TILE_SIZE.x))  # Add offset scroll to cell
-        cell_position.y += int((offset.y // TILE_SIZE.y))
-        return cell_position

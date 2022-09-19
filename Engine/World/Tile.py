@@ -22,7 +22,7 @@ class Tile:
         self.color = color
         self.thikness = thikness
 
-    def draw(self, surface: pygame.Surface, offset: Vector):
+    def draw(self, surface: pygame.Surface, offset: Vector ):
         pygame.draw.rect(
             surface,
             self.color,
@@ -32,10 +32,10 @@ class Tile:
                 self.size,
                 self.size,
             ),
-                width=self.thikness
+            width=self.thikness
         )
-
-    def get_tile_color_by_index(self, index: int):
+    @staticmethod
+    def get_tile_color_by_index(index: int):
         if index == 1:
             return (90, 90, 90)
         elif index == 2:

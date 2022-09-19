@@ -1,7 +1,11 @@
+from typing import Dict
 import pygame
 import json
 import math
 import random
+
+import pygame_gui
+from Engine.UI import UI
 
 from Engine.config import Config
 from Engine import utils
@@ -34,12 +38,18 @@ class MapMaker:
     tiles: list
     mouse: Mouse
     selected_tile: Tile
+    ui: UI
     configs: Config
 
     def __init__(self):
-        self.selected_tile = Tile(Vector(), TILE_SIZE)
+        self.selected_tile = Tile(Vector(), TILE_SIZE, Vector(0,0))
         self.configs = Config("./res/config.json")
         self.window = Window(self.configs.resolution)
+        self.ui = UI(
+            self.configs.resolution_as_tuple(),
+            'res/ui_theme.json',
+            self.window.screen
+        )
         self.center_point = Vector(
             self.window.screen_real_size[0] / 2, self.window.screen_real_size[1] / 2
         )
@@ -50,6 +60,8 @@ class MapMaker:
         self.FONT = pygame.font.Font("res/Pixellari.ttf", 22)
         
     def update(self):
+        self.time_delta = self.clock.tick(60)/1000.0
+        self.ui.update(self.time_delta)
         self.generate_tiles_with_game_map()
         self.mouse.update()
         self.camera.update()
@@ -73,7 +85,7 @@ class MapMaker:
             tile.draw(self.window.display, self.camera.position)
 
         self.draw_grid()
-
+        
         self.window.blit_displays()
         self.mouse.draw(self.window.screen)
     
@@ -117,6 +129,8 @@ class MapMaker:
                         position=Vector(x * TILE_SIZE, y * TILE_SIZE),
                         size=TILE_SIZE,
                         content=tile,
+                        color=Tile.get_tile_color_by_index(tile),
+                        tile_index=Vector(x,y)
                     )
                 )
 
@@ -126,10 +140,13 @@ class MapMaker:
     def draw_grid(self):
         for i in range (0, VERTICAL_MAP_SIZE):
             for j in range(0 , HORIZONTAL_MAP_SIZE):
-                t = Tile(Vector(i* TILE_SIZE, j * TILE_SIZE),
+                tile = Tile(Vector(i* TILE_SIZE, j * TILE_SIZE),
                         TILE_SIZE,
-                        content=4, thikness=1)
-                t.draw(self.window.display, self.camera.position)
+                        content=4,
+                        thikness=1,
+                        tile_index=Vector(i,j)
+                    )
+                tile.draw(self.window.display, self.camera.position)
         
     def check_events(self):
         for event in pygame.event.get():
@@ -137,7 +154,7 @@ class MapMaker:
                 self.running = False
                 self.save_world(WORLD_FILE)
                 quit()
-                exit()
+
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_d:
                     self.center_point.x += 10
@@ -149,7 +166,10 @@ class MapMaker:
                     self.center_point.y += 10
                           
                 self.check_number_keys_input(event.key)
+            if event.type == pygame_gui.UI_BUTTON_PRESSED:
+                self.ui.check_events(event)
 
+            self.ui.manager.process_events(event)
     def check_number_keys_input(self, key):
         if key == pygame.K_1:
             self.selected_tile.content = 1

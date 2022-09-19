@@ -83,12 +83,12 @@ class Game:
                 self.selected_tile_position.x,
                 self.selected_tile_position.y
             ),
-            self.camera.position)
+            self.camera.position
+        )
         self.window.blit_displays()
         self.ui.draw(self.window.screen)
-        self.ui.write(str(self.selected_tile_position), Vector(0,30))
-        self.ui.write(str(World.get_uppon_tile_number(self.mouse.position, self.camera.position)), Vector(0,50))
         self.ui.write(str(int(self.clock.get_fps())), Vector(0,10))
+        self.ui.write("Selected Tile: "  + str(self.selected_tile_position.to_tuple), Vector(0,30))
         self.mouse.draw(self.window.screen)
 
     def process_events(self):
