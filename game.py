@@ -16,7 +16,7 @@ from Engine.config import TILE_SIZE
 from Engine.camera import Camera
 from Engine.window import Window
 from Engine.World.Tile import Tile
-from Engine.World.World import World
+from Engine.World.world import World
 from Engine.image import Image
 
 from Entities.Mouse import ClickingState, Mouse
@@ -27,7 +27,6 @@ from unit import Unit
 class Globals:
     debugging: bool = True
 
-MAP_OFFSET: Vector = Vector(5,1)
 
 class Game:
     _entities: List[Entity]
@@ -55,77 +54,41 @@ class Game:
         self.world = World()
         self.mouse = Mouse(self.window)
         self.camera = Camera(None, self.window.screen_real_size)
-        self.testImage: Image = Image('./res/sprites/groun2.png', (215, 123, 186))
         self.selected: Image = Image('./res/sprites/selected.png',)
         self.selected.set_opacity(200)
-
         self.clock = pygame.time.Clock()
-        self.tiles = []
 
     def update(self):
-        self.tiles = []
         self.time_delta = self.clock.tick(60)/1000.0
         self.ui.update(self.time_delta)
-        # self.world.update()
-        self.add_tiles()
-        self.selected_tile_position = self.get_mouse_selected_tile()
+        self.world.update()
+        
+        self.selected_tile_position = World.get_tile_position_in_grid(
+            self.mouse.position,
+            self.camera.position
+        )
+        
         self.mouse.update()
         self.camera.update()
         pygame.display.update()
-        
-    def get_mouse_selected_tile(self):
-        # get the mouse offset position inside the tile
-        offset = Vector(self.mouse.position.x % TILE_SIZE.x, self.mouse.position.y % TILE_SIZE.y)
-        offset.x += self.camera.position.x % TILE_SIZE.x  # Add camera scroll to offset
-        offset.y += self.camera.position.y % TILE_SIZE.y
-
-        # get the cell number
-        cell_position = Vector((self.mouse.position.x // TILE_SIZE.x), (self.mouse.position.y // TILE_SIZE.y))
-        cell_position.x += int((self.camera.position.x // TILE_SIZE.x))  # Add camera scroll to cell
-        cell_position.y += int((self.camera.position.y // TILE_SIZE.y))
-
-        # get the selected cell in iso grid
-        selected_pos = Vector(
-            (cell_position.y - MAP_OFFSET.y) + (cell_position.x - MAP_OFFSET.x),
-            (cell_position.y - MAP_OFFSET.y) - (cell_position.x - MAP_OFFSET.x)
-        )
-        
-        # height and width of a quarter of a tile, select the corner of the tile to nodge to a direction
-        h, w = TILE_SIZE.y / 2, TILE_SIZE.x / 2
-        if offset.y < (h / w) * (w - offset.x):
-            selected_pos.x -= 1
-        if offset.y > (h / w) * offset.x + h:
-            selected_pos.y += 1
-        if offset.y < (h / w) * offset.x - h:
-            selected_pos.y -= 1
-        if offset.y > (h / w) * (2 * w - offset.x) + h:
-            selected_pos.x += 1
-
-        # translate the selected cell to world coordinate
-        return Window.to_screen(selected_pos.x, selected_pos.y)
-
-    def add_tiles(self):
-        y = 0
-        for row in range(0, 5):
-            x = 0
-            for tile in range(0, 5):
-                self.tiles.append(Window.to_screen(x,y))
-                x += 1
-            y += 1
-
+    
     def draw(self):
-        self.window.display.fill((30, 30, 30))
-        # self.world.draw(self.window.display, self.camera.position)
+        self.window.display.fill((80, 90, 90))
+        self.world.draw(self.window.display, self.camera.position)
         # self.world.draw_grid(self.window.display, self.camera.position)
-        # self.testImage.draw(self.window.display, Vector(60,60), self.camera.position)
  
-        for i in self.tiles:
-            self.testImage.draw( self.window.display, i, self.camera.position)
-        
-        self.selected.draw(self.window.display, self.selected_tile_position, self.camera.position)
+        self.selected.draw(
+            self.window.display,
+            Window.to_screen(
+                self.selected_tile_position.x,
+                self.selected_tile_position.y
+            ),
+            self.camera.position)
         self.window.blit_displays()
         self.ui.draw(self.window.screen)
-
+        self.ui.write(str(self.selected_tile_position), Vector(0,30))
+        self.ui.write(str(World.get_uppon_tile_number(self.mouse.position, self.camera.position)), Vector(0,50))
+        self.ui.write(str(int(self.clock.get_fps())), Vector(0,10))
         self.mouse.draw(self.window.screen)
 
     def process_events(self):
@@ -138,16 +101,16 @@ class Game:
                     Globals.debugging = not Globals.debugging
 
                 if event.key == pygame.K_a:
-                    self.camera.position.x+=10
+                    self.camera.position.x-=10
     
                 if event.key == pygame.K_d:
-                    self.camera.position.x-=10
+                    self.camera.position.x+=10
               
                 if event.key == pygame.K_s:
-                    self.camera.position.y-=10
+                    self.camera.position.y+=10
                 
                 if event.key == pygame.K_w:
-                    self.camera.position.y+=10
+                    self.camera.position.y-=10
                     
                     
                 if event.key == pygame.K_1:

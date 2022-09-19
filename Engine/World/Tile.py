@@ -6,15 +6,17 @@ from Engine.vector import Vector
 class Tile:
     position: Vector
     size: int
+    tile_index: Vector
     color: Tuple[int,int,int]
     thikness: int
     content: int 
 
     def __init__(
-        self, position: Vector, size: int, content: int = 0,
+        self, position: Vector, size: int, tile_index: Vector, content: int = 0,
         color: Tuple[int,int,int] = (100,100,100), thikness: int = 0
     ):
         self.content = content or 0
+        self.tile_index = tile_index
         self.position = position
         self.size = size
         self.color = color
