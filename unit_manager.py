@@ -2,6 +2,7 @@ from typing import List
 
 
 from pygame.surface import Surface
+from Engine.World.tile import Tile
 from Engine.image import Image
 from Engine.vector import Vector
 
@@ -23,6 +24,19 @@ class UnitManager:
             unit.draw(surface, offset)
         
     def add_unit_to_list(self, unit: Unit):
+        if self.is_tile_position_occupied(unit.tile_position):
+            return
         self.unit_list.append(unit)
-        self.unit_list = sorted(self.unit_list,key= lambda x:x.position.y)
+        self.unit_list = sorted(self.unit_list,key= lambda x:x.screen_position.y)
+
+            
+    def is_tile_position_occupied(self, tile_position: Vector) -> bool:
+        for unit in self.unit_list:
+            if (
+                unit.tile_position.x == tile_position.x 
+                and unit.tile_position.y == tile_position.y
+            ) :
+                return True
+        
+        return False
         

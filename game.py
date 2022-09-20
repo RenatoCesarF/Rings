@@ -69,23 +69,28 @@ class Game:
         )
 
         if self.mouse.left_is_pressed:
-            if self.world.is_tile_position_valid(
-                self.selected_tile_position.x,
-                self.selected_tile_position.y
-            ):
-                self.unit_manager.add_unit_to_list(
-                    Unit(
-                        Window.to_screen(
-                            self.selected_tile_position.x,
-                            self.selected_tile_position.y
-                        )
-                        
-                    )
-                )
+            self.add_unit_in_tile()
         
         self.mouse.update()
         self.camera.update()
         pygame.display.update()
+        
+    def add_unit_in_tile(self):
+        if not self.world.is_tile_position_valid(
+                self.selected_tile_position.x,
+                self.selected_tile_position.y
+            ):
+            return
+        
+        self.unit_manager.add_unit_to_list(
+            Unit(Vector(
+                    self.selected_tile_position.x,
+                    self.selected_tile_position.y
+                )
+                
+            )
+        )
+
     
     def draw(self):
         self.window.display.fill((80, 90, 90))
