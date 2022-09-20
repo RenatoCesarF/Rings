@@ -50,4 +50,4 @@ class Tile:
             return (90, 190, 90)
         
     def __str__(self) -> str:
-        return f"( {self.position} , {self.size} , {self.color} , {self.thikness}"
+        return f"( Position: {self.position}, Tile Index: {self.tile_index} Color: {self.color} , {self.thikness}"

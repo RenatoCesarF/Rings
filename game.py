@@ -15,7 +15,7 @@ from Engine.config import Config
 from Engine.config import TILE_SIZE
 from Engine.camera import Camera
 from Engine.window import Window
-from Engine.World.Tile import Tile
+from Engine.World.tile import Tile
 from Engine.World.world import World
 from Engine.image import Image
 
@@ -75,22 +75,38 @@ class Game:
     def draw(self):
         self.window.display.fill((80, 90, 90))
         self.world.draw(self.window.display, self.camera.position)
-        # self.world.draw_grid(self.window.display, self.camera.position)
- 
+
+        self.draw_selection_square(self.window.display)
+
+        self.window.blit_displays()
+        self.ui.draw(self.window.screen)
+        self.ui.write(str(int(self.clock.get_fps())), Vector(0,10))
+        self.ui.write(
+            str(self.world.get_tile_by_matrix_position(
+                self.selected_tile_position.x,
+                self.selected_tile_position.y
+            )),
+            Vector(5, 60)
+        )
+        self.ui.write("Selected Tile: "  + str(self.selected_tile_position.to_tuple), Vector(0,30))
+        self.mouse.draw(self.window.screen)
+
+    def draw_selection_square(self, surface):
+        is_selectable = self.world.is_tile_selectable(
+            self.selected_tile_position.x, 
+            self.selected_tile_position.y
+        )
+        if not is_selectable:
+            return
+        
         self.selected.draw(
-            self.window.display,
+            surface,
             Window.to_screen(
                 self.selected_tile_position.x,
                 self.selected_tile_position.y
             ),
             self.camera.position
         )
-        self.window.blit_displays()
-        self.ui.draw(self.window.screen)
-        self.ui.write(str(int(self.clock.get_fps())), Vector(0,10))
-        self.ui.write("Selected Tile: "  + str(self.selected_tile_position.to_tuple), Vector(0,30))
-        self.mouse.draw(self.window.screen)
-
     def process_events(self):
         for event in pygame.event.get():
             if event.type == pygame.QUIT:

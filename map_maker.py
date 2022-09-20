@@ -16,7 +16,7 @@ from Engine.Animator.animation import Animation
 from Engine.camera import Camera
 from Engine.window import Window
 from Engine.World.world import World
-from Engine.World.Tile import Tile
+from Engine.World.tile import Tile
 from Engine.VFX.spark import Spark
 from Engine.entity import Entity
 
