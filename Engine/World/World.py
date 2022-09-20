@@ -91,7 +91,7 @@ class World:
         # translate the selected cell to world coordinate
         return Vector(selected_pos.x, selected_pos.y)
 
-    def is_tile_selectable(self, x: int, y: int) -> bool:
+    def is_tile_position_valid(self, x: int, y: int) -> bool:
 
         if y < 0 or x < 0:
             return False
@@ -106,11 +106,3 @@ class World:
             return False
     
         return True
-            
-    def get_tile_by_matrix_position(self, x, y) -> Tile:
-
-        try:
-            return self.tiles[x+y]
-        except:
-            return Tile(Vector(), 0, Vector(),0)
-        

@@ -42,7 +42,7 @@ class Game:
     ui: UI
 
     def __init__(self) -> None:
-        # self.unit_manager = UnitManager(self)
+        self.unit_manager = UnitManager(self)
         self.running = True
         self.configs = Config("./res/config.json")
         self.window = Window(self.configs.resolution)
@@ -67,6 +67,21 @@ class Game:
             self.mouse.position,
             self.camera.position
         )
+
+        if self.mouse.left_is_pressed:
+            if self.world.is_tile_position_valid(
+                self.selected_tile_position.x,
+                self.selected_tile_position.y
+            ):
+                self.unit_manager.add_unit_to_list(
+                    Unit(
+                        Window.to_screen(
+                            self.selected_tile_position.x,
+                            self.selected_tile_position.y
+                        )
+                        
+                    )
+                )
         
         self.mouse.update()
         self.camera.update()
@@ -77,22 +92,23 @@ class Game:
         self.world.draw(self.window.display, self.camera.position)
 
         self.draw_selection_square(self.window.display)
-
+        self.unit_manager.draw(self.window.display, self.camera.position)
         self.window.blit_displays()
         self.ui.draw(self.window.screen)
         self.ui.write(str(int(self.clock.get_fps())), Vector(0,10))
+        
         self.ui.write(
-            str(self.world.get_tile_by_matrix_position(
+            str(self.window.to_screen(
                 self.selected_tile_position.x,
                 self.selected_tile_position.y
             )),
-            Vector(5, 60)
+            Vector(0, 60)
         )
         self.ui.write("Selected Tile: "  + str(self.selected_tile_position.to_tuple), Vector(0,30))
         self.mouse.draw(self.window.screen)
 
     def draw_selection_square(self, surface):
-        is_selectable = self.world.is_tile_selectable(
+        is_selectable = self.world.is_tile_position_valid(
             self.selected_tile_position.x, 
             self.selected_tile_position.y
         )
@@ -107,6 +123,7 @@ class Game:
             ),
             self.camera.position
         )
+    
     def process_events(self):
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
