@@ -103,11 +103,11 @@ class Game:
         self.ui.write(str(int(self.clock.get_fps())), Vector(0,10))
         
         self.ui.write(
-            str(self.window.to_screen(
+            str(self.unit_manager.get_unit_in_tile(
                 self.selected_tile_position.x,
                 self.selected_tile_position.y
             )),
-            Vector(0, 60)
+            Vector(5, 60)
         )
         self.ui.write("Selected Tile: "  + str(self.selected_tile_position.to_tuple), Vector(0,30))
         self.mouse.draw(self.window.screen)
