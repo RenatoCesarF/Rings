@@ -8,7 +8,7 @@ from Engine.vector import Vector
 
 from Engine.window import Window
 
-from unit import Unit
+from Entities.unit import Unit
 
 class UnitManager:
     window: Window
@@ -27,7 +27,20 @@ class UnitManager:
         unit.unique_id = len(self.unit_list)
         self.unit_list.append(unit)
         self.unit_list = sorted(self.unit_list,key= lambda x:x.screen_position.y)
-
+        
+    def remove(self, to_remove: Unit) -> bool:
+        for unit in self.unit_list:
+            if unit == to_remove:
+                self.unit_list.remove(unit)
+                
+    def get_unit_at_position(self, position: Vector, offset: Vector = Vector()) -> Unit:
+        for unit in sorted(self.unit_list,key= lambda x:x.screen_position.y *-1):
+            if unit.collision_rect.collidepoint(
+                position.x + offset.x,
+                position.y + offset.y
+            ):
+                return unit
+            
     def is_tile_position_occupied(self, tile_position: Vector) -> bool:
         for unit in self.unit_list:
             if (

@@ -11,6 +11,7 @@ class Vector:
     def get_copy(self) -> Vector:
         return Vector(self.x, self.y)
 
+    
     @property
     def to_tuple(self) -> tuple[int, int]:
         return (self.x, self.y)
@@ -26,7 +27,7 @@ class Vector:
         return Vector(self.x, self.y)
 
     def __eq__(self, compared: object) -> bool:
-        if type(compared) == type(self):
+        if type(compared) != type(self):
             return False
         
         return self.x == compared.x and self.y == compared.y  # type: ignore

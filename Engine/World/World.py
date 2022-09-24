@@ -34,7 +34,7 @@ class World:
             x = 0
             for tile in row:
                 t = Tile(
-                        position=Window.to_screen(x,y),
+                        position=Window.to_isometric_position(x,y),
                         size=TILE_SIZE,
                         tile_index=Vector(x,y),
                         content=tile,

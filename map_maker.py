@@ -21,7 +21,7 @@ from Engine.VFX.spark import Spark
 from Engine.entity import Entity
 
 from Entities.Player import Player
-from Entities.Mouse import Mouse
+from Entities.mouse import Mouse
 
 WORLD_FILE = 'test.json'
 game_map = json.load(open(WORLD_FILE))

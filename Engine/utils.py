@@ -16,3 +16,16 @@ def rotate(surface: pygame.Surface, angle: float, witdh: int, height: int) -> Tu
     rotated_surface: Surface = pygame.transform.rotozoom(surface, angle, 1)
     rotated_rect = rotated_surface.get_rect(center=(witdh, height))
     return (rotated_surface, rotated_rect)
+
+def draw_collision_rect(collision_rect: pygame.Rect, surface: Surface, offset: Vector):
+        pygame.draw.rect(
+            surface,
+            (0,200,0),
+            pygame.Rect(
+               collision_rect.x - offset.x,  # +left_offset.x,
+               collision_rect.y - offset.y,  # +left_offset.y,
+               collision_rect.width,
+               collision_rect.height,
+            ),
+            width=1,
+        )

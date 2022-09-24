@@ -2,6 +2,7 @@ from typing import Any
 from Engine.vector import Vector
 from Engine.entity import Entity
 import pygame
+from pygame.surface import Surface
 
 from Engine.window import Window
 
@@ -39,19 +40,16 @@ class Mouse(Entity):
         self.true_position = self.position.copy()
         self.handle_click()
 
-        self.position.x -= (
-            self.window.screen.get_width() - self.window.base_screen_size[0]
-        ) // 3
-        self.position.y -= (
-            self.window.screen.get_height() - self.window.base_screen_size[1]
-        ) // 3
-
-        self.position.x = int(self.position.x / (
-            self.window.base_screen_size[0] / self.window.display.get_width()
+        self.position = self.transform_mouse_position_to_screen(self.position, self.window.display)
+    
+    def transform_mouse_position_to_screen(self, position: Vector, display: Surface) -> Vector:
+        position.x = int(position.x / (
+            self.window.base_screen_size[0] / display.get_width()
         ))
-        self.position.y = int(self.position.y / (
-            self.window.base_screen_size[1] / self.window.display.get_height()
+        position.y = int(position.y / (
+            self.window.base_screen_size[1] / display.get_height()
         ))
+        return position
     
     def handle_click(self):
         if pygame.mouse.get_pressed()[0]:

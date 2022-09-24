@@ -5,6 +5,7 @@ from typing import Dict, List,Any, Tuple
 
 import pygame
 import pygame_gui
+from requests_mock import mock
 
 from Engine import utils
 from Engine.entity import Entity
@@ -19,10 +20,10 @@ from Engine.World.tile import Tile
 from Engine.World.world import World
 from Engine.image import Image
 
-from Entities.Mouse import ClickingState, Mouse
+from Entities.mouse import ClickingState, Mouse
 
 from unit_manager import UnitManager
-from unit import Unit
+from Entities.unit import Unit
 
 class Globals:
     debugging: bool = True
@@ -57,19 +58,37 @@ class Game:
         self.selected: Image = Image('./res/sprites/selected.png',)
         self.selected.set_opacity(200)
         self.clock = pygame.time.Clock()
-
+        self.selected_unit: Unit = None
+        
+        self.unit_manager.add_unit_to_list(
+            Unit(Vector(
+                    7,7
+                )      
+            )
+        )
     def update(self):
         self.time_delta = self.clock.tick(60)/1000.0
         self.ui.update(self.time_delta)
         self.world.update()
-        
+
         self.selected_tile_position = World.get_tile_position_in_grid(
             self.mouse.position,
             self.camera.position
         )
+        self.selected_unit = self.unit_manager.get_unit_at_position(
+           self.mouse.position
+           ,self.camera.position
+        )
+        
 
-        if self.mouse.left_is_pressed:
+        if self.selected_unit:
+            self.selected_tile_position = self.selected_unit.tile_position
+            if self.mouse.right_is_pressed:
+                self.unit_manager.remove(self.selected_unit)
+                
+        if self.mouse.left_is_pressed and not self.selected_unit:
             self.add_unit_in_tile()
+            
         
         self.mouse.update()
         self.camera.update()
@@ -83,30 +102,32 @@ class Game:
             return
         
         self.unit_manager.add_unit_to_list(
-            Unit(Vector(
-                    self.selected_tile_position.x,
-                    self.selected_tile_position.y
-                )
-                
-            )
+            Unit(Vector(self.selected_tile_position.x,self.selected_tile_position.y))
         )
 
-    
     def draw(self):
         self.window.display.fill((80, 90, 90))
         self.world.draw(self.window.display, self.camera.position)
 
         self.draw_selection_square(self.window.display)
+
         self.unit_manager.draw(self.window.display, self.camera.position)
+        
+        if self.selected_unit:
+            self.selected_unit.tower_img.draw_outline(
+                self.window.display,
+                self.selected_unit.screen_position,
+                self.camera.position
+            )
+            self.selected_unit.draw(self.window.display, self.camera.position)
+        
+
         self.window.blit_displays()
         self.ui.draw(self.window.screen)
         self.ui.write(str(int(self.clock.get_fps())), Vector(0,10))
         
         self.ui.write(
-            str(self.unit_manager.get_unit_in_tile(
-                self.selected_tile_position.x,
-                self.selected_tile_position.y
-            )),
+            "Selected unit: " + str(self.selected_unit),
             Vector(5, 60)
         )
         self.ui.write("Selected Tile: "  + str(self.selected_tile_position.to_tuple), Vector(0,30))
@@ -122,9 +143,8 @@ class Game:
         
         self.selected.draw(
             surface,
-            Window.to_screen(
-                self.selected_tile_position.x,
-                self.selected_tile_position.y
+            Window.to_isometric_position_from_vector(
+                self.selected_tile_position
             ),
             self.camera.position
         )

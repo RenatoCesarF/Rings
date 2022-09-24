@@ -12,6 +12,13 @@ from Engine import  utils
 from Engine.vector import Vector
 
 
+
+class PopUpInfo:
+    def __init__(self):
+        pass
+class DisplayPanel:
+    def __init__(self):
+        pass
 class Button:
     on_click: Callable
     ui_button: UIButton
