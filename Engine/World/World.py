@@ -92,12 +92,13 @@ class World:
         return Vector(selected_pos.x, selected_pos.y)
 
     def is_tile_position_valid(self, x: int, y: int) -> bool:
-
         if y < 0 or x < 0:
             return False
-        if x >= self.horinzontal_map_size:
+        if (
+            x >= self.horinzontal_map_size
+            or y >= self.vertical_map_size
+        ):
             return False
-        if y >= self.vertical_map_size:
             return False
 
         tile = self.map_matrix[y][x]

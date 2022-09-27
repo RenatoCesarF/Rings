@@ -60,16 +60,12 @@ class Game:
         self.clock = pygame.time.Clock()
         self.selected_unit: Unit = None
         
-        self.unit_manager.add_unit_to_list(
-            Unit(Vector(
-                    7,7
-                )      
-            )
-        )
     def update(self):
         self.time_delta = self.clock.tick(60)/1000.0
+    
         self.ui.update(self.time_delta)
         self.world.update()
+        self.unit_manager.update(self.time_delta)
 
         self.selected_tile_position = World.get_tile_position_in_grid(
             self.mouse.position,
@@ -80,7 +76,6 @@ class Game:
            ,self.camera.position
         )
         
-
         if self.selected_unit:
             self.selected_tile_position = self.selected_unit.tile_position
             if self.mouse.right_is_pressed:
@@ -124,8 +119,10 @@ class Game:
 
         self.window.blit_displays()
         self.ui.draw(self.window.screen)
-        self.ui.write(str(int(self.clock.get_fps())), Vector(0,10))
-        
+        # self.ui.write(str(int(self.clock.get_fps())), Vector(0,10))
+        self.ui.write(
+            str(self.unit_manager.time_to_remove_unit)
+        )
         self.ui.write(
             "Selected unit: " + str(self.selected_unit),
             Vector(5, 60)
