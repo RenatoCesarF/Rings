@@ -4,6 +4,7 @@ import pygame
 
 from pygame.surface import Surface
 from pygame.rect import Rect
+from Engine.entity import Entity
 from Engine.image import Image
 from Engine.utils import draw_collision_rect
 
@@ -11,7 +12,7 @@ from Engine.vector import Vector
 from Engine.window import Window
 
 
-class Unit:
+class Unit(Entity):
     tile_position: Vector
     screen_position: Vector
     tower_img: Image# go to resource instance
@@ -29,7 +30,6 @@ class Unit:
         
         self.tower_img = Image('./res/sprites/tower.png', (255,0,0))
         
-
     def draw(self, surface: Surface, offset: Vector = Vector()):
         self.tower_img.draw(
             surface,

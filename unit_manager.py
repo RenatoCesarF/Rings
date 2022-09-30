@@ -16,7 +16,9 @@ class UnitManager:
     unit_list: List[Unit]
     time_to_add_unit: Timer
     time_to_remove_unit: Timer
+    selected_unit: Unit
     def __init__(self, window):
+        self.selected_unit = None
         self.window = window
         self.unit_list = []
         self.time_to_add_unit = Timer(500, True)
@@ -25,7 +27,21 @@ class UnitManager:
     def draw(self, surface: Surface, offset: Vector):
         for unit in self.unit_list:
             unit.draw(surface, offset)
-            
+        
+        self.draw_selected_unit(surface, offset)
+ 
+    def draw_selected_unit(self, surface: Surface, offset: Vector) -> None:
+        if not self.selected_unit:
+            return
+        
+        self.selected_unit.tower_img.draw_outline(
+            surface,
+            self.selected_unit.screen_position,
+            offset
+        )
+        self.selected_unit.draw(surface, offset)
+       
+ 
     def update(self, delta):
         self.time_to_add_unit.update_timer(delta)
         self.time_to_remove_unit.update_timer(delta)

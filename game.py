@@ -38,6 +38,7 @@ class Game:
     world: World
     mouse: Mouse
     camera: Camera
+    _entities: List[Entity]
     delta_time: float
     unit_manager: UnitManager
     ui: UI
@@ -52,13 +53,13 @@ class Game:
             'res/ui_theme.json',
             self.window.screen
         )
+        self._entities = []
         self.world = World()
         self.mouse = Mouse(self.window)
         self.camera = Camera(None, self.window.screen_real_size)
         self.selected: Image = Image('./res/sprites/selected.png',)
         self.selected.set_opacity(200)
         self.clock = pygame.time.Clock()
-        self.selected_unit: Unit = None
         
     def update(self):
         self.time_delta = self.clock.tick(60)/1000.0
@@ -71,17 +72,17 @@ class Game:
             self.mouse.position,
             self.camera.position
         )
-        self.selected_unit = self.unit_manager.get_unit_at_position(
-           self.mouse.position
-           ,self.camera.position
+        self.unit_manager.selected_unit = self.unit_manager.get_unit_at_position(
+           self.mouse.position,
+           self.camera.position
         )
         
-        if self.selected_unit:
-            self.selected_tile_position = self.selected_unit.tile_position
+        if self.unit_manager.selected_unit:
+            self.selected_tile_position = self.unit_manager.selected_unit.tile_position
             if self.mouse.right_is_pressed:
-                self.unit_manager.remove(self.selected_unit)
+                self.unit_manager.remove(self.unit_manager.selected_unit)
                 
-        if self.mouse.left_is_pressed and not self.selected_unit:
+        if self.mouse.left_is_pressed and not self.unit_manager.selected_unit:
             self.add_unit_in_tile()
             
         
@@ -108,24 +109,12 @@ class Game:
 
         self.unit_manager.draw(self.window.display, self.camera.position)
         
-        if self.selected_unit:
-            self.selected_unit.tower_img.draw_outline(
-                self.window.display,
-                self.selected_unit.screen_position,
-                self.camera.position
-            )
-            self.selected_unit.draw(self.window.display, self.camera.position)
-        
 
         self.window.blit_displays()
         self.ui.draw(self.window.screen)
         # self.ui.write(str(int(self.clock.get_fps())), Vector(0,10))
         self.ui.write(
             str(self.unit_manager.time_to_remove_unit)
-        )
-        self.ui.write(
-            "Selected unit: " + str(self.selected_unit),
-            Vector(5, 60)
         )
         self.ui.write("Selected Tile: "  + str(self.selected_tile_position.to_tuple), Vector(0,30))
         self.mouse.draw(self.window.screen)
