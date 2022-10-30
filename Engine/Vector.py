@@ -9,7 +9,7 @@ class Vector:
         self.x = x
         self.y = y
 
-    def get_copy(self) -> Vector:
+    def copy(self) -> Vector:
         return Vector(self.x, self.y)
     
     @property

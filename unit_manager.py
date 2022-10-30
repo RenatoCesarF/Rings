@@ -10,6 +10,7 @@ from Engine.vector import Vector
 from Engine.window import Window
 
 from Entities.unit import Unit
+from Entities.bullet import Bullet
 
 class UnitManager:
     window: Window
@@ -17,17 +18,20 @@ class UnitManager:
     time_to_add_unit: Timer
     time_to_remove_unit: Timer
     selected_unit: Unit
+    bullets: List[Bullet]
     def __init__(self, window):
         self.selected_unit = None
         self.window = window
         self.unit_list = []
-        self.time_to_add_unit = Timer(500, True)
+        self.bullets = []
+        self.time_to_add_unit = Timer(0, True)
         self.time_to_remove_unit = Timer(500, True)
 
     def draw(self, surface: Surface, offset: Vector):
         for unit in self.unit_list:
             unit.draw(surface, offset)
-        
+        for bullet in self.bullets:
+            bullet.draw(surface, offset)
         self.draw_selected_unit(surface, offset)
  
     def draw_selected_unit(self, surface: Surface, offset: Vector) -> None:
@@ -45,6 +49,14 @@ class UnitManager:
     def update(self, delta):
         self.time_to_add_unit.update_timer(delta)
         self.time_to_remove_unit.update_timer(delta)
+
+        for unit in self.unit_list:
+            unit.update()
+
+        for i, b in enumerate(self.bullets):
+            b.update()
+            if not b.alive:
+                self.bullets.pop(i)
         
     def add_unit_to_list(self, unit: Unit):
         if (

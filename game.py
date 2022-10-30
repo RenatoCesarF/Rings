@@ -28,61 +28,7 @@ from Entities.mouse import ClickingState, Mouse
 from unit_manager import UnitManager
 from Entities.unit import Unit
 from Entities.bullet import Bullet
-
-class Bullet(Entity):
-    position: Vector
-    target: Entity
-    direction: Vector
-    speed: float
-    alive: bool
-    collision_rect: Rect
-    def __init__(self, position: Vector, target: Entity, speed: float = 1):
-        self.position = position
-        self.target = target
-        self.direction = Vector()
-        self.speed = speed
-        self.alive = True
-        self.collision_rect = Rect(position.x, position.y, 5, 5)
-    def update(self):
-        if not self.target or not self.alive:
-            return
-        self.direction.x = self.target.position.x - self.position.x
-        self.direction.y = self.target.position.y - self.position.y 
-
-        self.direction = self.direction.normalize()
-        self.position.x +=  self.direction.x * self.speed
-        self.position.y +=  self.direction.y * self.speed
-        self.collision_rect.x = self.position.x - 2
-        self.collision_rect.y = self.position.y - 2
-
-        if not self.target.collision_rect or self.target.collision_rect is None:
-            return
-        
-        self.handle_target_collision()
-
-    def handle_target_collision(self):
-        if not self.collided_with_target():
-            return
-        self.alive = False
-
-    
-    def collided_with_target(self):
-        if self.collision_rect.colliderect(self.target.collision_rect):
-            return True
-        return False
-
-        
-    def draw(self, surface: Surface, offset: Vector):
-        if not self.target or not self.alive:
-            return
-        pygame.draw.circle(
-            surface, 
-            (200,0,0),
-            (self.position.x - offset.x, self.position.y - offset.y),
-            2
-        )
-        # draw_collision_rect(self.collision_rect, surface, offset)
-
+from Entities.enemy import Enemy
 
 class Globals:
     debugging: bool = True
@@ -118,11 +64,13 @@ class Game:
         self.selected: Image = Image('./res/sprites/selected.png',)
         self.selected.set_opacity(200)
         self.clock = pygame.time.Clock()
-        self.bullets: List[Bullet] = []
+        self._entities.append(
+            Enemy(Vector(10,60), 20, 20)
+        )
 
     def update(self):
         self.time_delta = self.clock.tick(60)/1000.0
-    
+        self._entities = sorted(self._entities,key= lambda x:x.position.y)
         self.ui.update(self.time_delta)
         self.world.update()
         self.unit_manager.update(self.time_delta)
@@ -135,6 +83,9 @@ class Game:
            self.mouse.position,
            self.camera.position
         )
+
+        for ent in self._entities:
+            ent.update()
         
         if self.unit_manager.selected_unit:
             self.selected_tile_position = self.unit_manager.selected_unit.tile_position
@@ -146,11 +97,6 @@ class Game:
             
         
         self.mouse.update()
-        for i, b in enumerate(self.bullets):
-            if not b.alive:
-                self.bullets.pop(i)
-            b.update()
-        
             
         self.camera.update()
         pygame.display.update()
@@ -163,7 +109,10 @@ class Game:
             return
         
         self.unit_manager.add_unit_to_list(
-            Unit(Vector(self.selected_tile_position.x,self.selected_tile_position.y))
+            Unit(
+                Vector(self.selected_tile_position.x,self.selected_tile_position.y),
+                self.unit_manager
+            )
         )
 
     def draw(self):
@@ -174,12 +123,15 @@ class Game:
 
         self.unit_manager.draw(self.window.display, self.camera.position)
 
-        for b in self.bullets:
-            b.draw(self.window.display, self.camera.position)
+        for ent in self._entities:
+            ent.draw(self.window.display, self.camera.position)
+
         self.window.blit_displays()
         self.ui.draw(self.window.screen)
-        # self.ui.write(str(int(self.clock.get_fps())), Vector(0,10))
-    
+
+
+        self.ui.write(str(int(self.clock.get_fps())), Vector(0,10))
+        self.ui.write(str(len(self.unit_manager.bullets)), Vector(0, 30))
         # self.ui.write("Selected Tile: "  + str(self.selected_tile_position.to_tuple), Vector(0,30))
         self.mouse.draw(self.window.screen)
 
@@ -231,13 +183,9 @@ class Game:
                     self.mouse.set_state(ClickingState.Select)
 
                 if event.key == pygame.K_SPACE:
-                    target = self.unit_manager.selected_unit
-                    if not target:
-                        return
-                    self.bullets.append(
-                        Bullet(Vector(0,0),target, 4)
-                    )
-
+                    for unit in self.unit_manager.unit_list:
+                        unit.set_target(self._entities[0])
+                        unit.fire()
             if event.type == pygame_gui.UI_BUTTON_PRESSED:
                 self.ui.check_events(event)
 

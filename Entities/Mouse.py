@@ -1,13 +1,16 @@
 from typing import Any
-from Engine.vector import Vector
-from Engine.entity import Entity
-from Engine.utils import draw_collision_rect
+from enum import Enum
+
 import pygame
 from pygame.surface import Surface
 
+from Engine.vector import Vector
+from Engine.entity import Entity
+from Engine.utils import draw_collision_rect
+from Engine.image import Image
+
 from Engine.window import Window
 
-from enum import Enum
 
 class ClickingState(Enum):
     Delete = 1
@@ -29,20 +32,27 @@ class Mouse(Entity):
         self.true_position = Vector()
         self.position = Vector()
 
-        self.collision_rect = pygame.Rect(self.position.x, self.position.y, 20, 20)
-        self.image = pygame.transform.scale(
-            pygame.image.load("res/mouse.png").convert(), (33, 33)
+        self.image = Image("res/mouse.png", (255, 0, 0))
+        self.image.scale_to_resolution((43,43))
+
+        self.collision_rect = pygame.Rect(
+            self.position.x,
+            self.position.y,
+            self.image.width, self.image.height
         )
-        self.image.set_colorkey((255, 0, 0))
+        
         self.left_is_pressed = False
         self.right_is_pressed = False
+
+        super().__init__(self.position, name="Mouse")
 
     def update(self):
         self.position.x, self.position.y = pygame.mouse.get_pos()
         self.true_position = self.position.copy()
         self.handle_click()
-        self.collision_rect.x = self.position.x
-        self.collision_rect.y = self.position.y
+
+        self.collision_rect.x = self.position.x - self.image.width/2
+        self.collision_rect.y = self.position.y - self.image.height/2
 
         self.position = self.transform_mouse_position_to_screen(self.position, self.window.display)
     
@@ -70,11 +80,15 @@ class Mouse(Entity):
         self._state = new_state 
             
     def draw(self, surface: pygame.Surface, offset: Vector = Vector()) -> None:
-        surface.blit(
-            self.image,(
-                self.true_position.x - self.image.get_width() / 6,
-                self.true_position.y - self.image.get_height() / 6,
-            ),
+        pos = Vector(
+            self.true_position.x - self.image.width / 6,
+            self.true_position.y - self.image.height / 6,
         )
-        draw_collision_rect(self.collision_rect, surface, offset)
+        self.image.draw(
+            surface,
+             pos,
+            offset
+        )
+        
+        # draw_collision_rect(self.collision_rect, surface, offset)
 

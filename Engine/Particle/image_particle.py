@@ -50,7 +50,7 @@ class ImageParticle(AbcParticle):
             destinatonSurface (pygame.Surface): The surface where ther particle will be blited at
         """
         self.image.set_alpha(self.opacity)
-        destinatonSurface.blit(self.image, self.position.get_copy())
+        destinatonSurface.blit(self.image, self.position.copy())
 
         # TODO: make rotations
 

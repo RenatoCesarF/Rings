@@ -8,7 +8,7 @@ from Engine.vector import Vector
 class Image:
     surface: Surface
     color_key: Tuple[int,int,int]
-    width   : int
+    width: int
     height: int
     def __init__(self, directory: str, color_key: Tuple[int,int,int] = (0,0,0), scale: float = 1):
         self.surface: Surface = pygame.image.load(directory).convert()
@@ -47,7 +47,12 @@ class Image:
         )
         # mask.set_colorkey((0,0,0))
         return mask
-        
+
+    def scale_to_resolution(self, pixels: tuple):
+        self.surface = pygame.transform.scale(self.surface, pixels)
+        self.width = pixels[0]
+        self.height = pixels[1]
+
     def draw(self, surface: Surface, position: Vector, offset: Vector):
         surface.blit(
             self.surface,

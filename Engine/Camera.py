@@ -64,7 +64,7 @@ class Camera(Entity):
         
     @property
     def scroll_in_integer(self) -> Vector:
-        int_scroll = self.position.get_copy()
+        int_scroll = self.position.copy()
         int_scroll.x = int(int_scroll.x)
         int_scroll.y = int(int_scroll.y)
         return int_scroll
