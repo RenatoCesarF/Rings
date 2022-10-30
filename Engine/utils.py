@@ -20,7 +20,7 @@ def rotate(surface: pygame.Surface, angle: float, witdh: int, height: int) -> Tu
 def draw_collision_rect(collision_rect: pygame.Rect, surface: Surface, offset: Vector):
         pygame.draw.rect(
             surface,
-            (0,200,0),
+            (100,0,0),
             pygame.Rect(
                collision_rect.x - offset.x,  # +left_offset.x,
                collision_rect.y - offset.y,  # +left_offset.y,

@@ -1,6 +1,7 @@
 from typing import Any
 from Engine.vector import Vector
 from Engine.entity import Entity
+from Engine.utils import draw_collision_rect
 import pygame
 from pygame.surface import Surface
 
@@ -19,7 +20,7 @@ class Mouse(Entity):
     image: Any  
     left_is_pressed: bool 
     right_is_pressed: bool 
-    colision_rect: pygame.Rect
+    collision_rect: pygame.Rect
     _state: ClickingState
 
     def __init__(self, window: Window):
@@ -28,6 +29,7 @@ class Mouse(Entity):
         self.true_position = Vector()
         self.position = Vector()
 
+        self.collision_rect = pygame.Rect(self.position.x, self.position.y, 20, 20)
         self.image = pygame.transform.scale(
             pygame.image.load("res/mouse.png").convert(), (33, 33)
         )
@@ -39,6 +41,8 @@ class Mouse(Entity):
         self.position.x, self.position.y = pygame.mouse.get_pos()
         self.true_position = self.position.copy()
         self.handle_click()
+        self.collision_rect.x = self.position.x
+        self.collision_rect.y = self.position.y
 
         self.position = self.transform_mouse_position_to_screen(self.position, self.window.display)
     
@@ -72,3 +76,5 @@ class Mouse(Entity):
                 self.true_position.y - self.image.get_height() / 6,
             ),
         )
+        draw_collision_rect(self.collision_rect, surface, offset)
+

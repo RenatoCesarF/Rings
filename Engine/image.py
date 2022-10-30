@@ -8,21 +8,24 @@ from Engine.vector import Vector
 class Image:
     surface: Surface
     color_key: Tuple[int,int,int]
+    width   : int
+    height: int
     def __init__(self, directory: str, color_key: Tuple[int,int,int] = (0,0,0), scale: float = 1):
         self.surface: Surface = pygame.image.load(directory).convert()
         self.surface.set_colorkey(color_key)
         
         self.color_key = color_key
+        self.width  = self.surface.get_width() * scale
+        self.height = self.surface.get_height() * scale
         
         if scale == 1:
             return
+        # separate this bollow into functino
         self.surface = pygame.transform.scale(
             self.surface,
-            (
-                int(self.surface.get_width()*scale), 
-                int(self.surface.get_height()*scale)
-            )
+            (int(self.width), int(self.height))
         )
+
     
     def set_opacity(self, opacity_alpha: int):
         self.surface.set_alpha(opacity_alpha)
