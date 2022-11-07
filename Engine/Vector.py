@@ -13,7 +13,7 @@ class Vector:
         return Vector(self.x, self.y)
     
     @property
-    def to_tuple(self) -> tuple[int, int]:
+    def as_tuple(self) -> tuple[int, int]:
         return (self.x, self.y)
     
     @staticmethod
@@ -52,7 +52,7 @@ class Vector:
         )
 
     def __str__(self):
-        return f"X: {int(self.x)} Y: {int(self.y)}"
+        return f"Vector(x: {int(self.x)}, y: {int(self.y)})"
 
     def copy(self) -> Vector:
         return Vector(self.x, self.y)

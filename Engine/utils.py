@@ -9,7 +9,7 @@ from pygame.rect import Rect
 
 def draw_text(font: Font, text: str, surface: Surface, position: Vector):
     interface_surface: Surface = font.render(text, False, "White")
-    surface.blit(interface_surface, position.to_tuple)
+    surface.blit(interface_surface, position.as_tuple)
 
 
 def rotate(surface: pygame.Surface, angle: float, witdh: int, height: int) -> Tuple[Surface, Rect]:

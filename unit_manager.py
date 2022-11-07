@@ -1,12 +1,11 @@
 from typing import List
 
-
 from pygame.surface import Surface
+
 from Engine.World.tile import Tile
 from Engine.image import Image
 from Engine.timer import Timer
 from Engine.vector import Vector
-
 from Engine.window import Window
 
 from Entities.unit import Unit
@@ -38,6 +37,7 @@ class UnitManager:
         if not self.selected_unit:
             return
         
+        self.selected_unit.draw_fire_range(surface,offset)
         self.selected_unit.tower_img.draw_outline(
             surface,
             self.selected_unit.screen_position,
