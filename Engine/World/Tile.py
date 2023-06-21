@@ -7,13 +7,18 @@ class Tile:
     position: Vector
     size: int
     tile_index: Vector
-    color: Tuple[int,int,int]
+    color: Tuple[int, int, int]
     thikness: int
-    content: int 
+    content: int
 
     def __init__(
-        self, position: Vector, size: int, tile_index: Vector, content: int = 0,
-        color: Tuple[int,int,int] = (100,100,100), thikness: int = 0
+        self,
+        position: Vector,
+        size: int,
+        tile_index: Vector,
+        content: int = 0,
+        color: Tuple[int, int, int] = (100, 100, 100),
+        thikness: int = 0,
     ):
         self.content = content or 0
         self.tile_index = tile_index
@@ -22,7 +27,7 @@ class Tile:
         self.color = color
         self.thikness = thikness
 
-    def draw(self, surface: pygame.Surface, offset: Vector ):
+    def draw(self, surface: pygame.Surface, offset: Vector):
         pygame.draw.rect(
             surface,
             self.color,
@@ -32,8 +37,9 @@ class Tile:
                 self.size,
                 self.size,
             ),
-            width=self.thikness
+            width=self.thikness,
         )
+
     @staticmethod
     def get_tile_color_by_index(index: int):
         if index == 1:
@@ -43,11 +49,11 @@ class Tile:
         elif index == 3:
             return (90, 190, 90)
         elif index == 4:
-            return (30,30,30)
+            return (30, 30, 30)
         elif index == 6:
-            return (0,200,0)
+            return (0, 200, 0)
         else:
             return (90, 190, 90)
-        
+
     def __str__(self) -> str:
         return f"( Position: {self.position}, Tile Index: {self.tile_index} Color: {self.color} , {self.thikness}"

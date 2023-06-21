@@ -137,7 +137,7 @@ class Animation:
             custom_width (int, optional): If the sprite to be added had a different width of the original one. Defaults to None.
             custom_height (int, optional): If the sprite to be added had a different height of the original one. Defaults to None.
         """
-        if not custom_height  and not custom_width :
+        if not custom_height and not custom_width:
             custom_height = self.sprite_height
             custom_width = self.sprite_width
 
@@ -147,7 +147,8 @@ class Animation:
         custom_width += space_between_sprites
         for i in range(frame_amount):
             sprite_position = Vector(
-                int(custom_width * (i) + space_between_sprites), int(spritesheet_line_height)
+                int(custom_width * (i) + space_between_sprites),
+                int(spritesheet_line_height),
             )
             self.frames.append(
                 self.spritesheet.get_sprite(

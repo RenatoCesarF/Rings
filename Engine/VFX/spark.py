@@ -12,7 +12,7 @@ class Spark:
     angle: float
     speed: float
     scale: float
-    color: Tuple[int,int,int]
+    color: Tuple[int, int, int]
     thickness: float
     alive: bool
     points: list
@@ -22,7 +22,7 @@ class Spark:
         position: Vector,
         angle: float,
         speed: float,
-        color: Tuple[int,int,int] = (255, 255, 255),
+        color: Tuple[int, int, int] = (255, 255, 255),
         scale: float = 1,
         thickness: float = 0.3,
     ) -> None:

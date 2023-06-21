@@ -13,16 +13,21 @@ from Engine.window import Window
 
 
 class ClickingState(Enum):
+    """An enum to represent the possible mouse state"""
+
     Delete = 1
     Select = 2
     Create = 3
 
+
 class Mouse(Entity):
+    """The class that represents the mouse entity in the game"""
+
     true_position: Vector
     position: Vector
-    image: Any  
-    left_is_pressed: bool 
-    right_is_pressed: bool 
+    image: Any
+    left_is_pressed: bool
+    right_is_pressed: bool
     collision_rect: pygame.Rect
     _state: ClickingState
 
@@ -33,14 +38,12 @@ class Mouse(Entity):
         self.position = Vector()
 
         self.image = Image("res/mouse.png", (255, 0, 0))
-        self.image.scale_to_resolution((43,43))
+        self.image.scale_to_resolution((43, 43))
 
         self.collision_rect = pygame.Rect(
-            self.position.x,
-            self.position.y,
-            self.image.width, self.image.height
+            self.position.x, self.position.y, self.image.width, self.image.height
         )
-        
+
         self.left_is_pressed = False
         self.right_is_pressed = False
 
@@ -51,44 +54,51 @@ class Mouse(Entity):
         self.true_position = self.position.copy()
         self.handle_click()
 
-        self.collision_rect.x = self.position.x - self.image.width/2
-        self.collision_rect.y = self.position.y - self.image.height/2
+        self.collision_rect.x = self.position.x - self.image.width / 2
+        self.collision_rect.y = self.position.y - self.image.height / 2
 
-        self.position = self.transform_mouse_position_to_screen(self.position, self.window.display)
-    
-    def transform_mouse_position_to_screen(self, position: Vector, display: Surface) -> Vector:
-        position.x = int(position.x / (
-            self.window.base_screen_size[0] / display.get_width()
-        ))
-        position.y = int(position.y / (
-            self.window.base_screen_size[1] / display.get_height()
-        ))
+        self.position = self.transform_mouse_position_to_screen(
+            self.position, self.window.display
+        )
+
+    def transform_mouse_position_to_screen(
+        self, position: Vector, display: Surface
+    ) -> Vector:
+        position.x = int(
+            position.x / (self.window.base_screen_size[0] / display.get_width())
+        )
+        position.y = int(
+            position.y / (self.window.base_screen_size[1] / display.get_height())
+        )
         return position
-    
+
     def handle_click(self):
+        """Setting the variables inside the mouse class, so it's easier to check this"""
         if pygame.mouse.get_pressed()[0]:
             self.left_is_pressed = True
         else:
             self.left_is_pressed = False
-            
+
         if pygame.mouse.get_pressed()[2]:
             self.right_is_pressed = True
         else:
             self.right_is_pressed = False
-        
+
     def set_state(self, new_state: ClickingState):
-        self._state = new_state 
-            
+        """Change the mouse state, its action"""
+        self._state = new_state
+
     def draw(self, surface: pygame.Surface, offset: Vector = Vector()) -> None:
         pos = Vector(
             self.true_position.x - self.image.width / 6,
             self.true_position.y - self.image.height / 6,
         )
-        self.image.draw(
-            surface,
-             pos,
-            offset
-        )
-        
+        self.image.draw(surface, pos, offset)
+
         # draw_collision_rect(self.collision_rect, surface, offset)
 
+    def get_state(self) -> str:
+        """
+        Return the action that the mouse state is doing
+        """
+        return str(self._state)

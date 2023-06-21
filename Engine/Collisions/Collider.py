@@ -32,7 +32,9 @@ class Collider:
         self.is_colliding_left = False
         self.is_colliding_right = False
 
-    def check_multiple_tiles_collision(self, tile_list: List[Collider]) -> List[Collider]:
+    def check_multiple_tiles_collision(
+        self, tile_list: List[Collider]
+    ) -> List[Collider]:
         colide_list: List[Collider] = []
 
         for tile in tile_list:

@@ -8,7 +8,7 @@ class Spritesheet:
         self,
         file_directory: str,
         scale: int = 1,
-        custom_colorkey: Tuple[int, int, int]=(0, 0, 0),
+        custom_colorkey: Tuple[int, int, int] = (0, 0, 0),
         space_between_sprites: int = 0,
     ) -> None:
         """Load a spritesheet image by the file_directory and apply the custom_colorkey to it.

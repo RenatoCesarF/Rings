@@ -7,7 +7,7 @@ class Glow:
         self,
         width: int = 10,
         height: int = 10,
-        color: Tuple[int,int,int] = (0, 0, 0),
+        color: Tuple[int, int, int] = (0, 0, 0),
         radius: int = 0,
     ):
         self.radius = radius
