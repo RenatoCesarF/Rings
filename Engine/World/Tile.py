@@ -6,7 +6,7 @@ from Engine.vector import Vector
 class Tile:
     position: Vector
     size: int
-    tile_index: Vector
+    grid_index: Vector
     color: Tuple[int, int, int]
     thikness: int
     content: int
@@ -15,13 +15,13 @@ class Tile:
         self,
         position: Vector,
         size: int,
-        tile_index: Vector,
+        grid_index: Vector,
         content: int = 0,
         color: Tuple[int, int, int] = (100, 100, 100),
         thikness: int = 0,
     ):
         self.content = content or 0
-        self.tile_index = tile_index
+        self.grid_index = grid_index
         self.position = position
         self.size = size
         self.color = color
@@ -56,4 +56,4 @@ class Tile:
             return (90, 190, 90)
 
     def __str__(self) -> str:
-        return f"( Position: {self.position}, Tile Index: {self.tile_index} Color: {self.color} , {self.thikness}"
+        return f"( Position: {self.position}, Tile Index: {self.grid_index} Color: {self.color} , {self.thikness}"

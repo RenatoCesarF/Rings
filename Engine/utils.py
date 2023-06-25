@@ -21,7 +21,7 @@ def rotate(
     return (rotated_surface, rotated_rect)
 
 
-def draw_collision_rect(collision_rect: pygame.Rect, surface: Surface, offset: Vector):
+def draw_collision_rect(collision_rect: pygame.Rect, surface: Surface, offset: Vector, line_width: int=1):
     pygame.draw.rect(
         surface,
         (100, 0, 0),
@@ -31,5 +31,20 @@ def draw_collision_rect(collision_rect: pygame.Rect, surface: Surface, offset: V
             collision_rect.width,
             collision_rect.height,
         ),
-        width=1,
+        width=line_width,
+    )
+
+def draw_circle(destination: Surface, position: list, radius: int, color: Tuple, offset: Vector):
+    shape_surf = pygame.Surface((radius,radius), pygame.SRCALPHA)
+    pygame.draw.circle(shape_surf, color, position, radius)
+
+    shape_surf.set_alpha(color[3])
+    destination.blit(
+        shape_surf,
+        pygame.Rect(
+            position[0] - offset.x,
+            position[1] - offset.y,
+            radius,
+            radius
+        ),
     )

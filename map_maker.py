@@ -129,7 +129,7 @@ class MapMaker:
                         size=TILE_SIZE,
                         content=tile,
                         color=Tile.get_tile_color_by_index(tile),
-                        tile_index=Vector(x, y),
+                        grid_index=Vector(x, y),
                     )
                 )
 
@@ -144,7 +144,7 @@ class MapMaker:
                     TILE_SIZE,
                     content=4,
                     thikness=1,
-                    tile_index=Vector(i, j),
+                    grid_index=Vector(i, j),
                 )
                 tile.draw(self.window.display, self.camera.position)
 

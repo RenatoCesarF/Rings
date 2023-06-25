@@ -77,6 +77,7 @@ class Unit(Entity):
         pygame.draw.ellipse(shape_surf, color, shape_surf.get_rect())
 
         shape_surf.set_alpha(30)
+
         surface.blit(
             shape_surf,
             pygame.Rect(

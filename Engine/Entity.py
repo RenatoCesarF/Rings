@@ -1,8 +1,9 @@
-import pygame
+from pygame import Surface
 from Engine.vector import Vector
 
 
 class Entity:
+    """The base Entity class"""
     position: Vector
     name: str
 
@@ -11,10 +12,10 @@ class Entity:
         self.name = name
 
     def update(self) -> None:
-        pass
+        """Update function"""
 
-    def draw(self, surface: pygame.Surface, offset: Vector = Vector()) -> None:
-        pass
+    def draw(self, surface: Surface, offset: Vector = Vector()) -> None:
+        """Draw function"""
 
     def __str__(self) -> str:
         return f"Entity(name: {self.name}, position: {self.position}"

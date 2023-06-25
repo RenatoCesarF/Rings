@@ -1,12 +1,13 @@
 from __future__ import annotations
+import json
 
 from typing import List
 
 import pygame
 import pygame_gui
-from pygame.surface import Surface
+from pygame import Surface
 
-from Engine.utils import draw_collision_rect
+from Engine.utils import draw_circle, draw_collision_rect
 from Engine.entity import Entity
 from Engine.UI import UI
 from Engine.vector import Vector
@@ -25,9 +26,12 @@ from Entities.unit import Unit
 from Entities.enemy import Enemy
 
 
+game_map = json.load(open("test.json"))
+
 class Globals:
     """Cluster the globall variables that will be used in many files and classes"""
     debugging: bool = True
+    TILE_SIZE = Vector(28, 14)
 
 
 class Game:
@@ -49,16 +53,17 @@ class Game:
     time_delta: float
 
     def __init__(self) -> None:
-        self.unit_manager = UnitManager(self)
         self.running = True
-        self.ent = pygame.Rect(0, 0, 50, 50)
+        self.ent = pygame.Rect(200, 200, 5, 5)
         self.configs = Config("./res/config.json")
         self.window = Window(self.configs.resolution)
+        self.unit_manager = UnitManager()
         self.ui = UI(
             self.configs.resolution_as_tuple(), "res/ui_theme.json", self.window.screen
         )
         self._entities = []
         self._enemies = []
+        # self._enemies.append()
         self.world = World()
         self.mouse = Mouse(self.window)
         self.camera = Camera(None, self.window.screen_real_size)
@@ -136,16 +141,72 @@ class Game:
         for enemy in self._enemies:
             enemy.draw(self.window.display, self.camera.position)
 
-        # ======================
-        draw_collision_rect(self.ent, self.window.display, self.camera.position)
+        draw_collision_rect(self.ent, self.window.display, self.camera.position, line_width=0)
 
         self.window.blit_displays()
-        self.ui.draw(self.window.screen)
-        self.ui.write(str(int(self.clock.get_fps())), Vector(0, 10))
-        self.ui.write(str(len(self.unit_manager.bullets)), Vector(0, 30))
-        self.ui.write(str(self.mouse), Vector(0, 50))
-        # self.ui.write("Selected Tile: "  + str(self.selected_tile_position.as_tuple), Vector(0,30))
+        # self.ui.draw(self.window.screen)
+        # self.ui.write(str(int(self.clock.get_fps())), Vector(0, 300))
+        # self.ui.write(str(len(self.unit_manager.bullets)), Vector(0, 330))
+        # self.ui.write(str(self.mouse), Vector(0, 350))
+        # self.ui.write("Selected Tile: "  + str(self.selected_tile_position.as_tuple), Vector(0,380))
         self.mouse.draw(self.window.screen)
+
+        self.draw_top_down_view()
+
+    def draw_top_down_view(self):
+        screen_destination = self.window.screen
+        tile_size = 20
+
+        for row in self.world.map_matrix:
+            for tile in row:
+                pygame.draw.rect(
+                        screen_destination,
+                        (200,0,0),
+                        pygame.Rect(tile.grid_index.x * tile_size, tile.grid_index.y * tile_size,tile_size,tile_size),
+                        width=1
+                    )
+                if tile.content == 0:
+                    continue
+
+                pygame.draw.rect(
+                    screen_destination,
+                    (0,178,0),
+                    pygame.Rect(tile.grid_index.x * tile_size, tile.grid_index.y * tile_size,18,18),
+                    width=0
+                )
+
+        for unit in self.unit_manager.unit_list:
+            unit_color = (0,0,200)
+
+            if unit == self.unit_manager.selected_unit:
+                unit_color = (200,200, 0)
+                range_color = (200,200, 40)
+
+                if unit.has_entity_in_range:
+                    range_color = (200,0,tile_size)
+               
+                # DRAW RANGE
+                pygame.draw.circle(
+                   screen_destination, range_color,
+                    ((unit.tile_position.x * tile_size) + 8,
+                    (unit.tile_position.y * tile_size) + 8),
+                    unit.fire_range * 5,
+                    3
+                )
+            
+            #DRAW UNIT
+            pygame.draw.circle(
+               screen_destination, unit_color,
+                ((unit.tile_position.x * tile_size) + 8,(unit.tile_position.y * tile_size) + 8),5,0
+            )
+        
+        position = World.get_tile_position_in_grid(
+            self.ent, Vector(0,0)
+        )
+        pygame.draw.circle(
+           screen_destination, (255,0,0),
+            ((position.x * tile_size) + 8,(position.y * tile_size) + 8),5,0
+        )
 
     def draw_selection_square(self, surface: Surface):
         is_selectable = self.world.is_tile_position_valid(

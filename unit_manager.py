@@ -3,26 +3,22 @@ from typing import List
 from pygame.surface import Surface
 
 from Engine.World.tile import Tile
-from Engine.image import Image
 from Engine.timer import Timer
 from Engine.vector import Vector
-from Engine.window import Window
 
 from Entities.unit import Unit
 from Entities.bullet import Bullet
 
 
 class UnitManager:
-    window: Window
     unit_list: List[Unit]
     time_to_add_unit: Timer
     time_to_remove_unit: Timer
     selected_unit: Unit
     bullets: List[Bullet]
 
-    def __init__(self, window):
+    def __init__(self):
         self.selected_unit = None
-        self.window = window
         self.unit_list = []
         self.bullets = []
         self.time_to_add_unit = Timer(0, True)

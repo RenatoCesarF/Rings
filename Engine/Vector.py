@@ -3,6 +3,7 @@ import math
 
 
 class Vector:
+    """Representation of a position or a movement"""
     x: int
     y: int
 

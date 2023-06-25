@@ -14,6 +14,7 @@ MAP_OFFSET: Vector = Vector(5, 1)
 
 
 class World:
+    """The class that controll, draw and administrate the world map"""
     collision_tiles: List[Collider]
     vertical_map_size: int
     horizontal_map_size: int
@@ -25,7 +26,7 @@ class World:
         self.map_matrix = game_map
         self.vertical_map_size = len(game_map)
         self.horinzontal_map_size = len(game_map[0])
-        self.testImage: Image = Image("./res/sprites/ground6.png", (215, 123, 186))
+        self.test_image: Image = Image("./res/sprites/ground6.png", (215, 123, 186))
         self.create_world_tiles()
 
     def create_world_tiles(self):
@@ -36,7 +37,7 @@ class World:
                 t = Tile(
                     position=Window.to_isometric_position(x, y),
                     size=TILE_SIZE,
-                    tile_index=Vector(x, y),
+                    grid_index=Vector(x, y),
                     content=tile,
                 )
                 self.map_matrix[y][x] = t
@@ -62,22 +63,21 @@ class World:
             for tile in row:
                 if tile.content == 0:
                     continue
-                self.testImage.draw(surface, tile.position, offset)
+                self.test_image.draw(surface, tile.position, offset)
 
     @staticmethod
     def get_tile_position_in_grid(position: Vector, camera_position: Vector) -> Vector:
         # get the mouse offset position inside the tile
         offset = Vector(position.x % TILE_SIZE.x, position.y % TILE_SIZE.y)
-        offset.x += (
-            camera_position.x % TILE_SIZE.x
-        )  # Add camera_position scroll to offset
+        # Add camera_position scroll to offset
+        offset.x += camera_position.x % TILE_SIZE.x
         offset.y += camera_position.y % TILE_SIZE.y
 
         cell_position = Vector((position.x // TILE_SIZE.x), (position.y // TILE_SIZE.y))
-        cell_position.x += int(
-            (camera_position.x // TILE_SIZE.x)
-        )  # Add camera_position scroll to cell
-        cell_position.y += int((camera_position.y // TILE_SIZE.y))
+        # Add camera_position scroll to cell
+        cell_position.x += int(camera_position.x // TILE_SIZE.x)
+        cell_position.y += int(camera_position.y // TILE_SIZE.y)
+
         # get the selected cell in iso grid
         selected_pos = Vector(
             (cell_position.y - MAP_OFFSET.y) + (cell_position.x - MAP_OFFSET.x),
@@ -102,7 +102,6 @@ class World:
         if y < 0 or x < 0:
             return False
         if x >= self.horinzontal_map_size or y >= self.vertical_map_size:
-            return False
             return False
 
         tile = self.map_matrix[y][x]
