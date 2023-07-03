@@ -1,10 +1,7 @@
+from Engine.vector import Vector 
 from typing import Tuple
 from pygame import Surface
 import pygame
-
-from Engine.vector import Vector
-
-
 class Image:
     surface: Surface
     color_key: Tuple[int, int, int]
@@ -21,8 +18,8 @@ class Image:
         self.surface.set_colorkey(color_key)
 
         self.color_key = color_key
-        self.width = self.surface.get_width() * scale
-        self.height = self.surface.get_height() * scale
+        self.width=int(self.surface.get_width() * scale)
+        self.height = int(self.surface.get_height() * scale)
 
         if scale == 1:
             return

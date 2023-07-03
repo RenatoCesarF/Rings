@@ -4,7 +4,6 @@ import pygame
 
 from Engine.vector import Vector
 
-
 class Collider:
     def __init__(
         self,

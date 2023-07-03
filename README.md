@@ -16,15 +16,15 @@
 - [x] Sparks
 - [x] Colisions
 - [x] Camera
-- [ ] Tile System
+- [x] Tile System
 - [ ] Noise
 - [ ] Ragdoll simulations (ropes, cloth, etc)
 - [ ] Shadows & Light (maybe)
 
 ## Sub-tasks:
-- [ ] Camera shaking
+- [x] Camera shaking
 - [ ] Collision offset problem
-- [ ] Splite everything in a Game Class
+- [x] Splite everything in a Game Class
 - [ ] Polygon particle
 - [ ] Rework Particles
 - [ ] Document everything in details

@@ -11,8 +11,6 @@ class Vector:
         self.x = x
         self.y = y
 
-    def copy(self) -> Vector:
-        return Vector(self.x, self.y)
 
     @property
     def as_tuple(self) -> tuple[int, int]:
@@ -26,7 +24,7 @@ class Vector:
         if type(vector) != type(self):
             return False
 
-        return self.x == vector.x and self.y == vector.y
+        return (self.x == vector.x and self.y == vector.y)
 
     def normalize(self) -> Vector():
         l = self.x * self.x + self.y * self.y
@@ -38,10 +36,11 @@ class Vector:
     def divided_by_number(self, number: int) -> Vector:
         if number == 0:
             return Vector(0, 0)
-        return Vector(self.x / number, self.y / number)
+        return Vector(int(self.x / number), int(self.y / number))
 
     def divided_by_vector(self, vector: Vector) -> Vector:
-        return Vector(self.x / vector.x, self.y / vector.y)
+        return Vector(int(self.x / vector.x), int(self.y / vector.y))
+        
 
     def __str__(self):
         return f"Vector(x: {int(self.x)}, y: {int(self.y)})"

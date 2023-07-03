@@ -15,7 +15,7 @@ from Engine.vector import Vector
 from Engine.config import Config
 from Engine.camera import Camera
 from Engine.window import Window
-from Engine.World.tile import Tile
+
 from Engine.World.world import World
 from Engine.image import Image
 
@@ -25,15 +25,12 @@ from unit_manager import UnitManager
 from Entities.unit import Unit
 from Entities.enemy import Enemy
 
-
 game_map = json.load(open("test.json"))
 
 class Globals:
     """Cluster the globall variables that will be used in many files and classes"""
     debugging: bool = True
     TILE_SIZE = Vector(28, 14)
-
-
 class Game:
     """Main game class to cluster everything"""
     _entities: List[Entity]
@@ -48,13 +45,13 @@ class Game:
     delta_time: float
     unit_manager: UnitManager
     ui: UI
-    ent: pygame.Rect
-    selected_tile_position: Tile
+    ent_rect: pygame.Rect
+    selected_tile_position: Vector
     time_delta: float
 
     def __init__(self) -> None:
         self.running = True
-        self.ent = pygame.Rect(200, 200, 5, 5)
+        self.ent_rect = pygame.Rect(200, 200, 5, 5)
         self.configs = Config("./res/config.json")
         self.window = Window(self.configs.resolution)
         self.unit_manager = UnitManager()
@@ -91,7 +88,7 @@ class Game:
             self.mouse.position, self.camera.position
         )
         entity_test = Entity(Vector())
-        entity_test.collision_rect = self.ent
+        entity_test.collision_rect = self.ent_rect
         if len(self.unit_manager.unit_list) > 0:
             self.unit_manager.unit_list[0].is_in_range(entity_test)
 
@@ -141,7 +138,7 @@ class Game:
         for enemy in self._enemies:
             enemy.draw(self.window.display, self.camera.position)
 
-        draw_collision_rect(self.ent, self.window.display, self.camera.position, line_width=0)
+        draw_collision_rect(self.ent_rect, self.window.display, self.camera.position, line_width=0)
 
         self.window.blit_displays()
         # self.ui.draw(self.window.screen)
@@ -156,9 +153,11 @@ class Game:
     def draw_top_down_view(self):
         screen_destination = self.window.screen
         tile_size = 20
+        tile_color = (0,178, 0)
 
-        for row in self.world.map_matrix:
-            for tile in row:
+        for i_row, row in enumerate(self.world.map_matrix):
+            for i_tile, tile in enumerate(row):
+                tile_color = (0,178, 0)
                 pygame.draw.rect(
                         screen_destination,
                         (200,0,0),
@@ -167,10 +166,13 @@ class Game:
                     )
                 if tile.content == 0:
                     continue
+             
+                if self.selected_tile_position.is_equal(Vector(i_tile,i_row)):
+                    tile_color = (0,78, 0)
 
                 pygame.draw.rect(
                     screen_destination,
-                    (0,178,0),
+                    tile_color,
                     pygame.Rect(tile.grid_index.x * tile_size, tile.grid_index.y * tile_size,18,18),
                     width=0
                 )
@@ -201,7 +203,7 @@ class Game:
             )
         
         position = World.get_tile_position_in_grid(
-            self.ent, Vector(0,0)
+            self.ent_rect, Vector(0,0)
         )
         pygame.draw.circle(
            screen_destination, (255,0,0),
@@ -231,18 +233,18 @@ class Game:
 
                 if event.key == pygame.K_a:
                     # self.camera.position.x-=10
-                    self.ent.x -= 5
+                    self.ent_rect.x -= 5
 
                 if event.key == pygame.K_d:
                     # self.camera.position.x+=5
-                    self.ent.x += 5
+                    self.ent_rect.x += 5
 
                 if event.key == pygame.K_s:
-                    self.ent.y += 5
+                    self.ent_rect.y += 5
                     # self.camera.position.y+=5
 
                 if event.key == pygame.K_w:
-                    self.ent.y -= 5
+                    self.ent_rect.y -= 5
                     # self.camera.position.y-=5
 
                 if event.key == pygame.K_1:
