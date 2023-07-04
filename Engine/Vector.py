@@ -4,13 +4,13 @@ import math
 
 class Vector:
     """Representation of a position or a movement"""
+
     x: int
     y: int
 
     def __init__(self, x: int = 0, y: int = 0):
         self.x = x
         self.y = y
-
 
     @property
     def as_tuple(self) -> tuple[int, int]:
@@ -24,14 +24,14 @@ class Vector:
         if type(vector) != type(self):
             return False
 
-        return (self.x == vector.x and self.y == vector.y)
+        return self.x == vector.x and self.y == vector.y
 
     def normalize(self) -> Vector():
-        l = self.x * self.x + self.y * self.y
-        if l == 0:
+        normal_vector = self.x * self.x + self.y * self.y
+        if normal_vector == 0:
             return Vector(0, 0)
-        l = math.sqrt(l)
-        return Vector(self.x / l, self.y / l)
+        normal_vector = math.sqrt(normal_vector)
+        return Vector(int(self.x / normal_vector), int(self.y / normal_vector))
 
     def divided_by_number(self, number: int) -> Vector:
         if number == 0:
@@ -40,7 +40,6 @@ class Vector:
 
     def divided_by_vector(self, vector: Vector) -> Vector:
         return Vector(int(self.x / vector.x), int(self.y / vector.y))
-        
 
     def __str__(self):
         return f"Vector(x: {int(self.x)}, y: {int(self.y)})"

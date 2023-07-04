@@ -4,9 +4,7 @@ import pygame
 
 from pygame.rect import Rect
 from pygame.surface import Surface
-from Engine.utils import draw_collision_rect
 from Engine.entity import Entity
-from Engine.UI import UI
 from Engine.vector import Vector
 
 

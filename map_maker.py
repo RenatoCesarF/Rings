@@ -1,8 +1,6 @@
 from typing import Dict
 import pygame
 import json
-import math
-import random
 
 import pygame_gui
 from Engine.UI import UI
@@ -10,17 +8,9 @@ from Engine.UI import UI
 from Engine.config import Config
 from Engine import utils
 from Engine.vector import Vector
-from Engine.Collisions.collider import Collider
-from Engine.Animator.spriteSheet import Spritesheet
-from Engine.Animator.animation import Animation
-from Engine.camera import Camera
-from Engine.window import Window
-from Engine.World.world import World
 from Engine.World.tile import Tile
-from Engine.VFX.spark import Spark
 from Engine.entity import Entity
-
-from Entities.Player import Player
+from Engine.camera import Camera
 from Entities.mouse import Mouse
 
 WORLD_FILE = "test.json"

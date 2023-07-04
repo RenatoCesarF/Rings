@@ -28,7 +28,11 @@ class Camera(Entity):
         self.shaking_timer = 0
 
     def update(self):
-        if self._target:
+        if (
+            self._target
+            and hasattr(self._target, "position")
+            and hasattr(self._target.position, "x")
+        ):
             self.position.x = int(self._target.position.x - self.window_size[0] / 2)
             self.position.y = int(self._target.position.y - self.window_size[1] / 2)
 

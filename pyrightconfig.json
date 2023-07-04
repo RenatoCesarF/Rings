@@ -1,0 +1,15 @@
+{
+  "executionEnvironments": [
+    {
+      "root": "src"
+    }
+  ],
+  "include": [
+    ".",
+    "Engine/**/*.py"
+  ],
+  "reportMissingImports": true,
+  "strict": true,
+  "useLibraryCodeForTypes": true,
+  "venvPath": ".venv"
+}

@@ -2,7 +2,6 @@ from typing import List
 
 from pygame.surface import Surface
 
-from Engine.World.tile import Tile
 from Engine.timer import Timer
 from Engine.vector import Vector
 
@@ -66,7 +65,7 @@ class UnitManager:
 
     def remove(self, to_remove: Unit) -> bool:
         if not self.time_to_remove_unit.has_finished():
-            return
+            return False
         self.time_to_remove_unit.reset()
         for unit in self.unit_list:
             if unit == to_remove:
@@ -80,6 +79,7 @@ class UnitManager:
                 position.x + offset.x, position.y + offset.y
             ):
                 return unit
+        return None  # Unit(Vector(-1, -1), None)
 
     def is_tile_position_occupied(self, tile_position: Vector) -> bool:
         for unit in self.unit_list:

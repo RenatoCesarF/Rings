@@ -14,7 +14,6 @@ from Engine.window import Window
 
 class ClickingState(Enum):
     """An enum to represent the possible mouse state"""
-
     Delete = 1
     Select = 2
     Create = 3
@@ -22,7 +21,6 @@ class ClickingState(Enum):
 
 class Mouse(Entity):
     """The class that represents the mouse entity in the game"""
-
     true_position: Vector
     position: Vector
     image: Any
@@ -47,7 +45,7 @@ class Mouse(Entity):
         self.left_is_pressed = False
         self.right_is_pressed = False
 
-        super().__init__(self.position, name="Mouse")
+        super().__init__(self.position, (self.image.width, self.image.height),  name="Mouse")
 
     def update(self):
         self.position.x, self.position.y = pygame.mouse.get_pos()
@@ -65,15 +63,16 @@ class Mouse(Entity):
         self, position: Vector, display: Surface
     ) -> Vector:
         position.x = int(
-            position.x / (self.window.base_screen_size[0] / display.get_width())
+            position.x /
+            (self.window.base_screen_size[0] / display.get_width())
         )
         position.y = int(
-            position.y / (self.window.base_screen_size[1] / display.get_height())
+            position.y /
+            (self.window.base_screen_size[1] / display.get_height())
         )
         return position
 
     def handle_click(self):
-        """Setting the variables inside the mouse class, so it's easier to check this"""
         if pygame.mouse.get_pressed()[0]:
             self.left_is_pressed = True
         else:

@@ -1,5 +1,4 @@
-from turtle import pos
-from typing import List, Tuple, overload
+from typing import List, Tuple
 import pygame
 
 from Engine.vector import Vector
@@ -46,4 +45,4 @@ class Window:
     def to_isometric_position(x: int, y: int) -> Vector:
         screen_x = (MAP_OFFSET.x * TILE_SIZE.x) + (x - y) * (TILE_SIZE.x / 2)
         screen_y = (MAP_OFFSET.y * TILE_SIZE.y) + (x + y) * (TILE_SIZE.y / 2)
-        return Vector(screen_x, screen_y)
+        return Vector(int(screen_x), int(screen_y))

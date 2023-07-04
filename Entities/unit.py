@@ -1,12 +1,10 @@
-from turtle import Vec2D
-from typing import Tuple, List, Any
+from typing import Any
 import pygame
 
 from pygame.surface import Surface
 from pygame.rect import Rect
 from Engine.entity import Entity
 from Engine.image import Image
-from Engine.utils import draw_collision_rect
 
 from Engine.vector import Vector
 from Engine.window import Window
@@ -45,11 +43,13 @@ class Unit(Entity):
 
         self.tower_img = Image("./res/sprites/tower.png", (255, 0, 0))
         self.center_position = Vector(
-            self.screen_position.x + self.tower_img.width / 2,
-            self.screen_position.y + self.tower_img.height / 2,
+            int(self.screen_position.x + self.tower_img.width / 2),
+            int(self.screen_position.y + self.tower_img.height / 2),
         )
         self.create_range()
-        super().__init__(self.center_position)
+        super().__init__(
+            self.center_position, (self.tower_img.width, self.tower_img.height)
+        )
 
     def update(self):
         pass
@@ -99,7 +99,9 @@ class Unit(Entity):
             width=1,
         )
 
-    def is_in_range(self, entity: Entity):
+    def has_in_range(self, entity: Entity):
+        if not hasattr(entity, "collision_rect"):
+            return
         if self.fire_range_rect.colliderect(entity.collision_rect):
             self.has_entity_in_range = True
             return
