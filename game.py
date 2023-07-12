@@ -104,7 +104,6 @@ class Game:
 
         if self.unit_manager.selected_unit:
             self.selected_tile_position = self.unit_manager.selected_unit.tile_position
-
             if self.mouse.right_is_pressed:
                 self.unit_manager.remove(self.unit_manager.selected_unit)
 
@@ -148,10 +147,11 @@ class Game:
         )
 
         self.window.blit_displays()
-        # self.ui.draw(self.window.screen)
+        self.ui.draw(self.window.screen)
         # self.ui.write(str(int(self.clock.get_fps())), Vector(0, 300))
         # self.ui.write(str(len(self.unit_manager.bullets)), Vector(0, 330))
         # self.ui.write(str(self.mouse), Vector(0, 350))
+        self.ui.write(str(self.camera._target.position), Vector(0, 350))
         # self.ui.write(
         #     "Selected Tile: " + str(self.selected_tile_position.as_tuple),
         #     Vector(0, 380),
