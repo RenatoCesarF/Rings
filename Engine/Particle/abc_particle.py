@@ -1,6 +1,6 @@
 import abc
 
-from Engine.vector import Vector
+from Engine.Vector import Vector
 
 
 class AbcParticle(abc.ABC):

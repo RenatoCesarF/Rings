@@ -1,6 +1,6 @@
-from Engine.vector import Vector
+from Engine.Vector import Vector
 from typing import Tuple
-from pygame import Surface
+from pygame import Surface, Mask
 import pygame
 
 
@@ -42,7 +42,7 @@ class Image:
         surface.blit(mask_outline, (loc[0], loc[1] - 1))
         surface.blit(mask_outline, (loc[0], loc[1] + 1))
 
-    def get_mask(self) -> Surface:
+    def get_mask(self) -> Mask:
         mask = (
             pygame.mask.from_surface(self.surface)
             # .to_surface()

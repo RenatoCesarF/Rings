@@ -1,13 +1,15 @@
-from typing import Any
+from __future__ import annotations
+
+from typing import Any, Optional
 import pygame
 
 from pygame.surface import Surface
 from pygame.rect import Rect
-from Engine.entity import Entity
+from Engine.Entity import Entity
 from Engine.image import Image
 
-from Engine.vector import Vector
-from Engine.window import Window
+from Engine.Vector import Vector
+from Engine.Window import Window
 from Entities.bullet import Bullet
 
 
@@ -17,7 +19,7 @@ class Unit(Entity):
     tower_img: Image  # go to resource instance
     unique_id: int
     collision_rect: Rect  # go to resource instance
-    target: Entity
+    target: Optional[Entity]
     unit_manager: Any  # UnitManager
     fire_range: int
     fire_range_rect: Rect
@@ -34,14 +36,16 @@ class Unit(Entity):
         self.tile_position = tile_position
         self.target = None
         self.fire_range = 15
-        self.screen_position = Window.to_isometric_position_from_vector(tile_position)
+        self.screen_position = Window.to_isometric_position_from_vector(
+            tile_position
+        )
         self.screen_position += Vector(0, -14)
         self.collision_rect = pygame.Rect(
             self.screen_position.x + 6, self.screen_position.y, 17, 27
         )
         self.unit_manager = unit_manager
 
-        self.tower_img = Image("./res/sprites/tower.png", (255, 0, 0))
+        self.tower_img = Image('./res/sprites/tower.png', (255, 0, 0))
         self.center_position = Vector(
             int(self.screen_position.x + self.tower_img.width / 2),
             int(self.screen_position.y + self.tower_img.height / 2),
@@ -54,7 +58,7 @@ class Unit(Entity):
     def update(self):
         pass
 
-    def draw(self, surface: Surface, offset: Vector = Vector()):
+    def draw(self, surface: Surface, offset: Vector = Vector.zero()):
         self.tower_img.draw(surface, self.screen_position, offset)
         # self.draw_fire_range(surface, offset)
         # draw_collision_rect(self.collision_rect, surface, offset)
@@ -69,7 +73,9 @@ class Unit(Entity):
             height_range * 5,
         )
 
-    def draw_fire_range(self, surface: Surface, offset: Vector = Vector()):
+    def draw_fire_range(
+        self, surface: Surface, offset: Vector = Vector.zero()
+    ):
         color = (0, 200, 255)
         if self.has_entity_in_range:
             color = (200, 0, 0)
@@ -100,7 +106,7 @@ class Unit(Entity):
         )
 
     def has_in_range(self, entity: Entity):
-        if not hasattr(entity, "collision_rect"):
+        if not hasattr(entity, 'collision_rect'):
             return
         if self.fire_range_rect.colliderect(entity.collision_rect):
             self.has_entity_in_range = True
@@ -111,14 +117,13 @@ class Unit(Entity):
         self.target = target
 
     def fire(self):
+        if self.target is None:
+            return
         self.unit_manager.bullets.append(
             Bullet(self.center_position.copy(), self.target, 6)
         )
 
-    def __eq__(self, compared: object) -> bool:
-        if type(compared) != type(self):
-            return False
-        return self.tile_position == compared.tile_position
-
     def __str__(self) -> str:
-        return f"Unit(id: {self.unique_id}, tile_position: {self.tile_position}) "
+        return (
+            f'Unit(id: {self.unique_id}, tile_position: {self.tile_position}) '
+        )

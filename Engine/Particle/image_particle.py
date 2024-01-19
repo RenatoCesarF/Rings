@@ -1,8 +1,4 @@
 # TODO: add animation to the image using list of images or an animation Object
-from typing import Tuple
-from abc import ABC
-import abc
-
 import random
 
 import pygame

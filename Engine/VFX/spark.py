@@ -1,10 +1,11 @@
-import math, random
+import math
+import random
 from typing import List, Tuple
 import pygame
 from pygame import draw
 from pygame.display import set_palette
 from pygame.transform import scale
-from Engine.vector import Vector
+from Engine.Vector import Vector
 
 
 class Spark:
@@ -78,14 +79,18 @@ class Spark:
         if self.speed <= 0:
             self.alive = False
 
-    def draw(self, surface: pygame.Surface, offset: List[int] = [0, 0]) -> None:
+    def draw(
+        self, surface: pygame.Surface, offset: List[int] = [0, 0]
+    ) -> None:
         if not self.alive:
             return
         self.points = [
             # Point 1
             [
-                self.position.x + math.cos(self.angle) * self.speed * self.scale,
-                self.position.y + math.sin(self.angle) * self.speed * self.scale,
+                self.position.x
+                + math.cos(self.angle) * self.speed * self.scale,
+                self.position.y
+                + math.sin(self.angle) * self.speed * self.scale,
             ],
             # Point 2
             [
@@ -102,8 +107,10 @@ class Spark:
             ],
             # Point 3
             [
-                self.position.x - math.cos(self.angle) * self.speed * self.scale * 3.5,
-                self.position.y - math.sin(self.angle) * self.speed * self.scale * 3.5,
+                self.position.x
+                - math.cos(self.angle) * self.speed * self.scale * 3.5,
+                self.position.y
+                - math.sin(self.angle) * self.speed * self.scale * 3.5,
             ],
             # Point 4
             [

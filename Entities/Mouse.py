@@ -4,16 +4,18 @@ from enum import Enum
 import pygame
 from pygame.surface import Surface
 
-from Engine.vector import Vector
-from Engine.entity import Entity
-from Engine.utils import draw_collision_rect
+from Engine.Vector import Vector
+from Engine.Entity import Entity
+
+# from Engine.utils import draw_collision_rect
 from Engine.image import Image
 
-from Engine.window import Window
+from Engine.Window import Window
 
 
 class ClickingState(Enum):
     """An enum to represent the possible mouse state"""
+
     Delete = 1
     Select = 2
     Create = 3
@@ -21,6 +23,7 @@ class ClickingState(Enum):
 
 class Mouse(Entity):
     """The class that represents the mouse entity in the game"""
+
     true_position: Vector
     position: Vector
     image: Any
@@ -32,20 +35,25 @@ class Mouse(Entity):
     def __init__(self, window: Window):
         self._state = ClickingState.Select
         self.window = window
-        self.true_position = Vector()
-        self.position = Vector()
+        self.true_position = Vector.zero()
+        self.position = Vector.zero()
 
-        self.image = Image("res/mouse.png", (255, 0, 0))
+        self.image = Image('res/mouse.png', (255, 0, 0))
         self.image.scale_to_resolution((43, 43))
 
         self.collision_rect = pygame.Rect(
-            self.position.x, self.position.y, self.image.width, self.image.height
+            self.position.x,
+            self.position.y,
+            self.image.width,
+            self.image.height,
         )
 
         self.left_is_pressed = False
         self.right_is_pressed = False
 
-        super().__init__(self.position, (self.image.width, self.image.height),  name="Mouse")
+        super().__init__(
+            self.position, (self.image.width, self.image.height), name='Mouse'
+        )
 
     def update(self):
         self.position.x, self.position.y = pygame.mouse.get_pos()
@@ -63,12 +71,12 @@ class Mouse(Entity):
         self, position: Vector, display: Surface
     ) -> Vector:
         position.x = int(
-            position.x /
-            (self.window.base_screen_size[0] / display.get_width())
+            position.x
+            / (self.window.base_screen_size[0] / display.get_width())
         )
         position.y = int(
-            position.y /
-            (self.window.base_screen_size[1] / display.get_height())
+            position.y
+            / (self.window.base_screen_size[1] / display.get_height())
         )
         return position
 
@@ -87,7 +95,7 @@ class Mouse(Entity):
         """Change the mouse state, its action"""
         self._state = new_state
 
-    def draw(self, surface: pygame.Surface, offset: Vector = Vector()) -> None:
+    def draw(self, surface: pygame.Surface, offset: Vector = Vector.zero()):
         pos = Vector(
             self.true_position.x - self.image.width / 6,
             self.true_position.y - self.image.height / 6,

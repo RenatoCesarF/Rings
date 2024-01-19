@@ -2,8 +2,8 @@ from __future__ import annotations
 from typing import List
 import pygame
 from pygame.surface import Surface
-from Engine.Animator.spriteSheet import Spritesheet
-from Engine.vector import Vector
+from Engine.Animator.SpriteSheet import Spritesheet
+from Engine.Vector import Vector
 
 
 class Animation:
@@ -58,7 +58,8 @@ class Animation:
 
         for i in range(self.frames_amount):
             sprite_position = Vector(
-                int(sprite_width * (i) + space_between_sprites), spritesheet_line_height
+                int(sprite_width * (i) + space_between_sprites),
+                spritesheet_line_height,
             )
             self.frames.append(
                 sprite_sheet.get_sprite(
@@ -85,7 +86,7 @@ class Animation:
         self.frames_amount += self.frames_amount - 3
 
     def reset_animation(self) -> None:
-        "Returns the animation to the first frame"
+        """Returns the animation to the first frame"""
         self.current_frame = 0
 
     def get_next_frame(self) -> Surface:
@@ -162,7 +163,10 @@ class Animation:
 
     @classmethod
     def create_mirrored_animation(
-        cls, animation: Animation, horizontally: bool = True, vertically: bool = False
+        cls,
+        animation: Animation,
+        horizontally: bool = True,
+        vertically: bool = False,
     ) -> Animation:
         """Returns a new animation that is a mirrored version of passed in the args. This is
             a class method, so it only can be used with `Animation.create_mir...`. Usally the
@@ -179,7 +183,9 @@ class Animation:
             Animation: type Anumation and can be attached to a new animation without the need to configure
         """
         mirroredAnimation: Animation = Animation(
-            animation.frames_amount, animation.speed, animation.initial_animation_time
+            animation.frames_amount,
+            animation.speed,
+            animation.initial_animation_time,
         )
         mirroredAnimation.frames = animation.frames.copy()
         for index, frame in enumerate(mirroredAnimation.frames):

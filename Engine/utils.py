@@ -2,7 +2,7 @@
 
 from typing import Tuple
 from pygame.font import Font
-from Engine.vector import Vector
+from Engine.Vector import Vector
 import pygame
 from pygame.surface import Surface
 from pygame.rect import Rect

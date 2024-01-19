@@ -2,7 +2,8 @@ from __future__ import annotations
 from typing import List, Tuple
 import pygame
 
-from Engine.vector import Vector
+from Engine.Vector import Vector
+
 
 class Collider:
     def __init__(
@@ -11,7 +12,7 @@ class Collider:
         width: int,
         height: int,
         collision_tolerance: int = 3,
-        left_offset: Vector = Vector(),
+        left_offset: Vector = Vector.zero(),
     ) -> None:
         self.collision_rect = pygame.Rect(
             initial_position.x, initial_position.y, width, height
@@ -20,7 +21,7 @@ class Collider:
             left_offset  # TODO: implement a way to add offset to collision
         )
         self.collision_tolerance = collision_tolerance
-        self.speed = Vector()
+        self.speed = Vector.zero()
         self.width = width
         self.height = height
 
@@ -70,7 +71,7 @@ class Collider:
     def draw_collision_rect(
         self,
         destination_surface: pygame.Surface,
-        offset: Vector = Vector(),
+        offset: Vector = Vector.zero(),
         color: Tuple[int, int, int] = (250, 0, 0),
         width: int = 1,
     ) -> None:

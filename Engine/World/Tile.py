@@ -1,12 +1,11 @@
 from typing import Tuple
 import pygame
-from Engine.vector import Vector
+from Engine.Vector import Vector
 
 
 class Tile:
     position: Vector
     size: int
-    grid_index: Vector
     color: Tuple[int, int, int]
     thikness: int
     content: int
@@ -15,13 +14,11 @@ class Tile:
         self,
         position: Vector,
         size: int,
-        grid_index: Vector,
         content: int = 0,
         color: Tuple[int, int, int] = (100, 100, 100),
         thikness: int = 0,
     ):
         self.content = content or 0
-        self.grid_index = grid_index
         self.position = position
         self.size = size
         self.color = color
@@ -56,4 +53,6 @@ class Tile:
             return (90, 190, 90)
 
     def __str__(self) -> str:
-        return f"( Position: {self.position}, Tile Index: {self.grid_index} Color: {self.color} , {self.thikness}"
+        return (
+            f'Tile(Pos: {self.position}, Color: {self.color}, {self.thikness})'
+        )

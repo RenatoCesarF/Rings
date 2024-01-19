@@ -1,9 +1,9 @@
-from typing import List
+from typing import List, Optional
 
 from pygame.surface import Surface
 
 from Engine.timer import Timer
-from Engine.vector import Vector
+from Engine.Vector import Vector
 
 from Entities.unit import Unit
 from Entities.bullet import Bullet
@@ -13,7 +13,7 @@ class UnitManager:
     unit_list: List[Unit]
     time_to_add_unit: Timer
     time_to_remove_unit: Timer
-    selected_unit: Unit
+    selected_unit: Optional[Unit]
     bullets: List[Bullet]
 
     def __init__(self):
@@ -60,7 +60,9 @@ class UnitManager:
             return
         unit.unique_id = len(self.unit_list)
         self.unit_list.append(unit)
-        self.unit_list = sorted(self.unit_list, key=lambda x: x.screen_position.y)
+        self.unit_list = sorted(
+            self.unit_list, key=lambda x: x.screen_position.y
+        )
         self.time_to_add_unit.reset()
 
     def remove(self, to_remove: Unit) -> bool:
@@ -73,8 +75,12 @@ class UnitManager:
                 return True
         return False
 
-    def get_unit_at_position(self, position: Vector, offset: Vector = Vector()) -> Unit:
-        for unit in sorted(self.unit_list, key=lambda x: x.screen_position.y * -1):
+    def get_unit_at_position(
+        self, position: Vector, offset: Vector = Vector.zero()
+    ) -> Optional[Unit]:
+        for unit in sorted(
+            self.unit_list, key=lambda x: x.screen_position.y * -1
+        ):
             if unit.collision_rect.collidepoint(
                 position.x + offset.x, position.y + offset.y
             ):
@@ -91,8 +97,11 @@ class UnitManager:
 
         return False
 
-    def get_unit_in_tile(self, tile_x, tile_y) -> Unit:
+    def get_unit_in_tile(self, tile_x, tile_y) -> Optional[Unit]:
         for unit in self.unit_list:
-            if unit.tile_position.x == tile_x and unit.tile_position.y == tile_y:
+            if (
+                unit.tile_position.x == tile_x
+                and unit.tile_position.y == tile_y
+            ):
                 return unit
         return None

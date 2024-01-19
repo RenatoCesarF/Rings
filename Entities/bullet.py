@@ -1,11 +1,11 @@
 from __future__ import annotations
 
 import pygame
-
 from pygame.rect import Rect
 from pygame.surface import Surface
-from Engine.entity import Entity
-from Engine.vector import Vector
+
+from Engine.Entity import Entity
+from Engine.Vector import Vector
 
 
 class Bullet(Entity):
@@ -19,7 +19,7 @@ class Bullet(Entity):
     def __init__(self, position: Vector, target: Entity, speed: float = 1):
         self.position = position
         self.target = target
-        self.direction = Vector()
+        self.direction = Vector.zero()
         self.speed = speed
         self.alive = True
         self.collision_rect = Rect(position.x, position.y, 5, 5)
@@ -31,13 +31,16 @@ class Bullet(Entity):
         self.direction.y = self.target.position.y - self.position.y
 
         self.direction = self.direction.normalize()
-        self.position.x += self.direction.x * self.speed
-        self.position.y += self.direction.y * self.speed
+        self.position.x += int(self.direction.x * self.speed)
+        self.position.y += int(self.direction.y * self.speed)
         self.collision_rect.x = self.position.x - 2
         self.collision_rect.y = self.position.y - 2
 
-        if not self.target.collision_rect or self.target.collision_rect is None:
-            print("target has no collision rect")
+        if (
+            not self.target.collision_rect
+            or self.target.collision_rect is None
+        ):
+            print('target has no collision rect')
             return
 
         self.handle_target_collision()
@@ -52,7 +55,7 @@ class Bullet(Entity):
             return True
         return False
 
-    def draw(self, surface: Surface, offset: Vector):
+    def draw(self, surface: Surface, offset: Vector = Vector.zero()):
         if not self.alive or not self.target:
             return
         render_pos = (self.position.x - offset.x, self.position.y - offset.y)

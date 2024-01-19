@@ -1,8 +1,8 @@
 from typing import List, Tuple
 import pygame
 
-from Engine.vector import Vector
-from Engine.config import TILE_SIZE
+from Engine.Vector import Vector
+from Engine.Config import TILE_SIZE
 
 MAP_OFFSET: Vector = Vector(5, 1)
 

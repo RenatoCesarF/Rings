@@ -8,7 +8,7 @@ class Vector:
     x: int
     y: int
 
-    def __init__(self, x: int = 0, y: int = 0):
+    def __init__(self, x: int, y: int):
         self.x = x
         self.y = y
 
@@ -17,16 +17,20 @@ class Vector:
         return (self.x, self.y)
 
     @staticmethod
-    def from_tuple(tuple: tuple[int, int]) -> Vector:
-        return Vector(tuple[0], tuple[1])
+    def from_tuple(tp: tuple[int, int]) -> Vector:
+        return Vector(tp[0], tp[1])
+
+    @staticmethod
+    def zero() -> Vector:
+        return Vector(0, 0)
 
     def is_equal(self, vector: Vector) -> bool:
-        if type(vector) != type(self):
+        if isinstance(self, Vector):
             return False
 
         return self.x == vector.x and self.y == vector.y
 
-    def normalize(self) -> Vector():
+    def normalize(self) -> Vector:
         normal_vector = self.x * self.x + self.y * self.y
         if normal_vector == 0:
             return Vector(0, 0)
@@ -42,13 +46,13 @@ class Vector:
         return Vector(int(self.x / vector.x), int(self.y / vector.y))
 
     def __str__(self):
-        return f"Vector(x: {int(self.x)}, y: {int(self.y)})"
+        return f'Vector(x: {int(self.x)}, y: {int(self.y)})'
 
     def copy(self) -> Vector:
         return Vector(self.x, self.y)
 
     def __eq__(self, compared: object) -> bool:
-        if type(compared) != type(self):
+        if not isinstance(compared, Vector):
             return False
 
         return self.x == compared.x and self.y == compared.y  # type: ignore

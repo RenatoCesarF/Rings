@@ -1,10 +1,9 @@
 from typing import List, Tuple
-from abc import ABC
 import random
 import pygame
 
 from Engine import utils
-from Engine.vector import Vector
+from Engine.Vector import Vector
 from Engine.shape import Shape
 from Engine.Particle.abc_particle import AbcParticle
 from Engine.Glow import Glow
@@ -45,8 +44,12 @@ class ShapeParticle(AbcParticle):
     def set_polygon_points(self, points: List) -> None:
         self.points = points
 
-    def draw(self, destinatonSurface: pygame.Surface, glow: Glow = None) -> None:
-        formSurface = pygame.Surface((self.width, self.height), pygame.SRCALPHA)
+    def draw(
+        self, destinatonSurface: pygame.Surface, glow: Glow = None
+    ) -> None:
+        formSurface = pygame.Surface(
+            (self.width, self.height), pygame.SRCALPHA
+        )
 
         # SET SHAPE
         if self.shape == Shape.Rect:
@@ -59,7 +62,9 @@ class ShapeParticle(AbcParticle):
             )
         elif self.shape == Shape.Box:
             pygame.gfxdraw.box(
-                formSurface, pygame.Rect(0, 0, self.width, self.height), self.color
+                formSurface,
+                pygame.Rect(0, 0, self.width, self.height),
+                self.color,
             )
         elif self.shape == Shape.Circle:
             pygame.draw.circle(
@@ -69,7 +74,9 @@ class ShapeParticle(AbcParticle):
                 self.width,
             )  # can go directaly to the surface
         elif self.shape == Shape.Polygon:
-            pygame.draw.polygon(destinatonSurface, self.color, self.points, self.width)
+            pygame.draw.polygon(
+                destinatonSurface, self.color, self.points, self.width
+            )
         else:
             pygame.draw.rect(
                 formSurface,
