@@ -7,19 +7,19 @@ from Engine.Vector import Vector
 
 
 class Camera(Entity):
-    _target: Entity
+    # _target: Entity
     window_size: Tuple[int, int]
     position: Vector
     shaking_amount: Vector
     current_shake_rate: int
     original_shake_rate: int
-    is_shaking: bool
     shaking_timer: int
+    is_shaking: bool
 
-    def __init__(self, target: Entity, window_size: Tuple[int, int]):
-        self._target = target
-        self.position = Vector.zero()
+    def __init__(self, position: Vector, window_size: Tuple[int, int]):
+        self._target = None
         self.current_shake_rate = 0
+        self.position = position
         self.original_shake_rate = 0
         self.shaking_amount = Vector.zero()
         self.is_shaking = False
@@ -29,15 +29,13 @@ class Camera(Entity):
     def update(self):
         if (
             self._target
-            and hasattr(self._target, 'position')
-            and hasattr(self._target.position, 'x')
+            and hasattr(self._target, "position")
+            and hasattr(self._target.position, "x")
         ):
             self.position.x = int(
-                self._target.position.x - self.window_size[0] / 2
-            )
+                self._target.position.x - self.window_size[0] / 2)
             self.position.y = int(
-                self._target.position.y - self.window_size[1] / 2
-            )
+                self._target.position.y - self.window_size[1] / 2)
 
         if self.is_shaking:
             self.update_shaking_motion()

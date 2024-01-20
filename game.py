@@ -70,9 +70,7 @@ class Game:
         self._enemies.append(Entity(Vector(200, 200), (5, 5)))
         self.world = World()
         self.mouse = Mouse(self.window)
-        self.camera = Camera(
-            Entity(None, (1, 1)), self.window.screen_real_size
-        )
+        self.camera = Camera(Vector.zero(), self.window.screen_real_size)
         self.selected: Image = Image(
             './res/sprites/selected.png',
         )
@@ -250,7 +248,7 @@ class Game:
 
         for enemy in self._enemies:
             position = World.get_tile_position_in_grid(
-                enemy.position, Vector()
+                enemy.position, Vector.zero()
             )
             pygame.draw.circle(
                 screen_destination,

@@ -1,17 +1,17 @@
-from typing import Dict
+from typing import List
+
 import pygame
 import json
 
-import pygame_gui
 from Engine.UI import UI
 
-from Engine.config import Config
+from Engine.Config import Config
 from Engine import utils
-from Engine.vector import Vector
-from Engine.World.tile import Tile
-from Engine.entity import Entity
-from Engine.camera import Camera
-from Entities.mouse import Mouse
+from Engine.Vector import Vector
+from Engine.World.Tile import Tile
+from Engine.Camera import Camera
+from Entities.Mouse import Mouse
+from Engine.Window import Window
 
 WORLD_FILE = "test.json"
 game_map = json.load(open(WORLD_FILE))
@@ -26,23 +26,27 @@ class MapMaker:
     camera: Camera
     center_point: Vector
     window: Window
-    tiles: list
+    tiles: List[Tile]
     mouse: Mouse
     selected_tile: Tile
     ui: UI
     configs: Config
 
     def __init__(self):
-        self.selected_tile = Tile(Vector(), TILE_SIZE, Vector(0, 0))
+        self.selected_tile = Tile(
+            Vector.zero(), TILE_SIZE, grid_index=Vector.zero())
         self.configs = Config("./res/config.json")
         self.window = Window(self.configs.resolution)
         self.ui = UI(
-            self.configs.resolution_as_tuple(), "res/ui_theme.json", self.window.screen
+            self.configs.resolution_as_tuple(),
+            "res/ui_theme.json",
+            self.window.screen,
         )
         self.center_point = Vector(
-            self.window.screen_real_size[0] / 2, self.window.screen_real_size[1] / 2
+            int(self.window.screen_real_size[0] / 2),
+            int(self.window.screen_real_size[1] / 2),
         )
-        self.camera = Camera(Entity(self.center_point), self.window.screen_real_size)
+        self.camera = Camera(Vector(-30, -50), self.window.screen_real_size)
         self.mouse = Mouse(self.window)
         self.clock = pygame.time.Clock()
         self.running = True
@@ -50,13 +54,15 @@ class MapMaker:
 
     def update(self):
         self.time_delta = self.clock.tick(60) / 1000.0
-        self.ui.update(self.time_delta)
+        # self.ui.update(self.time_delta)
         self.generate_tiles_with_game_map()
         self.mouse.update()
         self.camera.update()
 
-        x_index = int((self.mouse.position.x + self.camera.position.x) / TILE_SIZE)
-        y_index = int((self.mouse.position.y + self.camera.position.y) / TILE_SIZE)
+        x_index = int(
+            (self.mouse.position.x + self.camera.position.x) / TILE_SIZE)
+        y_index = int(
+            (self.mouse.position.y + self.camera.position.y) / TILE_SIZE)
         self.tile_hover_index = [x_index, y_index]
 
         if self.mouse.left_is_pressed:
@@ -75,7 +81,18 @@ class MapMaker:
 
         self.draw_grid()
 
+        Tile(
+            Vector(20, 1),
+            7,
+            content=self.selected_tile.content,
+            grid_index=Vector.zero(),
+        ).draw(
+            self.window.display,
+            offset=Vector.zero(),
+        )
+
         self.window.blit_displays()
+        self.ui.write("Paint: ", Vector(1, 0))
         self.mouse.draw(self.window.screen)
 
     def change_tile_info(self, x_position, y_position, new_data):
@@ -104,7 +121,7 @@ class MapMaker:
         )
 
     def generate_tiles_with_game_map(self):
-        self.tiles: Dict[Tile] = []
+        self.tiles: List[Tile] = []
         y = 0
         for row in game_map:
             x = 0
@@ -147,19 +164,19 @@ class MapMaker:
 
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_d:
-                    self.center_point.x += 10
+                    self.camera.position.x += 10
                 if event.key == pygame.K_a:
-                    self.center_point.x -= 10
+                    self.camera.position.x -= 10
                 if event.key == pygame.K_w:
-                    self.center_point.y -= 10
+                    self.camera.position.y -= 10
                 if event.key == pygame.K_s:
-                    self.center_point.y += 10
+                    self.camera.position.y += 10
 
                 self.check_number_keys_input(event.key)
-            if event.type == pygame_gui.UI_BUTTON_PRESSED:
-                self.ui.check_events(event)
+            # if event.type == pygame_gui.UI_BUTTON_PRESSED:
+            #     self.ui.check_events(event)
 
-            self.ui.manager.process_events(event)
+            # self.ui.manager.process_events(event)
 
     def check_number_keys_input(self, key):
         if key == pygame.K_1:

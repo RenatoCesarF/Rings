@@ -39,7 +39,7 @@ class World:
                 t = Tile(
                     position=Window.to_isometric_position(x, y),
                     size=TILE_WIDTH,
-                    # grid_index=Vector(x, y),
+                    grid_index=Vector(x, y),
                     content=tile,
                 )
                 self.map_matrix[y][x] = t
@@ -54,6 +54,7 @@ class World:
                     TILE_WIDTH,
                     content=4,
                     thikness=1,
+                    grid_index=Vector(i, j),
                 )
                 t.draw(surface, offset)
 

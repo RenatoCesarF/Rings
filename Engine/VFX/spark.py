@@ -1,10 +1,6 @@
 import math
-import random
 from typing import List, Tuple
 import pygame
-from pygame import draw
-from pygame.display import set_palette
-from pygame.transform import scale
 from Engine.Vector import Vector
 
 
@@ -51,7 +47,7 @@ class Spark:
 
         self.angle += rate * rotate_sign
 
-    def calculate_movement(self, dt) -> None:
+    def calculate_movement(self, dt) -> List:
         return [
             math.cos(self.angle) * self.speed * dt,
             math.sin(self.angle) * self.speed * dt,
@@ -79,9 +75,7 @@ class Spark:
         if self.speed <= 0:
             self.alive = False
 
-    def draw(
-        self, surface: pygame.Surface, offset: List[int] = [0, 0]
-    ) -> None:
+    def draw(self, surface: pygame.Surface, offset: List[int] = [0, 0]):
         if not self.alive:
             return
         self.points = [

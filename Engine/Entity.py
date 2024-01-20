@@ -22,9 +22,11 @@ class Entity:
         self.position = position
         self.size = size
         self.name = name
-        # self.collision_rect = Rect(
-        #     self.position.as_tuple, (self.size[0], self.size[1])
-        # )
+        if self.position is None:
+            return
+        self.collision_rect = Rect(
+            self.position.as_tuple, (self.size[0], self.size[1])
+        )
 
     def update(self) -> None:
         """Update function"""

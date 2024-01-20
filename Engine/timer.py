@@ -29,6 +29,7 @@ class Timer:
 
     def __str__(self) -> str:
         return (
-            f"finished: {self.has_finished()} ; timer: {self.timer} "
-            + f"miliseconds: {self.miliseconds} ; seconds missing:  {self.time_missing_in_seconds()}"
+            f'finished: {self.has_finished()} ; timer: {self.timer} '
+            + f'miliseconds: {self.miliseconds}'
+            + f'seconds missing:  {self.time_missing_in_seconds()}'
         )
