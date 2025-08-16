@@ -38,8 +38,6 @@ class Globals:
 
 
 class Game:
-    """Main game class to cluster everything"""
-
     _entities: List[Entity]
     game_time: int
     running: bool
@@ -91,7 +89,6 @@ class Game:
         self.selected_tile_position = World.get_tile_position_in_grid(
             self.mouse.position, self.camera.position
         )
-        # TODO: Fix unit selection
         self.unit_manager.selected_unit = self.unit_manager.get_unit_at_position(
             self.mouse.position, self.camera.position
         )

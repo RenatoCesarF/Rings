@@ -6,7 +6,7 @@ from Engine.image import Image
 from Engine.utils import draw_collision_rect
 
 
-class Enemy(Entity):
+class Enemy:
     position: Vector
     collision_rect: pygame.Rect
     life: int

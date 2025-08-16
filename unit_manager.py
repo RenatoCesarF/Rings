@@ -2,15 +2,11 @@ from typing import List, Optional
 
 from pygame.surface import Surface
 
-from Engine.debugger_draw import debugger_draw
-from Engine.Window import window
 from Engine.timer import Timer
 from Engine.Vector import Vector
 
-from Engine.utils import draw_circle, draw_collision_rect
 from Entities.unit import Unit
 from Entities.bullet import Bullet
-# from main import game
 
 
 class UnitManager:

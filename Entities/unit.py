@@ -112,11 +112,12 @@ class Unit:
 
     def has_in_range(self, entity: Entity):
         if not hasattr(entity, 'collision_rect'):
-            return
+            return False
         if self.fire_range_rect.colliderect(entity.collision_rect):
             self.has_entity_in_range = True
-            return
+            return True
         self.has_entity_in_range = False
+        return False
 
     def set_target(self, target: Entity):
         self.target = target
