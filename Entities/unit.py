@@ -8,12 +8,13 @@ from pygame.rect import Rect
 from Engine.Entity import Entity
 from Engine.image import Image
 
+from Engine.utils import draw_collision_rect
 from Engine.Vector import Vector
 from Engine.Window import Window
 from Entities.bullet import Bullet
 
 
-class Unit(Entity):
+class Unit:
     tile_position: Vector
     screen_position: Vector
     tower_img: Image  # go to resource instance
@@ -31,6 +32,12 @@ class Unit(Entity):
         unit_manager,
         id: int = 0,
     ):
+        #
+        # super().__init__(
+        #     self.center_position, (self.tower_img.width, self.tower_img.height)
+        # )
+
+        self.tower_img = Image('./res/sprites/tower.png', (255, 0, 0))
         self.unique_id = id
         self.has_entity_in_range = False
         self.tile_position = tile_position
@@ -41,19 +48,17 @@ class Unit(Entity):
         )
         self.screen_position += Vector(0, -14)
         self.collision_rect = pygame.Rect(
-            self.screen_position.x + 6, self.screen_position.y, 17, 27
+            self.screen_position.x, #// - self.tower_img.width/2,
+            self.screen_position.y,# - self.tower_img.height/2,
+            self.tower_img.width, self.tower_img.height
         )
         self.unit_manager = unit_manager
 
-        self.tower_img = Image('./res/sprites/tower.png', (255, 0, 0))
         self.center_position = Vector(
             int(self.screen_position.x + self.tower_img.width / 2),
             int(self.screen_position.y + self.tower_img.height / 2),
         )
         self.create_range()
-        super().__init__(
-            self.center_position, (self.tower_img.width, self.tower_img.height)
-        )
 
     def update(self):
         pass
@@ -61,7 +66,7 @@ class Unit(Entity):
     def draw(self, surface: Surface, offset: Vector = Vector.zero()):
         self.tower_img.draw(surface, self.screen_position, offset)
         # self.draw_fire_range(surface, offset)
-        # draw_collision_rect(self.collision_rect, surface, offset)
+        draw_collision_rect(self.collision_rect, surface, offset)
 
     def create_range(self):
         width_range = self.fire_range * 2

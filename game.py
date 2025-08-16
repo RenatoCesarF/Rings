@@ -6,15 +6,16 @@ from typing import List
 import pygame
 from pygame import Surface
 
+from Engine.debugger_draw import debugger_draw
 from Engine.utils import draw_collision_rect
 from Engine.Entity import Entity
 
 from Engine.UI import UI
 from Engine.Vector import Vector
 
-from Engine.Config import Config
+from Engine.Config import config
 from Engine.Camera import Camera
-from Engine.Window import Window
+from Engine.Window import window
 
 from Engine.World.World import World
 from Engine.image import Image
@@ -40,10 +41,8 @@ class Game:
     """Main game class to cluster everything"""
 
     _entities: List[Entity]
-    configs: Config
     game_time: int
     running: bool
-    window: Window
     world: World
     mouse: Mouse
     camera: Camera
@@ -57,26 +56,27 @@ class Game:
     def __init__(self) -> None:
         self.running = True
         self.ent_rect = pygame.Rect(200, 200, 5, 5)
-        self.configs = Config("./res/config.json")
-        self.window = Window(self.configs.resolution)
+        print(config.resolution)
         self.unit_manager = UnitManager()
         self.ui = UI(
-            self.configs.resolution_as_tuple(),
+            config.resolution_as_tuple(),
             "res/ui_theme.json",
-            self.window.screen,
+            window.screen,
         )
         self._entities = []
         self._enemies = []
         self._enemies.append(Entity(Vector(200, 200), (5, 5)))
         self.world = World()
-        self.mouse = Mouse(self.window)
-        self.camera = Camera(Vector.zero(), self.window.screen_real_size)
+        self.mouse = Mouse(window)
+        self.camera = Camera(Vector.zero(), window.screen_real_size)
         self.selected: Image = Image(
             "./res/sprites/selected.png",
         )
         self.selected.set_opacity(200)
         self.clock = pygame.time.Clock()
+
         self._enemies.append(Enemy(Vector(10, 60), 20, 20))
+
         self.unit_manager.unit_list.append(Unit(Vector(9, 5), self.unit_manager))
 
     def update(self):
@@ -91,6 +91,7 @@ class Game:
         self.selected_tile_position = World.get_tile_position_in_grid(
             self.mouse.position, self.camera.position
         )
+        # TODO: Fix unit selection
         self.unit_manager.selected_unit = self.unit_manager.get_unit_at_position(
             self.mouse.position, self.camera.position
         )
@@ -101,6 +102,7 @@ class Game:
 
         for ent in self._entities:
             ent.update()
+
         for enemy in self._enemies:
             enemy.update()
 
@@ -135,27 +137,30 @@ class Game:
         )
 
     def draw(self):
-        self.window.display.fill((80, 90, 90))
-        self.world.draw(self.window.display, self.camera.position)
+        window.display.fill((80, 90, 90))
+        self.world.draw(window.display, self.camera.position)
 
-        self.draw_selection_square(self.window.display)
+        self.draw_selection_square(window.display)
 
-        self.unit_manager.draw(self.window.display, self.camera.position)
+        self.unit_manager.draw(window.display, self.camera.position)
 
         for ent in self._entities:
-            ent.draw(self.window.display, self.camera.position)
+            ent.draw(window.display, self.camera.position)
         for enemy in self._enemies:
-            enemy.draw(self.window.display, self.camera.position)
+            enemy.draw(window.display, self.camera.position)
 
         draw_collision_rect(
             self.ent_rect,
-            self.window.display,
+            window.display,
             self.camera.position,
             line_width=0,
         )
 
-        self.window.blit_displays()
-        # self.ui.draw(self.window.screen)
+
+        debugger_draw.draw(self.camera.position)
+
+        window.blit_displays()
+        # self.ui.draw(window.screen)
         self.ui.write(str(int(self.clock.get_fps())), Vector(0, 300))
         # self.ui.write(str(len(self.unit_manager.bullets)), Vector(0, 330))
         self.ui.write(str(self.mouse), Vector(0, 350))
@@ -165,12 +170,12 @@ class Game:
             "Selected Tile: " + str(self.selected_tile_position.as_tuple),
             Vector(0, 380),
         )
-        self.mouse.draw(self.window.screen)
+        self.mouse.draw(window.screen)
 
-        # self.draw_top_down_view()
+        self.draw_top_down_view()
 
     def draw_top_down_view(self):
-        screen_destination = self.window.screen
+        screen_destination = window.screen
         tile_size = 20
         tile_color = (0, 178, 0)
 
@@ -232,10 +237,7 @@ class Game:
             pygame.draw.circle(
                 screen_destination,
                 unit_color,
-                (
-                    (unit.tile_position.x * tile_size) + 8,
-                    (unit.tile_position.y * tile_size) + 8,
-                ),
+                ((unit.tile_position.x * tile_size) + 8, (unit.tile_position.y * tile_size) + 8),
                 5,
                 0,
             )
@@ -261,7 +263,7 @@ class Game:
 
         self.selected.draw(
             surface,
-            Window.to_isometric_position_from_vector(self.selected_tile_position),
+            window.to_isometric_position_from_vector(self.selected_tile_position),
             self.camera.position,
         )
 
@@ -315,5 +317,3 @@ class Game:
             self.draw()
 
 
-game = Game()
-game.run()

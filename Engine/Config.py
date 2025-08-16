@@ -22,3 +22,5 @@ class Config:
     def resolution_as_tuple(self) -> Tuple[int, int]:
         """Return the game window resolution in the tuple format"""
         return (self.resolution[0], self.resolution[1])
+
+config = Config("./res/config.json")

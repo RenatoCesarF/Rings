@@ -15,7 +15,6 @@ from Engine.Window import Window
 
 class ClickingState(Enum):
     """An enum to represent the possible mouse state"""
-
     Delete = 1
     Select = 2
     Create = 3
@@ -102,7 +101,7 @@ class Mouse(Entity):
         )
         self.image.draw(surface, pos, offset)
 
-        # draw_collision_rect(self.collision_rect, surface, offset)
+        # self.collision_rect.draw_collision_rect(self.collision_rect, surface, offset)
 
     def get_state(self) -> str:
         """

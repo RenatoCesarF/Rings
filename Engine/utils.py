@@ -31,7 +31,7 @@ def draw_collision_rect(
         surface,
         (100, 0, 0),
         pygame.Rect(
-            collision_rect.x - offset.x,  # +left_offset.x,
+            collision_rect.x  - offset.x,  # +left_offset.x,
             collision_rect.y - offset.y,  # +left_offset.y,
             collision_rect.width,
             collision_rect.height,

@@ -2,7 +2,7 @@ from typing import List, Tuple
 import pygame
 
 from Engine.Vector import Vector
-from Engine.Config import TILE_SIZE
+from Engine.Config import TILE_SIZE, config
 
 MAP_OFFSET: Vector = Vector(5, 1)
 
@@ -46,3 +46,5 @@ class Window:
         screen_x = (MAP_OFFSET.x * TILE_SIZE.x) + (x - y) * (TILE_SIZE.x / 2)
         screen_y = (MAP_OFFSET.y * TILE_SIZE.y) + (x + y) * (TILE_SIZE.y / 2)
         return Vector(int(screen_x), int(screen_y))
+
+window = Window(config.resolution)

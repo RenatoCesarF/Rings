@@ -2,11 +2,15 @@ from typing import List, Optional
 
 from pygame.surface import Surface
 
+from Engine.debugger_draw import debugger_draw
+from Engine.Window import window
 from Engine.timer import Timer
 from Engine.Vector import Vector
 
+from Engine.utils import draw_circle, draw_collision_rect
 from Entities.unit import Unit
 from Entities.bullet import Bullet
+# from main import game
 
 
 class UnitManager:
@@ -81,9 +85,8 @@ class UnitManager:
         for unit in sorted(
             self.unit_list, key=lambda x: x.screen_position.y * -1
         ):
-            if unit.collision_rect.collidepoint(
-                position.x + offset.x, position.y + offset.y
-            ):
+            pos = [position.x - offset.x, position.y - offset.y]
+            if unit.collision_rect.collidepoint(pos[0], pos[1]):
                 return unit
         return None  # Unit(Vector(-1, -1), None)
 
