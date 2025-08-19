@@ -5,6 +5,7 @@ import pygame
 
 from pygame.surface import Surface
 from pygame.rect import Rect
+from Engine import debugger_draw
 from Engine.Entity import Entity
 from Engine.image import Image
 
@@ -13,6 +14,7 @@ from Engine.Vector import Vector
 from Engine.Window import Window
 from Entities.bullet import Bullet
 
+import math
 
 class Unit:
     tile_position: Vector
@@ -32,17 +34,12 @@ class Unit:
         unit_manager,
         id: int = 0,
     ):
-        #
-        # super().__init__(
-        #     self.center_position, (self.tower_img.width, self.tower_img.height)
-        # )
-
         self.tower_img = Image('./res/sprites/tower.png', (255, 0, 0))
         self.unique_id = id
         self.has_entity_in_range = False
         self.tile_position = tile_position
         self.target = None
-        self.fire_range = 15
+        self.fire_range = 50
         self.screen_position = Window.to_isometric_position_from_vector(
             tile_position
         )
@@ -65,17 +62,17 @@ class Unit:
 
     def draw(self, surface: Surface, offset: Vector = Vector.zero()):
         self.tower_img.draw(surface, self.screen_position, offset)
-        # self.draw_fire_range(surface, offset)
-        draw_collision_rect(self.collision_rect, surface, offset)
+        self.draw_fire_range(surface, offset)
+        # draw_collision_rect(self.collision_rect, surface, offset)
 
     def create_range(self):
         width_range = self.fire_range * 2
         height_range = self.fire_range
         self.fire_range_rect = pygame.Rect(
-            (self.center_position.x - width_range * 2 * 1.2),
-            (self.center_position.y - height_range * 2),
-            width_range * 5,
-            height_range * 5,
+            (self.center_position.x - width_range/2),
+            (self.center_position.y - height_range/2 + 7),
+            width_range, 
+            height_range 
         )
 
     def draw_fire_range(
@@ -84,6 +81,7 @@ class Unit:
         color = (0, 200, 255)
         if self.has_entity_in_range:
             color = (200, 0, 0)
+
         shape_surf = pygame.Surface(self.fire_range_rect.size, pygame.SRCALPHA)
         pygame.draw.ellipse(shape_surf, color, shape_surf.get_rect())
 
@@ -110,14 +108,21 @@ class Unit:
             width=1,
         )
 
-    def has_in_range(self, entity: Entity):
-        if not hasattr(entity, 'collision_rect'):
-            return False
-        if self.fire_range_rect.colliderect(entity.collision_rect):
-            self.has_entity_in_range = True
-            return True
-        self.has_entity_in_range = False
-        return False
+    def has_in_range(self, target):
+        self_position = self.center_position
+
+        # pega o centro do inimigo
+        target_center_x = target.position.x + target.width / 2
+        target_center_y = target.position.y + target.height / 2
+
+        dx = target_center_x - self_position.x
+        dy = target_center_y - self_position.y
+        distance = math.sqrt(dx * dx + dy * dy)
+
+        collision_distance = self.fire_range 
+
+        self.has_entity_in_range = distance <= collision_distance
+        return self.has_entity_in_range
 
     def set_target(self, target: Entity):
         self.target = target

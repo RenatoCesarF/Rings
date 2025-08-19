@@ -38,7 +38,6 @@ class Globals:
 
 
 class Game:
-    _entities: List[Entity]
     game_time: int
     running: bool
     world: World
@@ -47,13 +46,11 @@ class Game:
     delta_time: float
     unit_manager: UnitManager
     ui: UI
-    ent_rect: pygame.Rect
     selected_tile_position: Vector
     time_delta: float
 
     def __init__(self) -> None:
         self.running = True
-        self.ent_rect = pygame.Rect(200, 200, 5, 5)
         print(config.resolution)
         self.unit_manager = UnitManager()
         self.ui = UI(
@@ -61,9 +58,7 @@ class Game:
             "res/ui_theme.json",
             window.screen,
         )
-        self._entities = []
         self._enemies = []
-        self._enemies.append(Entity(Vector(200, 200), (5, 5)))
         self.world = World()
         self.mouse = Mouse(window)
         self.camera = Camera(Vector.zero(), window.screen_real_size)
@@ -73,15 +68,13 @@ class Game:
         self.selected.set_opacity(200)
         self.clock = pygame.time.Clock()
 
-        self._enemies.append(Enemy(Vector(10, 60), 20, 20))
-
+        self._enemies.append(Enemy(Vector(5,5), 5, 5))
         self.unit_manager.unit_list.append(Unit(Vector(9, 5), self.unit_manager))
 
     def update(self):
         """Update function that cluster all update functions"""
         self.time_delta = self.clock.tick(60) / 1000.0
-        self._entities = sorted(self._entities, key=lambda x: x.position.y)
-        self._enemies = sorted(self._enemies, key=lambda x: x.position.y)
+        # self._enemies = sorted(self._enemies, key=lambda x: x.position.y)
         # self.ui.update(self.time_delta)
         self.world.update()
         self.unit_manager.update(self.time_delta)
@@ -96,9 +89,6 @@ class Game:
         for enemy in self._enemies:
             for unit in self.unit_manager.unit_list:
                 unit.has_in_range(enemy)
-
-        for ent in self._entities:
-            ent.update()
 
         for enemy in self._enemies:
             enemy.update()
@@ -119,7 +109,7 @@ class Game:
     def add_unit_in_tile(self):
         """Add a new unit in the world of tiles"""
         if not self.world.is_tile_position_valid(
-            self.selected_tile_position.x, self.selected_tile_position.y
+            int(self.selected_tile_position.x), int(self.selected_tile_position.y)
         ):
             return
 
@@ -141,18 +131,8 @@ class Game:
 
         self.unit_manager.draw(window.display, self.camera.position)
 
-        for ent in self._entities:
-            ent.draw(window.display, self.camera.position)
         for enemy in self._enemies:
             enemy.draw(window.display, self.camera.position)
-
-        draw_collision_rect(
-            self.ent_rect,
-            window.display,
-            self.camera.position,
-            line_width=0,
-        )
-
 
         debugger_draw.draw(self.camera.position)
 
@@ -160,11 +140,10 @@ class Game:
         # self.ui.draw(window.screen)
         self.ui.write(str(int(self.clock.get_fps())), Vector(0, 300))
         # self.ui.write(str(len(self.unit_manager.bullets)), Vector(0, 330))
-        self.ui.write(str(self.mouse), Vector(0, 350))
-        # self.ui.write(str(self.camera._target.position), Vector(0, 350))
+        self.ui.write(str(self.mouse.position), Vector(0, 350))
         self.ui.write(str(self.camera.position), Vector(0, 400))
         self.ui.write(
-            "Selected Tile: " + str(self.selected_tile_position.as_tuple),
+            "have target: " + str(self.unit_manager.unit_list[0].has_entity_in_range),
             Vector(0, 380),
         )
         self.mouse.draw(window.screen)
@@ -175,7 +154,7 @@ class Game:
         screen_destination = window.screen
         tile_size = 20
         tile_color = (0, 178, 0)
-
+    
         for i_row, row in enumerate(self.world.map_matrix):
             for i_tile, tile in enumerate(row):
                 tile_color = (0, 178, 0)
@@ -192,10 +171,10 @@ class Game:
                 )
                 if tile.content == 0:
                     continue
-
+    
                 if self.selected_tile_position.is_equal(Vector(i_tile, i_row)):
                     tile_color = (0, 78, 0)
-
+    
                 pygame.draw.rect(
                     screen_destination,
                     tile_color,
@@ -207,17 +186,17 @@ class Game:
                     ),
                     width=0,
                 )
-
+    
         for unit in self.unit_manager.unit_list:
             unit_color = (0, 0, 200)
-
+    
             if unit == self.unit_manager.selected_unit:
                 unit_color = (200, 200, 0)
                 range_color = (200, 200, 40)
-
+    
                 if unit.has_entity_in_range:
                     range_color = (200, 0, tile_size)
-
+    
                 # DRAW RANGE
                 pygame.draw.circle(
                     screen_destination,
@@ -226,34 +205,33 @@ class Game:
                         (unit.tile_position.x * tile_size) + 8,
                         (unit.tile_position.y * tile_size) + 8,
                     ),
-                    unit.fire_range * 5,
+                    unit.fire_range,
                     3,
                 )
-
+    
             # DRAW UNIT
             pygame.draw.circle(
                 screen_destination,
                 unit_color,
-                ((unit.tile_position.x * tile_size) + 8, (unit.tile_position.y * tile_size) + 8),
+                ((unit.tile_position.x * tile_size) + 8 , (unit.tile_position.y * tile_size) + 8),
                 5,
                 0,
             )
-
+    
         for enemy in self._enemies:
-            position = World.get_tile_position_in_grid(enemy.position, Vector.zero())
             pygame.draw.circle(
                 screen_destination,
                 (255, 0, 0),
-                ((position.x * tile_size) + 8, (position.y * tile_size) + 8),
+                ((enemy.position.x * tile_size ) + 8, (enemy.position.y * tile_size )+ 8),
                 5,
                 0,
             )
-
+    
         # position = World.get_tile_position_in_grid(self., Vector(0, 0))
 
     def draw_selection_square(self, surface: Surface):
         is_selectable = self.world.is_tile_position_valid(
-            self.selected_tile_position.x, self.selected_tile_position.y
+            int(self.selected_tile_position.x), int(self.selected_tile_position.y)
         )
         if not is_selectable:
             return
@@ -273,21 +251,27 @@ class Game:
                 if event.key == pygame.K_TAB:
                     Globals.debugging = not Globals.debugging
 
+                # if event.key == pygame.K_f:
+                #     self._enemies.append(Enemy(self.mouse.position + self.camera.position, 5, 5))
+
+                if event.key == pygame.K_j:
+                    self._enemies.pop()
+                
                 if event.key == pygame.K_a:
-                    self.camera.position.x -= 10
-                    # self.ent_rect.x -= 5
+                    # self.camera.position.x -= 10
+                    self._enemies[0].position.x -= 0.5
 
                 if event.key == pygame.K_d:
-                    self.camera.position.x += 5
-                    # self.ent_rect.x += 5
+                    # self.camera.position.x += 5
+                    self._enemies[0].position.x += 0.5
 
                 if event.key == pygame.K_s:
-                    # self.ent_rect.y += 5
-                    self.camera.position.y += 5
+                    self._enemies[0].position.y += 0.5
+                    # self.camera.position.y += 5
 
                 if event.key == pygame.K_w:
-                    # self.ent_rect.y -= 5
-                    self.camera.position.y -= 5
+                    self._enemies[0].position.y -= 0.5
+                    # self.camera.position.y -= 5
 
                 if event.key == pygame.K_1:
                     self.mouse.set_state(ClickingState.Create)

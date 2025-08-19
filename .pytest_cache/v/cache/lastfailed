@@ -1,1 +1,5 @@
-{}
+{
+  "tests/test_unit.py::test_unit_check_collision_success_using_vectors": true,
+  "tests/test_unit.py::test_unit_check_collision_out_of_range": true,
+  "tests/test_unit.py::test_unit_check_collision_diagonal_out_of_range": true
+}

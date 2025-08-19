@@ -5,15 +5,15 @@ import math
 class Vector:
     """Representation of a position or a movement"""
 
-    x: int
-    y: int
+    x: float
+    y: float
 
-    def __init__(self, x: int, y: int):
+    def __init__(self, x: float, y: float):
         self.x = x
         self.y = y
 
     @property
-    def as_tuple(self) -> tuple[int, int]:
+    def as_tuple(self) -> tuple[float, float]:
         return (self.x, self.y)
 
     @staticmethod

@@ -47,4 +47,10 @@ class Window:
         screen_y = (MAP_OFFSET.y * TILE_SIZE.y) + (x + y) * (TILE_SIZE.y / 2)
         return Vector(int(screen_x), int(screen_y))
 
+    @staticmethod
+    def to_isometric_position_non_tile(x: int, y: int) -> Vector:
+        screen_x = (MAP_OFFSET.x ) + (x - y) 
+        screen_y = (MAP_OFFSET.y ) + (x + y) 
+        return Vector(int(screen_x), int(screen_y))
+
 window = Window(config.resolution)

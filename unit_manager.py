@@ -81,7 +81,7 @@ class UnitManager:
         for unit in sorted(
             self.unit_list, key=lambda x: x.screen_position.y * -1
         ):
-            pos = [position.x - offset.x, position.y - offset.y]
+            pos = [position.x + offset.x, position.y + offset.y]
             if unit.collision_rect.collidepoint(pos[0], pos[1]):
                 return unit
         return None  # Unit(Vector(-1, -1), None)

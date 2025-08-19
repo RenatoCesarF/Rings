@@ -1,4 +1,10 @@
 [
   "tests/test_timer_class.py::test_time_in_seconds",
-  "tests/test_timer_class.py::test_time_in_seconds_passing_tree_seconds"
+  "tests/test_timer_class.py::test_time_in_seconds_passing_tree_seconds",
+  "tests/test_unit.py::test_unit_check_collision_diagonal_inside_range",
+  "tests/test_unit.py::test_unit_check_collision_diagonal_out_of_range",
+  "tests/test_unit.py::test_unit_check_collision_on_edge",
+  "tests/test_unit.py::test_unit_check_collision_out_of_range",
+  "tests/test_unit.py::test_unit_check_collision_success_using_vectors",
+  "tests/test_unit.py::test_unit_check_collision_sucess"
 ]
